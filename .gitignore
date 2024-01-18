@@ -1,4 +1,6 @@
 # 출처: github/gitignore, python.gitignore
+.vscode
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
