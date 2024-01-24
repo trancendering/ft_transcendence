@@ -1,7 +1,7 @@
 """물리적 2차원 벡터를 표현하기 위한 Vector 클래스 정의"""
 from math import sqrt
 from dataclasses import dataclass
-from typing import List, Dict
+from typing import Dict
 
 
 @dataclass
@@ -54,8 +54,8 @@ class Vector:
         """
         실수배를 수행하고 대입
         """
-        self.x *= other.x
-        self.y *= other.y
+        self.x *= other
+        self.y *= other
         return self
 
     def __rmul__(self, other: int | float) -> 'Vector':
@@ -76,13 +76,7 @@ class Vector:
         """
         return sqrt(self.x * self.x + self.y * self.y)
 
-    def __list__(self) -> List[float]:
-        """
-        현재 객체를 리스트로 변환
-        """
-        return [self.x, self.y]
-
-    def __dict__(self) -> Dict[str, float]:
+    def cast_dict(self) -> Dict[str, float]:
         """
         현재 객체를 딕셔너리로 변환
         """
