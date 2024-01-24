@@ -68,6 +68,10 @@ async def _normal_game_enqueue(sio, sid):
         room_name = "normal" + str(room_number)
         await sio.enter_room(matcher[0], room_name, namespace="/game")
         await sio.enter_room(matcher[1], room_name, namespace="/game")
+        async with sio.session(matcher[0]) as session:
+            session["room_name"] = room_name
+        async with sio.session(matcher[1]) as session:
+            session["room_name"] = room_name
         user1_session = await sio.get_session(matcher[0], namespace="/game")
         user2_session = await sio.get_session(matcher[1], namespace="/game")
         send_info = {
@@ -105,5 +109,10 @@ async def _speed_game_enqueue(sio, sid):
         game_room[room_name] = GameRoom(sio, matcher, room_name, "speed")
 
 
-async def matching_dequeue(sio, sid):
-    pass
+async def matching_dequeue(sio, sid, mode):
+    if mode == "normal":
+        if sid in normal_matching_queue:
+            normal_matching_queue.remove(sid)
+    else:
+        if sid in speed_matching_queue:
+            speed_matching_queue.remove(sid)

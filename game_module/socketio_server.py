@@ -1,6 +1,7 @@
 import socketio
 
-from .game_core import player_ready, bar_move, matching_enqueue
+from .game_core import player_ready, bar_move, matching_enqueue, matching_dequeue, \
+    game_room, game_normal_room, game_speed_room
 
 # 서버 객체
 sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins='*')
@@ -63,7 +64,17 @@ async def disconnect_game(sid):
     만약 대기중일 경우, 큐에서 제거
     그 외의 경우, 동작하지 않음
     """
-    print("disconnect")
+    global game_room
+
+    session = await sio.get_session(sid, namespace="/game")
+    _log("Disconnect", session["intraId"], sid)
+    if session["isSpeedUp"] == "normal" and sid in game_normal_room:
+        await matching_dequeue(sio, sid, "normal")
+    elif session["isSpeedUp"] == "speed" and sid in game_speed_room:
+        await matching_dequeue(sio, sid, "speed")
+    if "room_name" in session and session["room_name"] in game_room:
+        await game_room[session["room_name"]].kill_room()
+        del game_room[session["room_name"]]
 
 
 @sio.on("ping", namespace="/game")

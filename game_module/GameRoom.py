@@ -40,6 +40,7 @@ class GameRoom:
         self._ball_speed: float = 10 if self._game_mode == "normal" else 15
         self._ball_velocity: Vector = Vector(0, 0)  # ball 속도벡터
         self._ball_rad = 0
+        self._kill = False
 
         # 사용자에게 전송되는 게임 현재 상태 변수
         self._ball_loc: Vector = Vector(0, 0)  # ball의 위치벡터
@@ -71,8 +72,8 @@ class GameRoom:
         self._reset_ball_velocity()
         await asyncio.sleep(0.5)
         self._stay_state = False
-        await self._state_updata_loop()
-        await self._game_end()
+        isError = await self._state_updata_loop()
+        await self._game_end("normal" if not isError else "opponentLeft")
 
     async def _state_updata_loop(self):
         """
@@ -202,7 +203,7 @@ class GameRoom:
         # 충돌 보정값
         correction_val: float = 0
 
-        while True:
+        while not self._kill:
             # 게임 현재 상태 전송
             await self._state_send()
             loop_sleep = asyncio.create_task(asyncio.sleep(1 / self.UPDATE_FREQUENCY))
@@ -210,11 +211,11 @@ class GameRoom:
             # 우측 득점
             if self._ball_loc.x <= -self.FIELD_WIDTH / 2:
                 if await self._get_score(self._player[1]) is True:
-                    return  # 게임 종료
+                    return True  # 게임 종료
             # 좌측 득점
             elif self._ball_loc.x >= self.FIELD_WIDTH / 2:
                 if await self._get_score(self._player[0]) is True:
-                    return  # 게임 종료
+                    return True  # 게임 종료
             # 상단 충돌
             elif self._ball_velocity.y > 0 and \
                     self._ball_loc.y + self.BALL_SIZE > self.FIELD_HEIGHT / 2 - self._ball_velocity.y:
@@ -278,9 +279,10 @@ class GameRoom:
                     self._stay_time = False  # 게임 재개
                 else:
                     self._ball_loc.zero()
-
             # 루프 대기
             await loop_sleep
+
+        return False
 
     async def _state_send(self):
         """
@@ -312,16 +314,23 @@ class GameRoom:
         }
         end_game = False
         if self._score[player] >= self.ENDSCORE:
-            score_data["isEnded"] = "true"
             end_game = True
-        else:
-            score_data["isEnded"] = "false"
         await self._server.emit("updateGameScore", score_data, room=self._room_name, namespace="/game")
         self._ball_loc.zero()
         self._reset_ball_velocity()
         return end_game
 
-    async def _game_end(self):
+    async def _game_end(self, end_reason):
+        """
+        게임이 종료되었을 경우 해당 함수 호출
+
+        parameter
+        * end_reason: 종료 사유
+
+        normal: 정상 종료
+        opponentLeft: 상대가 나감
+        """
+        await self._server.emit("endGame", {"reason": end_reason}, room=self._room_name, namespace="/game")
         await self._server.close_room(self._room_name, namespace="/game")
         await self._server.disconnect(self._player[0], namespace="/game")
         await self._server.disconnect(self._player[1], namespace="/game")
@@ -345,3 +354,7 @@ class GameRoom:
             self._bar_loc_1 = 200 - bar_loc
         else:
             self._bar_loc_2 = 200 - bar_loc
+
+    async def kill_room(self):
+        self._kill = True
+        await self._async_task
