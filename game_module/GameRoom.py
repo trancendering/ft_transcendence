@@ -37,7 +37,7 @@ class GameRoom:
         self._stay_state: bool = True
         self._stay_time: float = time.time()
         self._async_task: asyncio.Task | None = None
-        self._ball_speed: float = 5 if self._game_mode == "normal" else 7
+        self._ball_speed: float = 10 if self._game_mode == "normal" else 15
         self._ball_velocity: Vector = Vector(0, 0)  # ball 속도벡터
         self._ball_rad = 0
 
@@ -287,7 +287,7 @@ class GameRoom:
         현재 게임 상태를 모든 플레이어에게 전파
         """
         now_state = {
-            "ballPosition": dict(self._ball_loc.translate()),
+            "ballPosition": self._ball_loc.translate().cast_dict(),
             "leftPaddlePosition": 200 - self._bar_loc_1,
             "rightPaddlePosition": 200 - self._bar_loc_2,
         }
@@ -333,7 +333,7 @@ class GameRoom:
         축 방향과 비슷할 경우 공이 너무 단조롭게 운동할 수 있기 때문이다.
         """
         ball_rad = random.randrange(10, 350)
-        while ball_rad % 90 < 10 or ball_rad % 90 > 80:
+        while ball_rad % 90 < 20 or ball_rad % 90 > 70:
             ball_rad = random.randrange(10, 350)
         self._ball_rad = math.radians(ball_rad)
         self._ball_velocity.x = math.cos(self._ball_rad)
