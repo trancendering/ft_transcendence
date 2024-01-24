@@ -322,9 +322,9 @@ class GameRoom:
         return end_game
 
     async def _game_end(self):
-        self._server.close_room(self._room_name, namespace="/game")
-        self._server.disconnect(self._player[0], namespace="/game")
-        self._server.disconnect(self._player[1], namespace="/game")
+        await self._server.close_room(self._room_name, namespace="/game")
+        await self._server.disconnect(self._player[0], namespace="/game")
+        await self._server.disconnect(self._player[1], namespace="/game")
 
     def _reset_ball_velocity(self):
         """
