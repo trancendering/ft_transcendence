@@ -76,8 +76,10 @@ async def _normal_game_enqueue(sio, sid):
         user2_session = await sio.get_session(matcher[1], namespace="/game")
         send_info = {
             "roomName": room_name,
-            "leftUser": user1_session["intraId"],
-            "rightUser": user2_session["intraId"],
+            "leftUserId": user1_session["intraId"],
+            "rightUserId": user2_session["intraId"],
+            "leftUserNickname": user1_session["nickname"],
+            "rightUserNickname": user2_session["nickname"],
         }
         await sio.emit("userFullEvent", send_info, room=room_name, namespace="/game")  # 플레이어 위치 정보 송신
         game_room[room_name] = GameRoom(sio, matcher, room_name, "normal")
