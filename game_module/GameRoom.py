@@ -55,12 +55,20 @@ class GameRoom:
 
         ../game_module/game_core.py의 player_ready에서 호출됨
         """
+        def _game_end_callback(task: asyncio.Future):
+            try:
+                task.result()
+                print("Game End!")
+            except Exception as e:
+                print(f"Error Occurred!!\nError: {e}")
+
         self._ready[sid] = True
 
         # All Ready
         if self._game_start is False and False not in self._ready.values():
             task = asyncio.create_task(self._new_game())  # 게임 시작(비동기 수행)
             self._async_task = task  # 비동기 작업 저장, 저장하지 않으면 GC가 작업을 날려먹는다.
+            self._async_task.add_done_callback(_game_end_callback)
             self._game_start = True
 
     async def _new_game(self):
@@ -376,8 +384,4 @@ class GameRoom:
             self._bar_loc_2 = 200 - bar_loc
 
     async def kill_room(self) -> None:
-        if self._kill is True:
-            return
         self._kill = True
-        if self._async_task is not None:
-            await self._async_task
