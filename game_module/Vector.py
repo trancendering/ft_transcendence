@@ -99,7 +99,7 @@ class Vector:
     def basis_translate(self, x_bas: 'Vector', y_bas: 'Vector') -> 'Vector | None':
         """
         2차원 벡터 기저 변환 함수
-        
+
         만약 불가능할 경우 None반환
         """
         if x_bas * y_bas == 0:
