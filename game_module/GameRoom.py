@@ -23,7 +23,7 @@ class GameRoom:
         self.FIELD_HEIGHT = 400  # 게임 화면 세로길이
         self.BALL_SIZE = 5  # 공의 크기(반지름)
         self.BAR_SIZE = 40  # 판의 크기(길이)
-        self.UPDATE_FREQUENCY: int = 20  # 업데이트 빈도(프레임)
+        self.UPDATE_FREQUENCY: int = 30  # 업데이트 빈도(프레임)
         self.ENDSCORE = 5  # 목표 점수
         self.ROUND_READY_TIME = 1  # 매 라운드 시작 시 준비 시간
 
@@ -37,7 +37,7 @@ class GameRoom:
         self._stay_state: bool = True
         self._stay_time: float = time.time()
         self._async_task: asyncio.Task | None = None
-        self._ball_speed: float = 10 if self._game_mode == "normal" else 15
+        self._ball_speed: float = 6 if self._game_mode == "normal" else 10
         self._ball_velocity: Vector = Vector(0, 0)  # ball 속도벡터
         self._ball_rad = 0
         self._kill = False
