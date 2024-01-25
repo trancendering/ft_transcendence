@@ -1,4 +1,5 @@
 import socketio
+from typing import Dict
 
 from .game_core import player_ready, bar_move, matching_enqueue, matching_dequeue, \
     game_room, normal_matching_queue, speed_matching_queue
@@ -23,7 +24,7 @@ def _log(command: str, name: str, sid: str) -> None:
 
 
 @sio.on("connect", namespace="/game")
-async def connect_game(sid, environ):
+async def connect_game(sid: str, environ: Dict[str, str]) -> None:
     """
     클라이언트 연결 시 호출되는 함수
 
@@ -38,7 +39,7 @@ async def connect_game(sid, environ):
     print("\nTry connect: ", sid, "\n")
     query_str: str = environ["QUERY_STRING"]  # 쿼리 문자열
     # 쿼리 문자열을 dictionary 형태로 변환
-    query = dict([key_val.split("=") for key_val in query_str.split("&") if key_val.count("=") == 1])
+    query: Dict[str, str] = dict([key_val.split("=") for key_val in query_str.split("&") if key_val.count("=") == 1])
 
     # 필수 키가 없는 경우 연결 거부
     for essential in ["nickname", "intraId", "isSpeedUp"]:
@@ -53,7 +54,7 @@ async def connect_game(sid, environ):
 
 
 @sio.on("disconnect", namespace="/game")
-async def disconnect_game(sid):
+async def disconnect_game(sid: str) -> None:
     """
     소켓 연결이 종료될 때 호출되는 함수
 
@@ -64,7 +65,7 @@ async def disconnect_game(sid):
     만약 대기중일 경우, 큐에서 제거
     그 외의 경우, 동작하지 않음
     """
-    session = await sio.get_session(sid, namespace="/game")
+    session: Dict[str, str] = await sio.get_session(sid, namespace="/game")
     _log("Disconnect", session["intraId"], sid)
     if session["isSpeedUp"] == "normal" and sid in normal_matching_queue:
         await matching_dequeue(sio, sid, "normal")
@@ -76,7 +77,7 @@ async def disconnect_game(sid):
 
 
 @sio.on("ping", namespace="/game")
-async def ping(sid, data):
-    session = await sio.get_session(sid, namespace="/game")
-    _log("PING", session["name"], sid)
+async def ping(sid: str, data: str) -> str:
+    session: Dict[str, str] = await sio.get_session(sid, namespace="/game")
+    _log("PING", session["name"], sid, data)
     return "pong"

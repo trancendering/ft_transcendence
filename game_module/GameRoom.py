@@ -17,7 +17,7 @@ class GameRoom:
     게임에 참가한 모든 플레이어에게 계속하여 실시간으로 게임 상태를 전송한다.(stateful game server)
     """
 
-    def __init__(self, sio: AsyncServer, matcher: List[str], room_name: str, mode: str) -> None:
+    def __init__(self, sio: AsyncServer, player: List[str], room_name: str, mode: str) -> None:
         # 게임 규격을 결정하는 상수
         self.FIELD_WIDTH = 800  # 게임 화면 가로길이
         self.FIELD_HEIGHT = 400  # 게임 화면 세로길이
@@ -29,10 +29,10 @@ class GameRoom:
 
         # 게임 객체를 정의하는 내부 변수
         self._server: AsyncServer = sio  # 서버 인스턴스
-        self._player: List[str] = matcher  # 플레이어 sid
+        self._player: List[str] = player  # 플레이어 sid
         self._room_name: str = room_name  # 방 이름
         self._game_start: bool = False  # 게임 시작 여부
-        self._ready: Dict[str, bool] = {matcher[0]: False, matcher[1]: False}  # 클라이언트 준비 여부
+        self._ready: Dict[str, bool] = {player[0]: False, player[1]: False}  # 클라이언트 준비 여부
         self._game_mode: str = mode  # 게임 모드(normal, speed)
         self._stay_state: bool = True
         self._stay_time: float = time.time()
@@ -46,7 +46,7 @@ class GameRoom:
         self._ball_loc: Vector = Vector(0, 0)  # ball의 위치벡터
         self._bar_loc_1: float = 0  # player[0]의 bar위치
         self._bar_loc_2: float = 0  # player[1]의 bar위치
-        self._score: Dict[str, int] = {matcher[0]: 0, matcher[1]: 0}  # 게임 스코어
+        self._score: Dict[str, int] = {player[0]: 0, player[1]: 0}  # 게임 스코어
 
     async def ready_player(self, sid: str) -> None:
         """
@@ -111,9 +111,14 @@ class GameRoom:
                 collusion_baseline = (
                     (self.FIELD_WIDTH/2 - self._ball_loc.x)
                     * (self._ball_velocity.y / self._ball_velocity.x)
-                    + self._ball_loc.y)
-                top_side_bound = bar_top + (self.BALL_SIZE * (self._ball_velocity.y / self._ball_velocity.x))
-                bottom_side_bound = bar_bottom + (self.BALL_SIZE * (self._ball_velocity.y / self._ball_velocity.x))
+                    + self._ball_loc.y
+                )
+                top_side_bound = bar_top + (
+                    self.BALL_SIZE * (self._ball_velocity.y / self._ball_velocity.x)
+                )
+                bottom_side_bound = bar_bottom + (
+                    self.BALL_SIZE * (self._ball_velocity.y / self._ball_velocity.x)
+                )
                 if bottom_side_bound <= collusion_baseline <= top_side_bound:
                     return Collusion.SIDE_COLLUSION
                 if self._ball_velocity.y > 0:
@@ -140,8 +145,12 @@ class GameRoom:
                     (-self.FIELD_WIDTH/2 - self._ball_loc.x)
                     * (self._ball_velocity.y / self._ball_velocity.x)
                     + self._ball_loc.y)
-                top_side_bound = bar_top - (self.BALL_SIZE * (self._ball_velocity.y / self._ball_velocity.x))
-                bottom_side_bound = bar_bottom - (self.BALL_SIZE * (self._ball_velocity.y / self._ball_velocity.x))
+                top_side_bound = bar_top - (
+                    self.BALL_SIZE * (self._ball_velocity.y / self._ball_velocity.x)
+                )
+                bottom_side_bound = bar_bottom - (
+                    self.BALL_SIZE * (self._ball_velocity.y / self._ball_velocity.x)
+                )
                 if bottom_side_bound <= collusion_baseline <= top_side_bound:
                     return Collusion.SIDE_COLLUSION
                 if self._ball_velocity.y > 0:
@@ -173,17 +182,15 @@ class GameRoom:
                 ball_to_edge = Vector(self.FIELD_WIDTH/2, edge_loc) - self._ball_loc
             else:
                 ball_to_edge = Vector(-self.FIELD_WIDTH/2, edge_loc) - self._ball_loc
-            nor_velocity = self._ball_velocity.nomalize()
-            b_to_e_other_basis = Vector(
-                nor_velocity * ball_to_edge, Vector(-nor_velocity.y, nor_velocity.x) * ball_to_edge
-                )
+            norm_velocity = self._ball_velocity.nomalize()
+            b_to_e_other_basis = ball_to_edge.basis_translate(
+                norm_velocity, Vector(-norm_velocity.y, norm_velocity.x)
+            )
             ball_to_edge_dencity = b_to_e_other_basis.x - math.sqrt(
-                self.BALL_SIZE * self.BALL_SIZE - b_to_e_other_basis.y * b_to_e_other_basis.y
+                self.BALL_SIZE ** 2 - b_to_e_other_basis.y ** 2
             )
             modified_val = ball_to_edge_dencity / self._ball_speed
-            return (
-                modified_val, self._ball_loc + (self._ball_velocity * modified_val)
-            )
+            return (modified_val, self._ball_loc + (self._ball_velocity * modified_val))
 
         def edge_collusion_velocity(self: 'GameRoom', edge_loc: float) -> Vector:
             """
@@ -288,8 +295,17 @@ class GameRoom:
         """
         현재 게임 상태를 모든 플레이어에게 전파
         """
+        def _vector_translate(vec: Vector) -> Vector:
+            """
+            프론트와 백엔드에서 다른 좌표계를 사용할 경우, 좌표 변환을 수행한다.
+
+            백엔드의 경우, field의 중앙이 원점, y축이 정방향으로 되어 있는 좌표계를 사용하고
+            프론트의 경우 field의 좌측 상단이 원점, y축이 역방향으로 되어 있는 좌표계를 사용한다.
+            """
+            return Vector(self.x + 400, -(self.y - 200))
+
         now_state = {
-            "ballPosition": self._ball_loc.translate().cast_dict(),
+            "ballPosition": _vector_translate(self._ball_loc).cast_dict(),
             "leftPaddlePosition": 200 - self._bar_loc_1,
             "rightPaddlePosition": 200 - self._bar_loc_2,
         }
@@ -315,12 +331,14 @@ class GameRoom:
         end_game = False
         if self._score[player] >= self.ENDSCORE:
             end_game = True
-        await self._server.emit("updateGameScore", score_data, room=self._room_name, namespace="/game")
+        await self._server.emit(
+            "updateGameScore", score_data, room=self._room_name, namespace="/game"
+        )
         self._ball_loc.zero()
         self._reset_ball_velocity()
         return end_game
 
-    async def _game_end(self, end_reason):
+    async def _game_end(self, end_reason: str) -> None:
         """
         게임이 종료되었을 경우 해당 함수 호출
 
@@ -330,12 +348,14 @@ class GameRoom:
         normal: 정상 종료
         opponentLeft: 상대가 나감
         """
-        await self._server.emit("endGame", {"reason": end_reason}, room=self._room_name, namespace="/game")
+        await self._server.emit(
+            "endGame", {"reason": end_reason}, room=self._room_name, namespace="/game"
+        )
         await self._server.close_room(self._room_name, namespace="/game")
         await self._server.disconnect(self._player[0], namespace="/game")
         await self._server.disconnect(self._player[1], namespace="/game")
 
-    def _reset_ball_velocity(self):
+    def _reset_ball_velocity(self) -> None:
         """
         공의 방향을 재설정한다.
         이 때 공의 방향은 랜덤으로 하고, 축 방향과 적어도 10도 이상 차이나게 한다.
@@ -349,12 +369,12 @@ class GameRoom:
         self._ball_velocity.y = math.sin(self._ball_rad)
         self._ball_velocity *= self._ball_speed
 
-    async def bar_move(self, bar_loc: float, player: str):
-        if player == "left":
+    async def bar_move(self, bar_loc: float, side: str) -> None:
+        if side == "left":
             self._bar_loc_1 = 200 - bar_loc
         else:
             self._bar_loc_2 = 200 - bar_loc
 
-    async def kill_room(self):
+    async def kill_room(self) -> None:
         self._kill = True
         await self._async_task

@@ -96,5 +96,12 @@ class Vector:
         """
         return (self * (1 / len(self)))
 
-    def translate(self):
-        return Vector(self.x + 400, -(self.y - 200))
+    def basis_translate(self, x_bas: 'Vector', y_bas: 'Vector') -> 'Vector | None':
+        """
+        2차원 벡터 기저 변환 함수
+        
+        만약 불가능할 경우 None반환
+        """
+        if x_bas * y_bas == 0:
+            return None
+        return Vector(self.x * y_bas.y + self.y * -y_bas.x, self.x * -x_bas.y + self.y * x_bas.x)
