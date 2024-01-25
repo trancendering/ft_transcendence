@@ -64,8 +64,6 @@ async def disconnect_game(sid):
     만약 대기중일 경우, 큐에서 제거
     그 외의 경우, 동작하지 않음
     """
-    global game_room
-
     session = await sio.get_session(sid, namespace="/game")
     _log("Disconnect", session["intraId"], sid)
     if session["isSpeedUp"] == "normal" and sid in game_normal_room:
