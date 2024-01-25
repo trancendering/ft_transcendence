@@ -1,7 +1,7 @@
 import socketio
 
 from .game_core import player_ready, bar_move, matching_enqueue, matching_dequeue, \
-    game_room, game_normal_room, game_speed_room
+    game_room, normal_matching_queue, speed_matching_queue
 
 # 서버 객체
 sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins='*')
@@ -66,9 +66,9 @@ async def disconnect_game(sid):
     """
     session = await sio.get_session(sid, namespace="/game")
     _log("Disconnect", session["intraId"], sid)
-    if session["isSpeedUp"] == "normal" and sid in game_normal_room:
+    if session["isSpeedUp"] == "normal" and sid in normal_matching_queue:
         await matching_dequeue(sio, sid, "normal")
-    elif session["isSpeedUp"] == "speed" and sid in game_speed_room:
+    elif session["isSpeedUp"] == "speed" and sid in speed_matching_queue:
         await matching_dequeue(sio, sid, "speed")
     if "room_name" in session and session["room_name"] in game_room:
         await game_room[session["room_name"]].kill_room()
