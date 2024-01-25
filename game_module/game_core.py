@@ -90,9 +90,9 @@ async def _enter_room(sio: AsyncServer, room_name: str, player: List[str], mode:
 
     await sio.enter_room(player[0], room_name, namespace="/game")
     await sio.enter_room(player[1], room_name, namespace="/game")
-    async with sio.session(player[0]) as session:
+    async with sio.session(player[0], namespace="/game") as session:
         session["room_name"] = room_name
-    async with sio.session(player[1]) as session:
+    async with sio.session(player[1], namespace="/game") as session:
         session["room_name"] = room_name
     user1_session = await sio.get_session(player[0], namespace="/game")
     user2_session = await sio.get_session(player[1], namespace="/game")
@@ -107,7 +107,7 @@ async def _enter_room(sio: AsyncServer, room_name: str, player: List[str], mode:
     game_room[room_name] = GameRoom(sio, player, room_name, mode)
 
 
-async def matching_dequeue(sio: AsyncServer, sid: str, mode: str) -> None:
+def matching_dequeue(sio: AsyncServer, sid: str, mode: str) -> None:
     if mode == "normal":
         if sid in normal_matching_queue:
             normal_matching_queue.remove(sid)

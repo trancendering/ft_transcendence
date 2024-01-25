@@ -68,12 +68,13 @@ async def disconnect_game(sid: str) -> None:
     session: Dict[str, str] = await sio.get_session(sid, namespace="/game")
     _log("Disconnect", session["intraId"], sid)
     if session["isSpeedUp"] == "normal" and sid in normal_matching_queue:
-        await matching_dequeue(sio, sid, "normal")
+        matching_dequeue(sio, sid, "normal")
     elif session["isSpeedUp"] == "speed" and sid in speed_matching_queue:
-        await matching_dequeue(sio, sid, "speed")
+        matching_dequeue(sio, sid, "speed")
     if "room_name" in session and session["room_name"] in game_room:
         await game_room[session["room_name"]].kill_room()
-        del game_room[session["room_name"]]
+        if session["room_name"] in game_room:
+            del game_room[session["room_name"]]
 
 
 @sio.on("ping", namespace="/game")

@@ -70,7 +70,7 @@ class Vector:
         """
         return Vector(-self.x, -self.y)
 
-    def __len__(self) -> float:
+    def size(self) -> float:
         """
         벡터의 크기를 구해서 반환
         """
@@ -94,7 +94,7 @@ class Vector:
         """
         정규화된 벡터(크기는 1이고 방향은 동일)를 반환
         """
-        return (self * (1 / len(self)))
+        return (self * (1 / self.size()))
 
     def basis_translate(self, x_bas: 'Vector', y_bas: 'Vector') -> 'Vector | None':
         """
@@ -102,6 +102,6 @@ class Vector:
 
         만약 불가능할 경우 None반환
         """
-        if x_bas * y_bas == 0:
+        if x_bas.y / x_bas.x == y_bas.y / y_bas.x:
             return None
         return Vector(self.x * y_bas.y + self.y * -y_bas.x, self.x * -x_bas.y + self.y * x_bas.x)

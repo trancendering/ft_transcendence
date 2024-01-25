@@ -204,7 +204,7 @@ class GameRoom:
             else:
                 ball_to_edge = Vector(-self.FIELD_WIDTH/2, edge_loc) - self._ball_loc
             original_velocity = self._ball_velocity
-            impulse = -2 * ((self._ball_velocity * ball_to_edge) / len(ball_to_edge)) * ball_to_edge
+            impulse = -2 * ((self._ball_velocity * ball_to_edge) / ball_to_edge.size()) * ball_to_edge
             return (original_velocity - impulse)
 
         # 충돌 보정값
@@ -218,11 +218,11 @@ class GameRoom:
             # 우측 득점
             if self._ball_loc.x <= -self.FIELD_WIDTH / 2:
                 if await self._get_score(self._player[1]) is True:
-                    return True  # 게임 종료
+                    return False  # 게임 종료
             # 좌측 득점
             elif self._ball_loc.x >= self.FIELD_WIDTH / 2:
                 if await self._get_score(self._player[0]) is True:
-                    return True  # 게임 종료
+                    return False  # 게임 종료
             # 상단 충돌
             elif self._ball_velocity.y > 0 and \
                     self._ball_loc.y + self.BALL_SIZE > self.FIELD_HEIGHT / 2 - self._ball_velocity.y:
@@ -289,7 +289,7 @@ class GameRoom:
             # 루프 대기
             await loop_sleep
 
-        return False
+        return True
 
     async def _state_send(self):
         """
@@ -302,7 +302,7 @@ class GameRoom:
             백엔드의 경우, field의 중앙이 원점, y축이 정방향으로 되어 있는 좌표계를 사용하고
             프론트의 경우 field의 좌측 상단이 원점, y축이 역방향으로 되어 있는 좌표계를 사용한다.
             """
-            return Vector(self.x + 400, -(self.y - 200))
+            return Vector(vec.x + 400, -(vec.y - 200))
 
         now_state = {
             "ballPosition": _vector_translate(self._ball_loc).cast_dict(),
@@ -376,5 +376,8 @@ class GameRoom:
             self._bar_loc_2 = 200 - bar_loc
 
     async def kill_room(self) -> None:
+        if self._kill is True:
+            return
         self._kill = True
-        await self._async_task
+        if self._async_task is not None:
+            await self._async_task
