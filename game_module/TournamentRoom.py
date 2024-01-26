@@ -7,22 +7,24 @@ from socketio import AsyncServer
 from .BaseRoom import BaseRoom
 
 
-class GameRoom(BaseRoom):
-    """
-    유저 두 명이 1대1 핑퐁 게임을 할 수 있는 게임방 인스턴스 정의
-
-    BaseRoom 객체를 상속받는다
-    """
-
+class TournamentRoom(BaseRoom):
     def __init__(self, sio: AsyncServer, player: List[str], room_name: str, mode: str) -> None:
-        super().__init__(sio, player, room_name, mode, "/single")
+        super().__init__(sio, player, room_name, mode, "/tournament")
+        self._winner: List[str] = []
+        self._round = 0
 
     async def _new_game(self):
         """
         새 게임 시작
         """
         # 초기화 작업 여기서 시행
-        self._left_player, self._right_player = self._player
+        self._round += 1
+        if self._round == 1:
+            self._left_player, self._right_player = self._player[:2]
+        elif self._round == 2:
+            self._left_player, self._right_player = self._player[2:]
+        elif self._round == 3:
+            self._left_player, self._right_player = self._winner[:2]
         self._ball_loc.zero()
         self._reset_ball_velocity()
         await asyncio.sleep(0.5)
@@ -30,7 +32,7 @@ class GameRoom(BaseRoom):
         isError = await self._state_updata_loop()
         await self._game_end("normal" if not isError else "opponentLeft")
 
-    async def _get_score(self, player: str) -> bool:
+    async def _get_score(self, player) -> bool:
         """
         player가 점수를 얻은 경우
 
@@ -50,6 +52,10 @@ class GameRoom(BaseRoom):
         end_game = False
         if self._score[player] >= self.ENDSCORE:
             end_game = True
+            if self._score[self._left_player] > self._score[self._right_player]:
+                self._winner[self._round - 1] = self._left_player
+            else:
+                self._winner[self._round - 1] = self._right_player
         await self._server.emit(
             "updateGameScore", score_data, room=self._room_name, namespace=self._namespace
         )
@@ -67,9 +73,18 @@ class GameRoom(BaseRoom):
         normal: 정상 종료
         opponentLeft: 상대가 나감
         """
+        send_info = {
+            "round": self._round,
+            "reason": end_reason,
+            "winnerSide": self._winner[self._round - 1]
+        }
+        self._game_start = False
+        for player_sid in self._ready:
+            self._ready[player_sid] = False
         await self._server.emit(
-            "endGame", {"reason": end_reason}, room=self._room_name, namespace=self._namespace
+            "endGame", send_info, room=self._room_name, namespace=self._namespace
         )
-        await self._server.close_room(self._room_name, namespace=self._namespace)
-        for player in self._player:
-            await self._server.disconnect(player, namespace=self._namespace)
+        if self._round == 3 or end_reason == "opponentLeft":
+            await self._server.close_room(self._room_name, namespace=self._namespace)
+            for player in self._player:
+                await self._server.disconnect(player, namespace=self._namespace)
