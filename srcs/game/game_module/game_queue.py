@@ -3,6 +3,7 @@ from typing import List
 from socketio import AsyncServer
 
 from .GameRoom import GameRoom
+from .game_ctl import game_room
 
 
 # normal game mode waiting queue
@@ -54,8 +55,6 @@ async def _speed_game_enqueue(sio: AsyncServer, sid: str) -> None:
 
 
 async def _enter_room(sio: AsyncServer, room_name: str, player: List[str], mode: str) -> None:
-    global game_room
-
     await sio.enter_room(player[0], room_name, namespace="/single")
     await sio.enter_room(player[1], room_name, namespace="/single")
     async with sio.session(player[0], namespace="/single") as session:
