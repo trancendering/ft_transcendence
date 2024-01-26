@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "daphne",
-    "test_api",
     "corsheaders",
 
     'django.contrib.admin',
