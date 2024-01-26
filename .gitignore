@@ -1,3 +1,5 @@
+database/*
+
 # 출처: github/gitignore, python.gitignore
 .vscode
 

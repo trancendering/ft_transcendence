@@ -1,6 +1,6 @@
 
 DOCKER_COMPOSE := docker compose
-
+YML_PATH = ./docker-compose.yml
 ifeq ($(shell uname), Darwin)
 # macOS인 경우
 	DATA_DIR := /Users/${USER}/docker-data
@@ -15,23 +15,23 @@ all: up
 # 이미지 빌드 후 컨테이너 인스턴스 생성
 up:
 	make makeDirs
-	$(DOCKER_COMPOSE) -f srcs/docker-compose.yml up -d --build
+	$(DOCKER_COMPOSE) -f $(YML_PATH) up -d --build
 
 # 컨테이너 인스턴스 삭제
 down:
-	$(DOCKER_COMPOSE) -f srcs/docker-compose.yml down
+	$(DOCKER_COMPOSE) -f $(YML_PATH) down
 
 # 컨테이너 재시작
 restart:
-	$(DOCKER_COMPOSE) -f srcs/docker-compose.yml restart
+	$(DOCKER_COMPOSE) -f $(YML_PATH) restart
 
 # 컨테이너 중지
 stop:
-	$(DOCKER_COMPOSE) -f srcs/docker-compose.yml stop
+	$(DOCKER_COMPOSE) -f $(YML_PATH) stop
 
 # 이미지 빌드
 build:
-	$(DOCKER_COMPOSE) -f srcs/docker-compose.yml build
+	$(DOCKER_COMPOSE) -f $(YML_PATH) build
 
 # 인스턴스와 이미지 및 네트워크 등 삭제
 clean:
@@ -48,7 +48,7 @@ fclean:
 
 # 컨테이너 로그 확인
 logs:
-	$(DOCKER_COMPOSE) -f srcs/docker-compose.yml logs $(SERVICE)
+	$(DOCKER_COMPOSE) -f $(YML_PATH) logs $(SERVICE)
 
 # 특정 컨테이너의 bash실행
 bash:
