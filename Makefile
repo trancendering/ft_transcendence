@@ -1,6 +1,6 @@
 
 DOCKER_COMPOSE := docker compose
-YML_PATH = ./docker-compose.yml
+YML_PATH = ./srcs/docker-compose.yml
 ifeq ($(shell uname), Darwin)
 # macOS인 경우
 	DATA_DIR := /Users/${USER}/docker-data
@@ -61,8 +61,11 @@ show:
 	docker network ls | tail -n +1; echo
 	docker volume ls | tail -n +1; echo
 
+re : clean all
+
+
 # 바인딩할 로컬 디렉토리 생성
 makeDirs:
-	mkdir -p $(DATA_DIR)/nginx > /dev/null 2>&1
+# mkdir -p $(DATA_DIR)/nginx > /dev/null 2>&1
 
 .PHONY: all up down restart stop build clean fclean bash logs show makeDirs

@@ -1,0 +1,46 @@
+version: '3' # docker compose version
+
+services:
+    middleware:
+        image: middleware
+        container_name: middleware
+        restart: always
+        build:
+            context: ./middleware/
+            dockerfile: Dockerfile
+        ports:
+            - "443:443"
+        networks:
+            - ts-network
+        env_file: .env
+
+    django_game:
+        image: django_game
+        container_name: django_game
+        restart: always # 시스템 부팅 및 오류로 인한 실패 시 컨테이너 재시작
+        pull_policy: never # dockerhub등에서 이미지 받아오지 않음
+        build:
+            context: ./game/ # Dockerfile folder
+            dockerfile: Dockerfile
+        expose:
+            - "8000" # django port
+        networks:
+            - ts-network
+        env_file: .env
+
+    database:
+        image: postgres:latest
+        container_name: database
+        restart: always
+        volumes:
+            - ./database:/var/lib/postgresql/data
+        env_file:
+            - .env
+        expose:
+            - "5432" # postgresql port
+        networks:
+            - ts-network
+networks:
+    ts-network:
+        # transcendence network 생성
+        driver: bridge # bridge driver, 호스트에 노출되지 않는 네트워크를 생성
