@@ -5,7 +5,7 @@ IMAGE_NAME = mygame
 CONTAINER_NAME = mygame-container
 
 # Docker run command
-DOCKER_RUN = docker run -p 8000:8000 --name $(CONTAINER_NAME) $(IMAGE_NAME)
+DOCKER_RUN = docker run -p 443:443 --name $(CONTAINER_NAME) $(IMAGE_NAME)
 
 all: build run
 

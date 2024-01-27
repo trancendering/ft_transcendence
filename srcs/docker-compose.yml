@@ -23,7 +23,7 @@ services:
             context: ./game/ # Dockerfile folder
             dockerfile: Dockerfile
         expose:
-            - "8000" # django port
+            - "443" # django port
         networks:
             - ts-network
         env_file: .env
