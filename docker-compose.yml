@@ -1,6 +1,19 @@
 version: '3' # docker compose version
 
 services:
+    middleware:
+        image: middleware
+        container_name: middleware
+        restart: always
+        build:
+            context: ./middleware/
+            dockerfile: Dockerfile
+        ports:
+            - "443:443"
+        networks:
+            - ts-network
+        env_file: .env
+
     django_game:
         image: django_game
         container_name: django_game
@@ -9,8 +22,8 @@ services:
         build:
             context: ./game/ # Dockerfile folder
             dockerfile: Dockerfile
-        ports:
-            - "8000:8000" # host 8000 port로 연결
+        expose:
+            - "8000" # django port
         networks:
             - ts-network
         env_file: .env
