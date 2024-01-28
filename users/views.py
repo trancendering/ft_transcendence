@@ -8,17 +8,9 @@ from rest_framework import status
 from django.shortcuts import redirect
 from rest_framework.authtoken.models import Token
 import requests
+import os
 
 # Create your views here.
-
-
-# def build_response(user, message):
-#     serializer = CustomUserSerializer(user)
-#     token, created = Token.objects.get_or_create(user=user)
-#     if created:
-#         token.save()
-#     return Response({"message": message, "user": serializer.data, "token": token.key}, status=status.HTTP_200_OK)
-
 
 # 유저 생성후 자동으로 token만들어주는 로직
 # from django.conf import settings
@@ -84,7 +76,6 @@ class UserOrTokenAPIView(APIView):
         return token.key
 
 
-# 프론트에서 버튼에 링크 달아둿 처리할 것임
 class LoginAPIView(UserOrTokenAPIView):
     def get(self, request):
         user = request.user
@@ -94,8 +85,17 @@ class LoginAPIView(UserOrTokenAPIView):
                              "user": user_data,
                              "token": token_key},
                             status=status.HTTP_200_OK)
-        # TODO: 하드코딩하지 말고 env파일로 반드시 수정할 것
-        login_url = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-b6614932c6fb613e593766922c87c46c9c9f8ddce83a78e326a3f8f72da35ffd&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Foauth&response_type=code"
+
+        client_id = os.getenv('CLIENT_ID')
+        redirect_uri = os.getenv('REDIRECT_URI')
+
+        # TODO: 프론트에서 버튼에 직접 url달아서 처리하니 추후 이 부분 로직 변경
+        if not client_id or not redirect_uri:
+            return Response({"error": "Client ID or Redirect URI is not set in the environment variables."},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        login_url = f"https://api.intra.42.fr/oauth/authorize?client_id={
+            client_id}&redirect_uri={redirect_uri}&response_type=code"
         return redirect(login_url)
 
 
@@ -144,13 +144,12 @@ class OAuthCallbackAPIView(UserOrTokenAPIView):
                          "token": token_key})
 
     def get_access_token_data(self, code):
-        # TODO: env파일로 반드시 수정할 것
         data = {
             "grant_type": "authorization_code",
-            "client_id": "u-s4t2ud-b6614932c6fb613e593766922c87c46c9c9f8ddce83a78e326a3f8f72da35ffd",
-            "client_secret": "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",
+            "client_id": os.getenv("CLIENT_ID"),
+            "client_secret": os.getenv("CLIENT_SECRET"),
             "code": code,
-            "redirect_uri": "http://127.0.0.1:8000/oauth",
+            "redirect_uri": os.getenv("REDIRECT_URI"),
             "scope": "public"
         }
         try:

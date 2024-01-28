@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserOrTokenAPIView, LoginAPIView, OAuthCallbackAPIView, login, home
+from .views import UserOrTokenAPIView, LoginAPIView, OAuthCallbackAPIView, home
 
 urlpatterns = [
     # path('login/', LoginView.as_view(), name='login-url'),
