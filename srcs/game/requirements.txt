@@ -12,6 +12,7 @@ constantly==23.10.4
 cryptography==41.0.7
 daphne==4.0.0
 Django==5.0.1
+django-cors-headers==4.3.1
 djangorestframework==3.14.0
 flake8==7.0.0
 h11==0.14.0
@@ -38,5 +39,8 @@ sqlparse==0.4.4
 Twisted==23.10.0
 txaio==23.1.1
 typing_extensions==4.9.0
+tzlocal==5.2
 wsproto==1.2.0
 zope.interface==6.1
+psycopg2-binary==2.9.2
+Twisted[tls,http2]
