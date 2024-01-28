@@ -13,7 +13,15 @@ endif
 all: up
 
 # 이미지 빌드 후 컨테이너 인스턴스 생성
-up:
+	
+
+up: 
+	make -C ./srcs/frontend/ all
+
+## 도커 파일에서는 보안상의 이유 때문에 상위 디렉토리에 대한 참조가 허용되지 않는다. 
+## 그래서 복사해야만 함. 
+	rm -rf ./srcs/middleware/dist
+	cp -r ./srcs/frontend/dist ./srcs/middleware/
 	make makeDirs
 	$(DOCKER_COMPOSE) -f $(YML_PATH) up -d --build
 
@@ -36,10 +44,12 @@ build:
 # 인스턴스와 이미지 및 네트워크 등 삭제
 clean:
 	make down
+	make -C ./srcs/frontend/ 
+	rm -rf ./srcs/middleware/dist
 	docker system prune -f --all
 
 # 로컬 저장소를 포함하여 전부 삭제
-fclean:
+fclean: 
 	make clean
 	docker builder prune -f
 	sudo rm -rf $(DATA_DIR)
