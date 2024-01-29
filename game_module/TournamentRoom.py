@@ -11,6 +11,7 @@ class TournamentRoom(BaseRoom):
     def __init__(self, sio: AsyncServer, player: List[str], room_name: str, mode: str) -> None:
         super().__init__(sio, player, room_name, mode, "/tournament")
         self._winner: List[str] = []
+        self._winner_side: str = ""
         self._round = 0
 
     async def _new_game(self):
@@ -56,8 +57,10 @@ class TournamentRoom(BaseRoom):
             end_game = True
             if self._score[self._left_player] > self._score[self._right_player]:
                 self._winner.append(self._left_player)
+                self._winner_side = "left"
             else:
                 self._winner.append(self._right_player)
+                self._winner_side = "right"
         await self._server.emit(
             "updateGameScore", score_data, room=self._room_name, namespace=self._namespace
         )
@@ -78,7 +81,7 @@ class TournamentRoom(BaseRoom):
         send_info = {
             "round": self._round,
             "reason": end_reason,
-            "winnerSide": self._winner[self._round - 1]
+            "winnerSide": self._winner_side
         }
         self._game_start = False
         for player_sid in self._ready:
