@@ -3,6 +3,7 @@ from typing import List
 from socketio import AsyncServer
 
 from .GameRoom import GameRoom
+from .game_ctl import game_room
 
 
 # normal game mode waiting queue
@@ -54,8 +55,6 @@ async def _speed_game_enqueue(sio: AsyncServer, sid: str) -> None:
 
 
 async def _enter_room(sio: AsyncServer, room_name: str, player: List[str], mode: str) -> None:
-    global game_room
-
     await sio.enter_room(player[0], room_name, namespace="/single")
     await sio.enter_room(player[1], room_name, namespace="/single")
     async with sio.session(player[0], namespace="/single") as session:
@@ -66,10 +65,8 @@ async def _enter_room(sio: AsyncServer, room_name: str, player: List[str], mode:
     user2_session = await sio.get_session(player[1], namespace="/single")
     send_info = {
         "roomName": room_name,
-        "leftUserId": user1_session["intraId"],
-        "rightUserId": user2_session["intraId"],
-        "leftUserNickname": user1_session["nickname"],
-        "rightUserNickname": user2_session["nickname"],
+        "intraId": [user1_session["intraId"], user2_session["intraId"]],
+        "nickname": [user1_session["nickname"], user2_session["nickname"]],
     }
     await sio.emit("userFullEvent", send_info, room=room_name, namespace="/single")  # 플레이어 위치 정보 송신
     game_room[room_name] = GameRoom(sio, player, room_name, mode)
