@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.shortcuts import render
 from .serializers import CustomUserSerializer
 from .models import CustomUser
@@ -100,6 +100,17 @@ class LoginAPIView(UserOrTokenAPIView):
         return redirect(login_url)
 
 
+class LogOutAPIView(APIView):
+    def get(self, request):
+        user = request.user
+        if user.is_authenticated:
+            logout(request)
+            return Response({"message": "Logout successful"},
+                            status=status.HTTP_200_OK)
+        return Response({"message": "Not logged in"},
+                        status=status.HTTP_400_BAD_REQUEST)
+
+
 # TODO: 유저 생성 로직 고민, 이미 로그인 됐을 때 로직 고민
 # TODO: 유저가 로그인 이후에 42로그인만 로그아웃 하는 경우
 class OAuthCallbackAPIView(UserOrTokenAPIView):
@@ -140,10 +151,11 @@ class OAuthCallbackAPIView(UserOrTokenAPIView):
         user = self.get_or_create_user(user_info)
         login(request, user)
         token_key = self.get_or_create_token(request)
-        # return Response({"message": "OAuth successful",
-        #                  "user": self.get_user_data(request),
-        #                  "token": token_key})
-        return HttpResponseRedirect('https://127.0.0.1/')
+        return Response({"message": "OAuth successful",
+                         "user": self.get_user_data(request),
+                         "token": token_key})
+
+        # return HttpResponseRedirect('https://127.0.0.1/')
         # response = HttpResponseRedirect('http://localhost:8080')
         # response.set_cookie('token', token_key)
         # return response
