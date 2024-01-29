@@ -30,24 +30,23 @@ function setFancyBall(state, payload) {
 	return state;
 }
 
-// Set Game Status
+// game common state
 function setGameStatus(state, payload) {
 	state.gameStatus = payload.gameStatus;
 	return state;
 }
 
-// game start
-function setSocket(state, payload) {
-	state.socket = payload.socket;
+function setGameContext(state, payload) {
+	state.gameContext = payload.gameContext;
 	return state;
 }
 
-function setGameInfo(state, payload) {
-	state.gameInfo = payload.gameInfo;
+function setEndReason(state, payload) {
+	state.endReason = payload.endReason;
 	return state;
 }
 
-// real-time game update
+// game common state : real-time update
 function updateBallPosition(state, payload) {
 	state.ballPosition = payload.ballPosition;
 	return state;
@@ -73,13 +72,42 @@ function updateRightUserScore(state, payload) {
 	return state;
 }
 
-// game end
-
-function setEndReason(state, payload) {
-	state.endReason = payload.endReason;
+// tournament state
+function setRound(state, payload) {
+	state.round = payload.round;
 	return state;
 }
 
+function setTournamentPlayer(state, payload) {
+	state.tournamentPlayer = payload.tournamentPlayer;
+	return state;
+}
+
+function setTournamentScore(state, payload) {
+	state.tournamentScore = payload.tournamentScore;
+	return state;
+}
+
+function setTournamentWinner(state, payload) {
+	state.tournamentWinner = payload.tournamentWinner;
+	return state;
+}
+
+function updateTournamentScore(state, payload) {
+	const newTournamentScore = { ...state.tournamentScore };
+	newTournamentScore[payload.round] = [payload.leftScore, payload.rightScore];
+	state.tournamentScore = newTournamentScore;
+	return state;
+}
+
+function updateTournamentWinner(state, payload) {
+	const newTournamentWinner = { ...state.tournamentWinner };
+	newTournamentWinner[payload.round] = payload.winner;
+	state.tournamentWinner = newTournamentWinner;
+	return state;
+}
+
+// single game state
 function setWinner(state, payload) {
 	state.winner = payload.winner;
 	return state;
@@ -90,22 +118,27 @@ export default {
 	logIn,
 	logOut,
 	setIntraId,
-	//main
+	// main
 	setLanguage,
 	setGameMode,
 	setFancyBall,
-	// set game status
+	// game common state
 	setGameStatus,
-	// at game start
-	setSocket,
-	setGameInfo,
-	// real-time update
+	setGameContext,
+	setEndReason,
+	// game common state : real-time update
 	updateBallPosition,
 	updateLeftPaddlePosition,
 	updateRightPaddlePosition,
 	updateLeftUserScore,
 	updateRightUserScore,
-	// at game end
-	setEndReason,
+	// tournament state
+	setRound,
+	setTournamentPlayer,
+	setTournamentScore,
+	setTournamentWinner,
+	updateTournamentScore,
+	updateTournamentWinner,
+	// single game state
 	setWinner,
 };

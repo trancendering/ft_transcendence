@@ -1,3 +1,9 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
 #game-controls {
     text-align: center;
     margin-top: 20px;
@@ -34,7 +40,7 @@ canvas {
 
 .modal#statusSuccessModal .modal-content,
 .modal#statusErrorsModal .modal-content,
-.modal#opponent-waiting-modal .modal-content,
+.modal#opponentWaitingModal .modal-content,
 .modal#statusCustomizeModal .modal-content {
 
     border-radius: 30px;
@@ -42,7 +48,7 @@ canvas {
 
 .modal#statusSuccessModal .modal-content svg,
 .modal#statusErrorsModal .modal-content svg,
-.modal#opponent-waiting-modal .modal-content svg,
+.modal#opponentWaitingModal .modal-content svg,
 .modal#statusCustomizeModal .modal-content svg {
     width: 100px;
     display: block;
@@ -51,7 +57,7 @@ canvas {
 
 .modal#statusSuccessModal .modal-content .path,
 .modal#statusErrorsModal .modal-content .path,
-.modal#opponent-waiting-modal .modal-content .path,
+.modal#opponentWaitingModal .modal-content .path,
 .modal#statusCustomizeModal .modal-content .path {
     stroke-dasharray: 1000;
     stroke-dashoffset: 0;
@@ -59,7 +65,7 @@ canvas {
 
 .modal#statusSuccessModal .modal-content .path.circle,
 .modal#statusErrorsModal .modal-content .path.circle,
-.modal#opponent-waiting-modal .modal-content .path.circle,
+.modal#opponentWaitingModal .modal-content .path.circle,
 .modal#statusCustomizeModal .modal-content .path.circle {
     -webkit-animation: dash 0.9s ease-in-out;
     animation: dash 0.9s ease-in-out;
@@ -67,7 +73,7 @@ canvas {
 
 .modal#statusSuccessModal .modal-content .path.line,
 .modal#statusErrorsModal .modal-content .path.line,
-.modal#opponent-waiting-modal .modal-content .path.line,
+.modal#opponentWaitingModal .modal-content .path.line,
 .modal#statusCustomizeModal .modal-content .path.line {
     stroke-dashoffset: 1000;
     -webkit-animation: dash 0.95s 0.35s ease-in-out forwards;
@@ -76,7 +82,7 @@ canvas {
 
 .modal#statusSuccessModal .modal-content .path.check,
 .modal#statusErrorsModal .modal-content .path.check,
-.modal#opponent-waiting-modal .modal-content .path.check,
+.modal#opponentWaitingModal .modal-content .path.check,
 .modal#statusCustomizeModal .modal-content .path.check {
     stroke-dashoffset: -100;
     -webkit-animation: dash-check 0.95s 0.35s ease-in-out forwards;

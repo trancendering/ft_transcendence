@@ -7,7 +7,7 @@ export default class InvalidNicknameModal extends Component {
 	constructor(params) {
 		super({
 			store,
-			element: document.getElementById("invalid-nickname-modal"),
+			element: document.getElementById("invalidNicknameModal"),
 		});
 		this.render();
 		// store.events.subscribe("gameStatusChange", async () => this.hideInvalidNicknameModal());
@@ -16,7 +16,7 @@ export default class InvalidNicknameModal extends Component {
 	async render() {
 		const languageId = store.state.languageId;
 
-		const view = `
+		const view = /*html*/`
 			<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
 				<div class="modal-content">
 					<div class="modal-body text-center p-lg-4">
@@ -32,17 +32,17 @@ export default class InvalidNicknameModal extends Component {
 						</svg>
 						<h4 class="text-danger mt-3">${invalidNicknameModal[languageId].title}</h4>
 						<p class="mt-3">${invalidNicknameModal[languageId].description}</p>
-						<button type="button" class="btn btn-sm mt-3 btn-danger" data-bs-dismiss="modal">${invalidNicknameModal[languageId].ok}</button>
+						<button id="closeInvalidNicknameModalBtn" type="button" class="btn btn-sm mt-3 btn-danger" data-bs-dismiss="modal">${invalidNicknameModal[languageId].ok}</button>
 					</div>
 				</div>
 			</div>
 		`;
-		this.element = document.getElementById("invalid-nickname-modal");
+		this.element = document.getElementById("invalidNicknameModal");
 		this.element = this.element.innerHTML = view;
 		this.handleEvent();
 	}
 
-	async handleEvent() {}
+	async handleEvent() { }
 
 	async hideInvalidNicknameModal() {
 		if (store.state.gameStatus !== "playing") return;

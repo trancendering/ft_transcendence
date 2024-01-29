@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import redirect
 from rest_framework.authtoken.models import Token
+from django.http import HttpResponseRedirect
 import requests
 import os
 
@@ -139,9 +140,13 @@ class OAuthCallbackAPIView(UserOrTokenAPIView):
         user = self.get_or_create_user(user_info)
         login(request, user)
         token_key = self.get_or_create_token(request)
-        return Response({"message": "OAuth successful",
-                         "user": self.get_user_data(request),
-                         "token": token_key})
+        # return Response({"message": "OAuth successful",
+        #                  "user": self.get_user_data(request),
+        #                  "token": token_key})
+        return HttpResponseRedirect('https://127.0.0.1/')
+        # response = HttpResponseRedirect('http://localhost:8080')
+        # response.set_cookie('token', token_key)
+        # return response
 
     def get_access_token_data(self, code):
         data = {

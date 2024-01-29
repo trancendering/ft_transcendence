@@ -2,11 +2,13 @@
 import Main from "../components/main.js";
 import Login from "../components/login.js";
 import Game from "../components/game.js";
+import Tournament from "../components/tournament.js";
 
 const routes = [
     {path: "/", view: Main},
     {path: "/login", view: Login},
-    {path: "/game", view: Game},
+    { path: "/game", view: Game },
+    { path: "/tournament", view: Tournament },
 ];
 
 const viewCache = {};
