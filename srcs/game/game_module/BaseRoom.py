@@ -54,10 +54,10 @@ class BaseRoom:
         self._ball_speed: float = 6 if self._game_mode == "normal" else 10  # 공의 속력
         self._ball_velocity: Vector = Vector(0, 0)  # 공의 속도벡터
         self._correction_val: float = 0  # 충돌 보정값
-        self._ball_rad = 0  # 공이 날아가는 각도
-        self._kill = False  # 해당 게임 종료 여부
-        self._left_player: str = ""
-        self._right_player: str = ""
+        self._ball_rad: float = 0  # 공이 날아가는 각도
+        self._kill = False  # 해당 게임 종료 여부(일반적으로 플레이어 탈주 플래그로 사용)
+        self._left_player: str = ""  # 왼쪽 바를 움직이는 플레이어
+        self._right_player: str = ""  # 오른쪽 바를 움직이는 플레이어
 
         # 사용자에게 전송되는 게임 현재 상태 변수
         self._ball_loc: Vector = Vector(0, 0)  # ball의 위치벡터
@@ -73,6 +73,7 @@ class BaseRoom:
     async def _get_score(self, player) -> bool:
         raise NotImplementedError('Must be implemented in subclasses')
 
+    # 게임(토너먼트에선 라운드) 종료 시 호출되는 함수
     async def _game_end(self, end_reason: str) -> None:
         raise NotImplementedError('Must be implemented in subclasses')
 
@@ -84,6 +85,10 @@ class BaseRoom:
         ../game_module/game_core.py의 player_ready에서 호출됨
         """
         def _game_end_callback(task: asyncio.Future):
+            """
+            게임 비동기 루프가 끝난 경우 호출,
+            예외로 끝난 경우 예외를 출력하고 그 외에는 Game end 출력
+            """
             try:
                 task.result()
                 print("Game End!")
@@ -95,11 +100,11 @@ class BaseRoom:
         # All Ready
         if self._game_start is False and False not in self._ready.values():
             task = asyncio.create_task(self._new_game())  # 게임 시작(비동기 수행)
-            self._async_task = task  # 비동기 작업 저장, 저장하지 않으면 GC가 작업을 날려먹는다.
+            self._async_task = task  # 비동기 작업 저장, 저장하지 않으면 GC가 작업을 날려먹음
             self._async_task.add_done_callback(_game_end_callback)
             self._game_start = True
 
-    async def _state_updata_loop(self):
+    async def _state_updata_loop(self) -> bool:
         """
         게임 진행 루프를 실행하여 지속적으로 게임 상태 업데이트
         공의 궤적과 충돌을 계산하여 공의 위치를 조정함
@@ -137,7 +142,6 @@ class BaseRoom:
         """
         현재 게임 상태를 모든 플레이어에게 전파
         """
-
         now_state = {
             "ballPosition": self._ball_loc.cast_dict(),
             "leftPaddlePosition": self._bar_loc_left,
@@ -156,6 +160,9 @@ class BaseRoom:
 
             parameter
             * self: 현재 BaseRoom 객체
+
+            반환형:
+            충돌 여부 (Collusion 열거형)
             """
             # 우측에 충돌 시
             if self._ball_velocity.x > 0:
@@ -318,6 +325,8 @@ class BaseRoom:
         else:
             self._ball_loc += self._ball_velocity * (1 + self._correction_val)
             self._correction_val = 0
+
+            # 데드라인에 도달한 경우 이동을 데드라인에서 중단한 것처럼 보이게 함, 렌더링이 겹치는 것을 막기 위함
             if self._ball_loc.x < -self.FIELD_WIDTH / 2:
                 self._ball_loc -= (
                     (-self.FIELD_WIDTH/2 - self._ball_loc.x) / -self._ball_velocity.x
@@ -344,10 +353,20 @@ class BaseRoom:
         self._ball_velocity *= self._ball_speed
 
     def bar_move(self, bar_loc: float, side: str) -> None:
+        """
+        바를 움직이는 함수
+
+        parameter
+        * bar_loc: 바의 위치, 바의 중심을 기준으로 받는다
+        * side: "left", "right" 중 바가 움직이는 쪽의 방향을 받음
+        """
         if side == "left":
             self._bar_loc_left = bar_loc
         else:
             self._bar_loc_right = bar_loc
 
     def kill_room(self) -> None:
+        """
+        해당 방의 실행을 중지시킴
+        """
         self._kill = True
