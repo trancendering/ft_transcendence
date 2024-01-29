@@ -82,7 +82,10 @@ class Vector:
         """
         return {"x": self.x, "y": self.y}
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        벡터를 print하는 형식 정의, 디버깅 시 용이함
+        """
         return f"({self.x}, {self.y})"
 
     def zero(self) -> 'Vector':

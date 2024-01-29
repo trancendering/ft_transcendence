@@ -17,7 +17,7 @@ class GameRoom(BaseRoom):
     def __init__(self, sio: AsyncServer, player: List[str], room_name: str, mode: str) -> None:
         super().__init__(sio, player, room_name, mode, "/single")
 
-    async def _new_game(self):
+    async def _new_game(self) -> None:
         """
         새 게임 시작
         """

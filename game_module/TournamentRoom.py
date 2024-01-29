@@ -8,18 +8,24 @@ from .BaseRoom import BaseRoom
 
 
 class TournamentRoom(BaseRoom):
+    """
+    유저 네 명이 토너먼트 핑퐁 게임을 할 수 있는 게임방 인스턴스 정의
+
+    BaseRoom 객체를 상속받는다
+    """
     def __init__(self, sio: AsyncServer, player: List[str], room_name: str, mode: str) -> None:
         super().__init__(sio, player, room_name, mode, "/tournament")
-        self._winner: List[str] = []
-        self._winner_side: str = ""
-        self._round = 0
+        self._winner: List[str] = []  # 이긴 플레이어의 sid
+        self._winner_side: str = ""  # 직전 판에 이긴 플레이어의 방향
+        self._round: int = 0  # 현재 라운드 수
 
-    async def _new_game(self):
+    async def _new_game(self) -> None:
         """
         새 게임 시작
         """
         # 초기화 작업 여기서 시행
         self._round += 1
+        # 출전 플레이어 설정
         if self._round == 1:
             self._left_player, self._right_player = self._player[:2]
         elif self._round == 2:
@@ -70,7 +76,7 @@ class TournamentRoom(BaseRoom):
 
     async def _game_end(self, end_reason: str) -> None:
         """
-        게임이 종료되었을 경우 해당 함수 호출
+        게임(라운드)이 종료되었을 경우 해당 함수 호출
 
         parameter
         * end_reason: 종료 사유
@@ -89,6 +95,7 @@ class TournamentRoom(BaseRoom):
         await self._server.emit(
             "endGame", send_info, room=self._room_name, namespace=self._namespace
         )
+        # 토너먼트 전체 종료. 전체 종료의 경우, 연결을 끊고 방을 닫는다.
         if self._round == 3 or end_reason == "opponentLeft":
             await self._server.close_room(self._room_name, namespace=self._namespace)
             for player in self._player:

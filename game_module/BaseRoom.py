@@ -1,6 +1,6 @@
 from typing import List, Dict
 from enum import Enum
-# import random
+import random
 import asyncio
 import time
 import math
@@ -54,10 +54,10 @@ class BaseRoom:
         self._ball_speed: float = 9 if self._game_mode == "normal" else 10  # 공의 속력
         self._ball_velocity: Vector = Vector(0, 0)  # 공의 속도벡터
         self._correction_val: float = 0  # 충돌 보정값
-        self._ball_rad = 0  # 공이 날아가는 각도
-        self._kill = False  # 해당 게임 종료 여부
-        self._left_player: str = ""
-        self._right_player: str = ""
+        self._ball_rad: float = 0  # 공이 날아가는 각도
+        self._kill = False  # 해당 게임 종료 여부(일반적으로 플레이어 탈주 플래그로 사용)
+        self._left_player: str = ""  # 왼쪽 바를 움직이는 플레이어
+        self._right_player: str = ""  # 오른쪽 바를 움직이는 플레이어
 
         # 사용자에게 전송되는 게임 현재 상태 변수
         self._ball_loc: Vector = Vector(0, 0)  # ball의 위치벡터
@@ -73,6 +73,7 @@ class BaseRoom:
     async def _get_score(self, player) -> bool:
         raise NotImplementedError('Must be implemented in subclasses')
 
+    # 게임(토너먼트에선 라운드) 종료 시 호출되는 함수
     async def _game_end(self, end_reason: str) -> None:
         raise NotImplementedError('Must be implemented in subclasses')
 
@@ -84,6 +85,10 @@ class BaseRoom:
         ../game_module/game_core.py의 player_ready에서 호출됨
         """
         def _game_end_callback(task: asyncio.Future):
+            """
+            게임 비동기 루프가 끝난 경우 호출,
+            예외로 끝난 경우 예외를 출력하고 그 외에는 Game end 출력
+            """
             try:
                 task.result()
                 print("Game End!")
@@ -95,11 +100,11 @@ class BaseRoom:
         # All Ready
         if self._game_start is False and False not in self._ready.values():
             task = asyncio.create_task(self._new_game())  # 게임 시작(비동기 수행)
-            self._async_task = task  # 비동기 작업 저장, 저장하지 않으면 GC가 작업을 날려먹는다.
+            self._async_task = task  # 비동기 작업 저장, 저장하지 않으면 GC가 작업을 날려먹음
             self._async_task.add_done_callback(_game_end_callback)
             self._game_start = True
 
-    async def _state_updata_loop(self):
+    async def _state_updata_loop(self) -> bool:
         """
         게임 진행 루프를 실행하여 지속적으로 게임 상태 업데이트
         공의 궤적과 충돌을 계산하여 공의 위치를 조정함
@@ -116,12 +121,10 @@ class BaseRoom:
 
             # 우측 득점
             if self._ball_loc.x <= -self.FIELD_WIDTH / 2:
-                print("\n우측 득점!", self._ball_loc)
                 if await self._get_score(self._right_player) is True:
                     return False  # 게임 종료
             # 좌측 득점
             elif self._ball_loc.x >= self.FIELD_WIDTH / 2:
-                print("\n좌측 득점!", self._ball_loc)
                 if await self._get_score(self._left_player) is True:
                     return False  # 게임 종료
 
@@ -139,15 +142,6 @@ class BaseRoom:
         """
         현재 게임 상태를 모든 플레이어에게 전파
         """
-        # def _vector_translate(vec: Vector) -> Vector:
-        #     """
-        #     프론트와 백엔드에서 다른 좌표계를 사용할 경우, 좌표 변환을 수행한다.
-
-        #     백엔드의 경우, field의 중앙이 원점, y축이 정방향으로 되어 있는 좌표계를 사용하고
-        #     프론트의 경우 field의 좌측 상단이 원점, y축이 역방향으로 되어 있는 좌표계를 사용한다.
-        #     """
-        #     return Vector(vec.x + 400, -(vec.y - 200))
-
         now_state = {
             "ballPosition": self._ball_loc.cast_dict(),
             "leftPaddlePosition": self._bar_loc_left,
@@ -166,6 +160,9 @@ class BaseRoom:
 
             parameter
             * self: 현재 BaseRoom 객체
+
+            반환형:
+            충돌 여부 (Collusion 열거형)
             """
             # 우측에 충돌 시
             if self._ball_velocity.x > 0:
@@ -203,21 +200,18 @@ class BaseRoom:
                             else Collusion.BOT_EDGE_COLLUSION
             # 좌측에 충돌 시
             else:
-                print("\n충돌 계산??")
                 bar_top = self._bar_loc_left + self.BAR_SIZE/2
                 bar_bottom = self._bar_loc_left - self.BAR_SIZE/2
                 collusion_baseline = (
                     (-self.FIELD_WIDTH/2 - self._ball_loc.x)
                     * (self._ball_velocity.y / self._ball_velocity.x)
                     + self._ball_loc.y)
-                print("collusion_baseline", collusion_baseline)
                 top_side_bound = bar_top - (
                     self.BALL_SIZE * (self._ball_velocity.y / self._ball_velocity.x)
                 )
                 bottom_side_bound = bar_bottom - (
                     self.BALL_SIZE * (self._ball_velocity.y / self._ball_velocity.x)
                 )
-                print(top_side_bound, bottom_side_bound)
                 if self._ball_loc.x >= -self.FIELD_WIDTH/2 + self.BALL_SIZE and \
                         bottom_side_bound <= collusion_baseline <= top_side_bound:
                     return Collusion.SIDE_COLLUSION
@@ -278,28 +272,23 @@ class BaseRoom:
         # 상단 충돌
         if self._ball_velocity.y > 0 and \
                 self._ball_loc.y + self.BALL_SIZE > self.FIELD_HEIGHT / 2 - self._ball_velocity.y:
-            print("\n상단 충돌 전, v: ", self._ball_velocity, " l: ", self._ball_loc)
             ball_top = self._ball_loc.y + self.BALL_SIZE
             modified_val = ((self.FIELD_HEIGHT / 2) - ball_top) / (self._ball_velocity.y)
             self._ball_loc += self._ball_velocity * modified_val
             self._correction_val += 1 - modified_val
             self._ball_velocity.y *= -1
-            print("상단 충돌 후, v: ", self._ball_velocity, " l: ", self._ball_loc)
         # 하단 충돌
         elif self._ball_velocity.y < 0 and \
                 self._ball_loc.y - self.BALL_SIZE < -self.FIELD_HEIGHT / 2 - self._ball_velocity.y:
-            print("\n하단 충돌 전, v: ", self._ball_velocity, " l: ", self._ball_loc)
             ball_bottom = self._ball_loc.y - self.BALL_SIZE
             modified_val = ((self.FIELD_HEIGHT / 2) + ball_bottom) / (-self._ball_velocity.y)
             self._ball_loc += self._ball_velocity * modified_val
             self._correction_val += 1 - modified_val
             self._ball_velocity.y *= -1
-            print("하단 충돌 후, v: ", self._ball_velocity, " l: ", self._ball_loc)
         # 우측 바 충돌
         elif self._ball_velocity.x > 0 and \
                 self._ball_loc.x + self.BALL_SIZE > self.FIELD_WIDTH / 2 - self._ball_velocity.x and \
                 (collusion := bar_collusion(self)) is not Collusion.NO_COLLUSION:
-            print("\n우측 충돌 전, v: ", self._ball_velocity, " l: ", self._ball_loc)
             if collusion is Collusion.TOP_EDGE_COLLUSION:
                 modified_val, self._ball_loc = edge_collusion(self, self._bar_loc_right + 20)
                 self._ball_velocity = edge_collusion_velocity(self, self._bar_loc_right + 20)
@@ -314,12 +303,10 @@ class BaseRoom:
                 self._ball_loc += self._ball_velocity * modified_val
                 self._correction_val += 1 - modified_val
                 self._ball_velocity.x *= -1
-            print("우측 충돌 후, v: ", self._ball_velocity, " l: ", self._ball_loc)
         # 좌측 바 충돌
         elif self._ball_velocity.x < 0 and \
                 self._ball_loc.x - self.BALL_SIZE < -self.FIELD_WIDTH / 2 - self._ball_velocity.x and \
                 (collusion := bar_collusion(self)) is not Collusion.NO_COLLUSION:
-            print("\n좌측 충돌 전, v: ", self._ball_velocity, " l: ", self._ball_loc)
             if collusion is Collusion.TOP_EDGE_COLLUSION:
                 modified_val, self._ball_loc = edge_collusion(self, self._bar_loc_left + 20)
                 self._ball_velocity = edge_collusion_velocity(self, self._bar_loc_left + 20)
@@ -334,16 +321,12 @@ class BaseRoom:
                 self._ball_loc += self._ball_velocity * modified_val
                 self._correction_val += 1 - modified_val
                 self._ball_velocity.x *= -1
-            print("좌측 충돌 후, v: ", self._ball_velocity, " l: ", self._ball_loc)
         # 충돌하지 않음, 속도에 따른 공 위치 갱신
         else:
-            aaaa = False
-            if self._correction_val != 0:
-                print("\nself._correction_val: ", self._correction_val)
-                print("보정 충돌 전, v: ", self._ball_velocity, " l: ", self._ball_loc)
-                aaaa = True
             self._ball_loc += self._ball_velocity * (1 + self._correction_val)
             self._correction_val = 0
+
+            # 데드라인에 도달한 경우 이동을 데드라인에서 중단한 것처럼 보이게 함, 렌더링이 겹치는 것을 막기 위함
             if self._ball_loc.x < -self.FIELD_WIDTH / 2:
                 self._ball_loc -= (
                     (-self.FIELD_WIDTH/2 - self._ball_loc.x) / -self._ball_velocity.x
@@ -354,8 +337,6 @@ class BaseRoom:
                     (self._ball_loc.x - self.FIELD_WIDTH/2) / self._ball_velocity.x
                     * self._ball_velocity
                     )
-            if aaaa:
-                print("보정 충돌 후, v: ", self._ball_velocity, " l: ", self._ball_loc)
 
     def _reset_ball_velocity(self) -> None:
         """
@@ -363,22 +344,29 @@ class BaseRoom:
         이 때 공의 방향은 랜덤으로 하고, 축 방향과 적어도 10도 이상 차이나게 한다.
         축 방향과 비슷할 경우 공이 너무 단조롭게 운동할 수 있기 때문이다.
         """
-        # ball_rad = random.randrange(10, 350)
-        # while ball_rad % 90 < 20 or ball_rad % 90 > 70:
-        #     ball_rad = random.randrange(10, 350)
-        # self._ball_rad = math.radians(ball_rad)
-        self._ball_rad = math.atan2(-2, 4)
+        ball_rad = random.randrange(10, 350)
+        while ball_rad % 90 < 20 or ball_rad % 90 > 70:
+            ball_rad = random.randrange(10, 350)
+        self._ball_rad = math.radians(ball_rad)
         self._ball_velocity.x = math.cos(self._ball_rad)
         self._ball_velocity.y = math.sin(self._ball_rad)
         self._ball_velocity *= self._ball_speed
 
     def bar_move(self, bar_loc: float, side: str) -> None:
+        """
+        바를 움직이는 함수
+
+        parameter
+        * bar_loc: 바의 위치, 바의 중심을 기준으로 받는다
+        * side: "left", "right" 중 바가 움직이는 쪽의 방향을 받음
+        """
         if side == "left":
             self._bar_loc_left = bar_loc
-            print("left bar: ", self._bar_loc_left)
         else:
             self._bar_loc_right = bar_loc
-            print("right bar: ", self._bar_loc_right)
 
     def kill_room(self) -> None:
+        """
+        해당 방의 실행을 중지시킴
+        """
         self._kill = True
