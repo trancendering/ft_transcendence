@@ -82,6 +82,9 @@ class Vector:
         """
         return {"x": self.x, "y": self.y}
 
+    def __str__(self):
+        return f"({self.x}, {self.y})"
+
     def zero(self) -> 'Vector':
         """
         현재 객체를 영벡터로 변환

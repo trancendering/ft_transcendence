@@ -55,9 +55,9 @@ class TournamentRoom(BaseRoom):
         if self._score[player] >= self.ENDSCORE:
             end_game = True
             if self._score[self._left_player] > self._score[self._right_player]:
-                self._winner[self._round - 1] = self._left_player
+                self._winner.append(self._left_player)
             else:
-                self._winner[self._round - 1] = self._right_player
+                self._winner.append(self._right_player)
         await self._server.emit(
             "updateGameScore", score_data, room=self._room_name, namespace=self._namespace
         )
