@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+from dotenv import load_dotenv
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,6 +28,7 @@ SECRET_KEY = "django-insecure-*vko47^b1o*3sy=$9e$sbzh3curt4g@%o04m7o390)+=@aaq5r
 DEBUG = True
 
 ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -39,6 +42,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'rest_framework',
+    'rest_framework.authtoken',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -82,7 +88,6 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-import os
 
 DATABASES = {
     "default": {
@@ -136,3 +141,10 @@ STATIC_URL = "dist/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# 유저 추가 필드
+AUTH_USER_MODEL = 'users.CustomUser'
+# settings.py 내용 예시
+
+# .env 파일 로드
+load_dotenv()
