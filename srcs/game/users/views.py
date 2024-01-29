@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.shortcuts import render
 from .serializers import CustomUserSerializer
 from .models import CustomUser
@@ -97,6 +97,17 @@ class LoginAPIView(UserOrTokenAPIView):
         login_url = f"https://api.intra.42.fr/oauth/authorize?client_id={
             client_id}&redirect_uri={redirect_uri}&response_type=code"
         return redirect(login_url)
+
+
+class LogOutAPIView(APIView):
+    def get(self, request):
+        user = request.user
+        if user.is_authenticated:
+            logout(request)
+            return Response({"message": "Logout successful"},
+                            status=status.HTTP_200_OK)
+        return Response({"message": "Not logged in"},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 # TODO: 유저 생성 로직 고민, 이미 로그인 됐을 때 로직 고민
