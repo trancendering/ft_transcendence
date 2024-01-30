@@ -51,7 +51,7 @@ class BaseRoom:
         self._stay_state: bool = True  # 게임 진행 중단 여부(라운드 간 초기화 후 공 잠깐 멈춤)
         self._stay_time: float = time.time()  # 게임 중단 시간
         self._async_task: asyncio.Task | None = None  # 실행되는 비동기 Task
-        self._ball_speed: float = 9 if self._game_mode == "normal" else 10  # 공의 속력
+        self._ball_speed: float = 6 if self._game_mode == "normal" else 10  # 공의 속력
         self._ball_velocity: Vector = Vector(0, 0)  # 공의 속도벡터
         self._correction_val: float = 0  # 충돌 보정값
         self._ball_rad: float = 0  # 공이 날아가는 각도
