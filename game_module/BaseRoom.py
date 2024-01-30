@@ -279,6 +279,7 @@ class BaseRoom:
             self._ball_loc += self._ball_velocity * modified_val
             self._correction_val += 1 - modified_val
             self._ball_velocity.y *= -1
+            self._ball_rad = -self._ball_rad + 2 * math.pi
         # 하단 충돌
         elif self._ball_velocity.y < 0 and \
                 self._ball_loc.y - self.BALL_SIZE < -self.FIELD_HEIGHT / 2 - self._ball_velocity.y:
@@ -287,6 +288,7 @@ class BaseRoom:
             self._ball_loc += self._ball_velocity * modified_val
             self._correction_val += 1 - modified_val
             self._ball_velocity.y *= -1
+            self._ball_rad = -self._ball_rad + 2 * math.pi
         # 우측 바 충돌
         elif self._ball_velocity.x > 0 and \
                 self._ball_loc.x + self.BALL_SIZE > self.FIELD_WIDTH / 2 - self._ball_velocity.x and \
@@ -295,16 +297,25 @@ class BaseRoom:
                 modified_val, self._ball_loc = edge_collusion(self, self._bar_loc_right + 20)
                 self._ball_velocity = edge_collusion_velocity(self, self._bar_loc_right + 20)
                 self._correction_val += 1 - modified_val
+                self._ball_rad = math.atan2(self._ball_velocity.y, self._ball_velocity.x)
+                if self._ball_rad < 0:
+                    self._ball_rad += 2 * math.pi
             elif collusion is Collusion.BOT_EDGE_COLLUSION:
                 modified_val, self._ball_loc = edge_collusion(self, self._bar_loc_right - 20)
                 self._ball_velocity = edge_collusion_velocity(self, self._bar_loc_right - 20)
                 self._correction_val += 1 - modified_val
+                self._ball_rad = math.atan2(self._ball_velocity.y, self._ball_velocity.x)
+                if self._ball_rad < 0:
+                    self._ball_rad += 2 * math.pi
             else:
                 ball_right = self._ball_loc.x + self.BALL_SIZE
                 modified_val = ((self.FIELD_WIDTH / 2) - ball_right) / (self._ball_velocity.x)
                 self._ball_loc += self._ball_velocity * modified_val
                 self._correction_val += 1 - modified_val
                 self._ball_velocity.x *= -1
+                self._ball_rad = math.pi - self._ball_rad
+                if self._ball_rad < 0:
+                    self._ball_rad += 2 * math.pi
         # 좌측 바 충돌
         elif self._ball_velocity.x < 0 and \
                 self._ball_loc.x - self.BALL_SIZE < -self.FIELD_WIDTH / 2 - self._ball_velocity.x and \
@@ -313,16 +324,25 @@ class BaseRoom:
                 modified_val, self._ball_loc = edge_collusion(self, self._bar_loc_left + 20)
                 self._ball_velocity = edge_collusion_velocity(self, self._bar_loc_left + 20)
                 self._correction_val += 1 - modified_val
+                self._ball_rad = math.atan2(self._ball_velocity.y, self._ball_velocity.x)
+                if self._ball_rad < 0:
+                    self._ball_rad += 2 * math.pi
             elif collusion is Collusion.BOT_EDGE_COLLUSION:
                 modified_val, self._ball_loc = edge_collusion(self, self._bar_loc_left - 20)
                 self._ball_velocity = edge_collusion_velocity(self, self._bar_loc_left - 20)
                 self._correction_val += 1 - modified_val
+                self._ball_rad = math.atan2(self._ball_velocity.y, self._ball_velocity.x)
+                if self._ball_rad < 0:
+                    self._ball_rad += 2 * math.pi
             else:
                 ball_left = self._ball_loc.x - self.BALL_SIZE
                 modified_val = ((self.FIELD_WIDTH / 2) + ball_left) / (-self._ball_velocity.x)
                 self._ball_loc += self._ball_velocity * modified_val
                 self._correction_val += 1 - modified_val
                 self._ball_velocity.x *= -1
+                self._ball_rad = math.pi - self._ball_rad
+                if self._ball_rad < 0:
+                    self._ball_rad += 2 * math.pi
         # 충돌하지 않음, 속도에 따른 공 위치 갱신
         else:
             self._ball_loc += self._ball_velocity * (1 + self._correction_val)
@@ -332,13 +352,11 @@ class BaseRoom:
             if self._ball_loc.x < -self.FIELD_WIDTH / 2:
                 self._ball_loc -= (
                     (-self.FIELD_WIDTH/2 - self._ball_loc.x) / -self._ball_velocity.x
-                    * self._ball_velocity
-                    )
+                    * self._ball_velocity)
             elif self._ball_loc.x > self.FIELD_WIDTH / 2:
                 self._ball_loc -= (
                     (self._ball_loc.x - self.FIELD_WIDTH/2) / self._ball_velocity.x
-                    * self._ball_velocity
-                    )
+                    * self._ball_velocity)
 
     def _reset_ball_velocity(self) -> None:
         """
