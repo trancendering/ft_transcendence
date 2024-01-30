@@ -12,6 +12,8 @@ import requests
 import os
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -130,6 +132,7 @@ class LogOutAPIView(APIView):
 # TODO: 유저가 로그인 이후에 42로그인만 로그아웃 하는 경우
 class OAuthCallbackAPIView(UserOrTokenAPIView):
     def get(self, request):
+        # base_url = "https://127.0.0.1"
         # base_url = "https://127.0.0.1"
         user = request.user
         if user.is_authenticated:
