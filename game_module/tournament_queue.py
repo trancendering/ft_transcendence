@@ -21,7 +21,7 @@ async def tournament_enqueue(sio: AsyncServer, sid: str, is_speed: str) -> None:
 
     parameter
     * sid: 플레이어의 sid
-    * is_speed: "normal", "speed" 중 알맞은 게임 모드를 받음
+    * is_speed: "normal", "fast" 중 알맞은 게임 모드를 받음
     """
     if is_speed == "normal":
         await _normal_tournament_enqueue(sio, sid)
@@ -78,7 +78,7 @@ async def _speed_tournament_enqueue(sio: AsyncServer, sid: str) -> None:
             ]
         room_number = tournament_speed_room
         room_name = "tour_speed" + str(room_number)
-        await _enter_room(sio, room_name, player, "speed")
+        await _enter_room(sio, room_name, player, "fast")
 
 
 async def _enter_room(sio: AsyncServer, room_name: str, player: List[str], mode: str) -> None:
@@ -89,7 +89,7 @@ async def _enter_room(sio: AsyncServer, room_name: str, player: List[str], mode:
     * sio: 플레이하는 서버
     * room_name: 방의 이름
     * player: 플레이하는 유저의 sid 리스트
-    * mode: "normal" or "speed"
+    * mode: "normal" or "fast"
     """
     for player_sid in player:
         await sio.enter_room(player_sid, room_name, namespace="/tournament")
