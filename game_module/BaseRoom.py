@@ -96,8 +96,6 @@ class BaseRoom:
                 print(f"Error Occurred!!\nError: {e}")
 
         self._ready[sid] = True
-        if self._kill is True:
-            await self._game_end("opponentLeft")
 
         # All Ready
         if self._game_start is False and False not in self._ready.values():
@@ -385,8 +383,10 @@ class BaseRoom:
         else:
             self._bar_loc_right = bar_loc
 
-    def kill_room(self) -> None:
+    async def kill_room(self) -> None:
         """
         해당 방의 실행을 중지시킴
         """
         self._kill = True
+        if self._game_start is False:
+            await self._game_end("opponentLeft")

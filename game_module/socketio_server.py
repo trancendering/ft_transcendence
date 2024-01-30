@@ -77,7 +77,7 @@ async def disconnect_game(sid: str) -> None:
     elif session["isSpeedUp"] == "speed" and sid in speed_matching_queue:
         matching_dequeue(sio, sid, "speed")
     if "room_name" in session and session["room_name"] in game_room:
-        game_room[session["room_name"]].kill_room()
+        await game_room[session["room_name"]].kill_room()
         if session["room_name"] in game_room:
             del game_room[session["room_name"]]
 
@@ -131,7 +131,7 @@ async def disconnect_tournament(sid: str) -> None:
     elif session["isSpeedUp"] == "speed" and sid in speed_tournament_queue:
         tournament_dequeue(sio, sid, "speed")
     if "room_name" in session and session["room_name"] in game_room:
-        game_room[session["room_name"]].kill_room()
+        await game_room[session["room_name"]].kill_room()
         if session["room_name"] in game_room:
             del game_room[session["room_name"]]
 
