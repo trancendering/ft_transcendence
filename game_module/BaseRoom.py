@@ -96,6 +96,8 @@ class BaseRoom:
                 print(f"Error Occurred!!\nError: {e}")
 
         self._ready[sid] = True
+        if self._kill is True:
+            await self._game_end("opponentLeft")
 
         # All Ready
         if self._game_start is False and False not in self._ready.values():
