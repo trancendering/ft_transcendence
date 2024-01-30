@@ -21,7 +21,7 @@ async def matching_enqueue(sio: AsyncServer, sid: str, is_speed: str) -> None:
 
     parameter
     * sid: 플레이어의 sid
-    * is_speed: "normal", "speed" 중 알맞은 게임 모드를 받음
+    * is_speed: "normal", "fast" 중 알맞은 게임 모드를 받음
     """
     if is_speed == "normal":
         await _normal_game_enqueue(sio, sid)
@@ -39,7 +39,6 @@ async def _normal_game_enqueue(sio: AsyncServer, sid: str) -> None:
     """
     global game_normal_room
     global normal_matching_queue
-    global game_room
 
     normal_matching_queue.appendleft(sid)
     num_waiting = len(normal_matching_queue)
@@ -63,7 +62,6 @@ async def _speed_game_enqueue(sio: AsyncServer, sid: str) -> None:
     """
     global game_speed_room
     global speed_matching_queue
-    global game_room
 
     speed_matching_queue.appendleft(sid)
     num_waiting = len(speed_matching_queue)
@@ -73,8 +71,8 @@ async def _speed_game_enqueue(sio: AsyncServer, sid: str) -> None:
         game_speed_room += 1
         player = [speed_matching_queue.pop(), speed_matching_queue.pop()]
         room_number = game_speed_room
-        room_name = "speed" + str(room_number)
-        await _enter_room(sio, room_name, player, "speed")
+        room_name = "fast" + str(room_number)
+        await _enter_room(sio, room_name, player, "fast")
 
 
 async def _enter_room(sio: AsyncServer, room_name: str, player: List[str], mode: str) -> None:
@@ -85,7 +83,7 @@ async def _enter_room(sio: AsyncServer, room_name: str, player: List[str], mode:
     * sio: 플레이하는 서버
     * room_name: 방의 이름
     * player: 플레이하는 유저의 sid 리스트
-    * mode: "normal" or "speed"
+    * mode: "normal" or "fast"
     """
     await sio.enter_room(player[0], room_name, namespace="/single")
     await sio.enter_room(player[1], room_name, namespace="/single")
