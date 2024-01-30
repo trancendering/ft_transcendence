@@ -29,35 +29,30 @@ window.addEventListener("popstate", (event) => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (!store.state.isLoggedIn) {
-        const sessionId = document.cookie.split('; ').find(row => row.startsWith('sessionid='));
-        if (sessionId) {
-            store.dispatch("logIn");
-        } else {
-            navigateTo("/login");
-        }
-        return;
-    }
-
-	const urlParams = new URLSearchParams(window.location.search);
-	const code = urlParams.get('code');
-
-	if (window.location.pathname === "/oauth" && code) {
-		fetch("http://localhost:8000/oauth?code=" + code, {
-			method: "GET",
-			credentials: "include",
-		})
-		.then(response => response.json())
-		.then(data => {
-			if (data.status === "success") {
-				store.dispatch("logIn");
-				// navigateTo("/");
-				window.location.href = "/";
-			} else {
-				console.error(data);
-			}
-		})
-		.catch(error => console.error(error));
+	if (!store.state.isLoggedIn) {
+		fetch("/api/v1/check-login", { credentials: "include" })
+			.then((response) => {
+				if (response.redirected) {
+					throw new Error("Not logged in");
+				} else {
+					return response.json();
+				}
+			})
+			.then((data) => {
+				if (data.isLoggedIn) {
+					store.dispatch("logIn");
+					navigateTo("/");
+					console.log("login state: redirect to /");
+				} else {
+					navigateTo("/login");
+					console.log("logout state: redirect to login");
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+				navigateTo("/login");
+				console.log("logout state: redirect to login");
+			});
 	} else {
 		document.body.addEventListener("click", (event) => {
 			const targetElement = event.target.closest("[data-link]");

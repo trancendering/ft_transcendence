@@ -10,6 +10,8 @@ from rest_framework.authtoken.models import Token
 from django.http import HttpResponseRedirect
 import requests
 import os
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -23,6 +25,17 @@ import os
 # def create_auth_token(sender, instance=None, created=False, **kwargs):
 #     if created:
 #         Token.objects.create(user=instance)
+
+
+# @login_required
+# def check_login_status(request):
+#     pass
+#     # return JsonResponse({"isLoggedIn": True})
+
+def check_login_status(request):
+    if request.user.is_authenticated:
+        return JsonResponse({"isLoggedIn": True})
+    return JsonResponse({"isLoggedIn": False})
 
 
 class UserOrTokenAPIView(APIView):
@@ -77,6 +90,7 @@ class UserOrTokenAPIView(APIView):
         return token.key
 
 
+# TODO: 제출시 삭제하거나 주석처리
 class LoginAPIView(UserOrTokenAPIView):
     def get(self, request):
         user = request.user
@@ -100,6 +114,7 @@ class LoginAPIView(UserOrTokenAPIView):
         return redirect(login_url)
 
 
+# TODO: 제출시 삭제, 개발용 로그아웃
 class LogOutAPIView(APIView):
     def get(self, request):
         user = request.user
@@ -115,12 +130,16 @@ class LogOutAPIView(APIView):
 # TODO: 유저가 로그인 이후에 42로그인만 로그아웃 하는 경우
 class OAuthCallbackAPIView(UserOrTokenAPIView):
     def get(self, request):
+        # base_url = "https://127.0.0.1"
         user = request.user
         if user.is_authenticated:
-            user_data, token_key = self.get_user_data_and_token_key(request)
-            return Response({"message": "Already logged in",
-                             "user": user_data, "token": token_key},
-                            status=status.HTTP_200_OK)
+            message = "Already logged in"
+            stat = status.HTTP_200_OK
+            return HttpResponseRedirect('https://127.0.0.1')
+            # user_data, token_key = self.get_user_data_and_token_key(request)
+            # return Response({"message": "Already logged in",
+            #                  "user": user_data, "token": token_key},
+            #                 status=status.HTTP_200_OK)
 
         code = request.GET.get("code")
         error = request.GET.get("error")
@@ -132,33 +151,33 @@ class OAuthCallbackAPIView(UserOrTokenAPIView):
             else:
                 message = "OAuth failed"
                 stat = status.HTTP_500_INTERNAL_SERVER_ERROR
-            return Response({"message": message,
-                            "error": error,
-                             "error_description": error_description
-                             }, status=stat)
+            return HttpResponseRedirect('https://127.0.0.1')
+            # return Response({"message": message,
+            #                 "error": error,
+            #                  "error_description": error_description
+            #                  }, status=stat)
 
         access_token = self.get_access_token_data(code)
         if 'error' in access_token or 'access_token' not in access_token:
-            return Response({"error": "Failed to acquire token"},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return HttpResponseRedirect('https://127.0.0.1')
+            # return Response({"error": "Failed to acquire token"},
+            #                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         user_info = self.get_user_info(access_token['access_token'])
         if 'error' in user_info:
-            return Response({"error": "Failed to fetch user information"},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return HttpResponseRedirect('https://127.0.0.1')
+            # return Response({"error": "Failed to fetch user information"},
+            #                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         # user가 로그인 하지 않았으니, get_or_create로 유저 로드후 login
         user = self.get_or_create_user(user_info)
         login(request, user)
         token_key = self.get_or_create_token(request)
-        return Response({"message": "OAuth successful",
-                         "user": self.get_user_data(request),
-                         "token": token_key})
 
-        # return HttpResponseRedirect('https://127.0.0.1/')
-        # response = HttpResponseRedirect('http://localhost:8080')
-        # response.set_cookie('token', token_key)
-        # return response
+        # return Response({"message": "OAuth successful",
+        #                  "user": self.get_user_data(request),
+        #                  "token": token_key})
+        return HttpResponseRedirect('https://127.0.0.1')
 
     def get_access_token_data(self, code):
         data = {
