@@ -100,6 +100,13 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -148,3 +155,7 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 # .env 파일 로드
 load_dotenv()
+
+SESSION_COOKIE_HTTPONLY = False
+
+# LOGIN_URL='https://127.0.0.1/login'

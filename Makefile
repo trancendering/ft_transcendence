@@ -23,7 +23,8 @@ up:
 	rm -rf ./srcs/middleware/dist
 	cp -r ./srcs/frontend/dist ./srcs/middleware/
 	make makeDirs
-	$(DOCKER_COMPOSE) -f $(YML_PATH) up -d --build
+# $(DOCKER_COMPOSE) -f $(YML_PATH) up -d --build
+	$(DOCKER_COMPOSE) -f $(YML_PATH) up --build
 
 # 컨테이너 인스턴스 삭제
 down:

@@ -30,14 +30,52 @@ window.addEventListener("popstate", (event) => {
 
 document.addEventListener("DOMContentLoaded", () => {
     if (!store.state.isLoggedIn) {
+		console.log("cookie: ", document.cookie)
         const sessionId = document.cookie.split('; ').find(row => row.startsWith('sessionid='));
+
+        // const cookies = document.cookie.split(';').map(cookie => cookie.trim());
+        // const sessionCookie = cookies.find(cookie => cookie.startsWith('sessionid='));
+        // const sessionId = sessionCookie ? sessionCookie.split('=')[1] : null;
+
+		console.log("sessionid=", sessionId);
         if (sessionId) {
             store.dispatch("logIn");
+			navigateto("/");
+			console.log("login state: redirect to /");
+			console.log("sessionid=", sessionid);
         } else {
-            navigateTo("/login");
+            navigateto("/login");
+			console.log("logout state: redirect to login");
+			console.log("sessionid=", sessionid);
         }
         return;
     }
+
+	// if (!store.state.isLoggedIn) {
+	// 	fetch('/api/check-login', { credentials: 'include' })
+	// 		.then(response => {
+	// 			if (response.ok) {
+	// 				return response.json();
+	// 			} else {
+	// 				throw new Error('Not logged in');
+	// 			}
+	// 		})
+	// 		.then(data => {
+	// 			if (data.isLoggedIn) {
+	// 				store.dispatch("logIn");
+	// 				navigateTo("/");
+	// 				console.log("login state: redirect to /");
+	// 			} else {
+	// 				navigateTo("/login");
+	// 				console.log("logout state: redirect to login");
+	// 			}
+	// 		})
+	// 		.catch(error => {
+	// 			console.log(error);
+	// 			navigateTo("/login");
+	// 			console.log("logout state: redirect to login");
+	// 		});
+	// }
 
 	const urlParams = new URLSearchParams(window.location.search);
 	const code = urlParams.get('code');
