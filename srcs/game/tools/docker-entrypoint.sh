@@ -9,7 +9,8 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
         -subj "/C=KR/L=Seoul/O=42Seoul/CN=nginx" \
         > /dev/null 2>&1
 
-sleep 20
+# TODO: 고칠 수 있으면 고치기
+sleep 10
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser
