@@ -27,6 +27,8 @@ services:
         networks:
             - ts-network
         env_file: .env
+        volumes:
+            - ./game:/game
 
     database:
         image: postgres:latest
