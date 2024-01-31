@@ -15,16 +15,15 @@ all: up
 # 이미지 빌드 후 컨테이너 인스턴스 생성
 	
 
-up: refront
+up: webpack
 	make makeDirs
 	$(DOCKER_COMPOSE) -f $(YML_PATH) up -d --build
 
 # webpack 생성 및 복사 front src만 바뀌었을 때, webpack만 다시 빌드하고, nginx 재시작.
-refront :
+webpack :
 	make -C ./srcs/frontend/ all
 	rm -rf ./srcs/middleware/dist
 	cp -r ./srcs/frontend/dist ./srcs/middleware/
-	docker compose -f $(YML_PATH) restart middleware
 
 # 컨테이너 인스턴스 삭제
 down:
