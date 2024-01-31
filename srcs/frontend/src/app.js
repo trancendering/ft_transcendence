@@ -1,8 +1,9 @@
 import router, { navigateTo } from "./views/utils/router.js";
 import store from "./store/index.js";
-import './static/scss/styles.scss';
-import './static/css/styles.css';
-import 'bootstrap';
+import "./static/scss/styles.scss";
+import "./static/css/styles.css";
+import "./static/css/tournamentBracketStyle.css";
+import "bootstrap";
 
 window.addEventListener("popstate", (event) => {
 	console.log("popstat: window.location.pathname=", window.location.pathname);
@@ -11,9 +12,11 @@ window.addEventListener("popstate", (event) => {
 		event.preventDefault();
 		console.log("leave game");
 		store.dispatch("leaveGame");
-		return;
 	}
-	if (window.location.pathname === "/game" || window.location.pathname === "/tournament") {
+	if (
+		window.location.pathname === "/game" ||
+		window.location.pathname === "/tournament"
+	) {
 		event.preventDefault();
 		console.log("can't go back to game or tournament page");
 		navigateTo("/");
@@ -34,8 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	});
 
-    if (store.state.gameStatus !== "playing"
-        && window.location.pathname === "/game") {
+	if (
+		store.state.gameStatus !== "playing" &&
+		(window.location.pathname === "/game" ||
+			window.location.pathname === "/tournament")
+	) {
 		navigateTo("/");
 	} else {
 		router();

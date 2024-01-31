@@ -1,15 +1,86 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
 #game-controls {
     text-align: center;
     margin-top: 20px;
 }
 
 canvas {
-    background-color: #000;
-    display: block;
-    margin: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    outline: none;
 }
 
-#gameOverModal {
+.custom-modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.custom-modal-dialog {
+    position: relative;
+    margin: auto; /* 10% from the top and centered */
+    padding: 0;
+    width: 80%;
+    box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    border-radius: 10px;
+}
+
+.custom-modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+}
+
+/* Media Queries */
+/* Small devices (sm) */
+@media (min-width: 640px) { 
+    .custom-modal-dialog {
+        width: 60%; /* Adjusted width */
+    }
+}
+
+/* Medium devices (md) */
+@media (min-width: 768px) { 
+    .custom-modal-dialog {
+        width: 60%; /* Adjusted width */
+    }
+}
+
+/* Large devices (lg) */
+@media (min-width: 1024px) { 
+    .custom-modal-dialog {
+        width: 60%; /* Adjusted width */
+    }
+}
+
+/* Extra large devices (xl) */
+@media (min-width: 1280px) { 
+    .custom-modal-dialog {
+        width: 50%; /* Adjusted width */
+    }
+}
+
+/* 2x extra large devices (2xl) */
+@media (min-width: 1536px) { 
+    .custom-modal-dialog {
+        width: 40%; /* Adjusted width */
+    }
+}
+
+/* #gameOverModal {
     position: fixed;
     z-index: 1;
     left: 0;
@@ -18,7 +89,7 @@ canvas {
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
 }
@@ -30,11 +101,11 @@ canvas {
     border: 1px solid #888;
     width: 80%;
     text-align: center;
-}
+} */
 
 .modal#statusSuccessModal .modal-content,
 .modal#statusErrorsModal .modal-content,
-.modal#opponent-waiting-modal .modal-content,
+.modal#opponentWaitingModal .modal-content,
 .modal#statusCustomizeModal .modal-content {
 
     border-radius: 30px;
@@ -42,7 +113,7 @@ canvas {
 
 .modal#statusSuccessModal .modal-content svg,
 .modal#statusErrorsModal .modal-content svg,
-.modal#opponent-waiting-modal .modal-content svg,
+.modal#opponentWaitingModal .modal-content svg,
 .modal#statusCustomizeModal .modal-content svg {
     width: 100px;
     display: block;
@@ -51,7 +122,7 @@ canvas {
 
 .modal#statusSuccessModal .modal-content .path,
 .modal#statusErrorsModal .modal-content .path,
-.modal#opponent-waiting-modal .modal-content .path,
+.modal#opponentWaitingModal .modal-content .path,
 .modal#statusCustomizeModal .modal-content .path {
     stroke-dasharray: 1000;
     stroke-dashoffset: 0;
@@ -59,7 +130,7 @@ canvas {
 
 .modal#statusSuccessModal .modal-content .path.circle,
 .modal#statusErrorsModal .modal-content .path.circle,
-.modal#opponent-waiting-modal .modal-content .path.circle,
+.modal#opponentWaitingModal .modal-content .path.circle,
 .modal#statusCustomizeModal .modal-content .path.circle {
     -webkit-animation: dash 0.9s ease-in-out;
     animation: dash 0.9s ease-in-out;
@@ -67,7 +138,7 @@ canvas {
 
 .modal#statusSuccessModal .modal-content .path.line,
 .modal#statusErrorsModal .modal-content .path.line,
-.modal#opponent-waiting-modal .modal-content .path.line,
+.modal#opponentWaitingModal .modal-content .path.line,
 .modal#statusCustomizeModal .modal-content .path.line {
     stroke-dashoffset: 1000;
     -webkit-animation: dash 0.95s 0.35s ease-in-out forwards;
@@ -76,7 +147,7 @@ canvas {
 
 .modal#statusSuccessModal .modal-content .path.check,
 .modal#statusErrorsModal .modal-content .path.check,
-.modal#opponent-waiting-modal .modal-content .path.check,
+.modal#opponentWaitingModal .modal-content .path.check,
 .modal#statusCustomizeModal .modal-content .path.check {
     stroke-dashoffset: -100;
     -webkit-animation: dash-check 0.95s 0.35s ease-in-out forwards;
@@ -157,17 +228,15 @@ canvas {
     }
 }
 
-/
-
 /* Spinner Wrapper */
-.loader {
+/* .loader {
     width: 100vw;
     height: 100vh;
     background: #fff;
     position: fixed;
     top: 0;
     left: 0;
-}
+} */
 
 .loader-inner {
     position: absolute;
