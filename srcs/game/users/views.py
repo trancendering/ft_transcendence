@@ -40,6 +40,10 @@ def check_login_status(request):
     return JsonResponse({"isLoggedIn": False})
 
 
+def custom_404(request, exception):
+    return render(request, 'users/custom_404.html', {}, status=404)
+
+
 class UserOrTokenAPIView(APIView):
     def get(self, request):
         request_type = request.GET.get('type')
