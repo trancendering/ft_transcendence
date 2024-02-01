@@ -24,6 +24,7 @@ webpack :
 	make -C ./srcs/frontend/ all
 	rm -rf ./srcs/middleware/dist
 	cp -r ./srcs/frontend/dist ./srcs/middleware/
+	$(DOCKER_COMPOSE) -f $(YML_PATH) restart middleware
 
 # 컨테이너 인스턴스 삭제
 down:
