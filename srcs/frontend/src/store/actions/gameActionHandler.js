@@ -30,6 +30,7 @@ export default class gameActionHandler {
 	 * @description 소켓 연결
 	 * @param {object} payload {namespace, intraId, nickname, speedUp}
 	 */
+	// TODO: env 환경변수로 변경
 	async connectSocket(payload) {
 		const url = `http://localhost:8000/${payload.namespace}`;
 
