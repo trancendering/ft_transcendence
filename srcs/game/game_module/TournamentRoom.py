@@ -65,17 +65,19 @@ class TournamentRoom(BaseRoom):
         end_game = False
         if self._score[player] >= self.ENDSCORE:
             end_game = True
+            left_session = await self._server.get_session(self._left_player, namespace="/tournament")
+            right_session = await self._server.get_session(self._right_player, namespace="/tournament")
             if self._score[self._left_player] > self._score[self._right_player]:
                 self._winner.append(self._left_player)
                 self._winner_side = "left"
                 self._tournament_log.append({
                     "game_id": self._round,
                     "winner": {
-                        "name": await self._server.get_session(self._left_player, namespace="/tournament")["intraId"],
+                        "name": left_session["intraId"],
                         "score": self._score[self._left_player],
                         },
                     "loser": {
-                        "name": await self._server.get_session(self._right_player, namespace="/tournament")["intraId"],
+                        "name": right_session["intraId"],
                         "score": self._score[self._right_player],
                         },
                 })
@@ -85,11 +87,11 @@ class TournamentRoom(BaseRoom):
                 self._tournament_log.append({
                     "game_id": self._round,
                     "winner": {
-                        "name": await self._server.get_session(self._right_player, namespace="/tournament")["intraId"],
+                        "name": right_session["intraId"],
                         "score": self._score[self._right_player],
                         },
                     "loser": {
-                        "name": await self._server.get_session(self._left_player, namespace="/tournament")["intraId"],
+                        "name": left_session["intraId"],
                         "score": self._score[self._left_player],
                         },
                 })
