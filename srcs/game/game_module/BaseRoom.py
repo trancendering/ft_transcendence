@@ -147,6 +147,7 @@ class BaseRoom:
                     print("left_bar: ", self._bar_loc_left)
                     print("right_bar: ", self._bar_loc_right)
                     print("\n")
+                    raise e
         return True  # 비정상(사용자 탈주 등) 종료
 
     async def _state_send(self):
