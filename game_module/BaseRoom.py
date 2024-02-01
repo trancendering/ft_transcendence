@@ -259,7 +259,6 @@ class BaseRoom:
             b_to_e_other_basis = ball_to_edge.basis_translate(
                 norm_velocity, Vector(-norm_velocity.y, norm_velocity.x)
             )
-            print(ball_to_edge, b_to_e_other_basis)
             ball_to_edge_dencity = b_to_e_other_basis.x - math.sqrt(
                 self.BALL_SIZE ** 2 - b_to_e_other_basis.y ** 2
             )
