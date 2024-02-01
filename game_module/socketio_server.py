@@ -59,7 +59,7 @@ async def connect_game(sid: str, environ: Dict[str, str]) -> None:
 
     # 필수 키가 없는 경우 연결 거부
     for essential in ["nickname", "intraId", "isSpeedUp"]:
-        if essential not in query or _is_query_valid(essential, query["intraId"]) is False:
+        if essential not in query or _is_query_valid(essential, query[essential]) is False:
             print(f"Connection Fail: no {essential}\n")
             raise ConnectionRefusedError(f"Query has no \"{essential}\" field")
 
@@ -113,7 +113,7 @@ async def connect_tournament(sid: str, environ: Dict[str, str]) -> None:
 
     # 필수 키가 없는 경우 연결 거부
     for essential in ["nickname", "intraId", "isSpeedUp"]:
-        if essential not in query:
+        if essential not in query or _is_query_valid(essential, query[essential]) is False:
             print(f"Connection Fail: no {essential}\n")
             raise ConnectionRefusedError(f"Query has no \"{essential}\" field")
 
