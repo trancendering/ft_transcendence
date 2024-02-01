@@ -3,11 +3,8 @@ import Component from "../../library/component.js";
 import { tournamentRecord } from "../utils/languagePack.js";
 
 export default class TournamentRecord extends Component {
-	constructor(params) {
-		super({
-			store,
-			element: document.getElementById("app"),
-		});
+	constructor() {
+		super({ element: document.getElementById("app") });
 		this.render();
 		this.tournamentLogData = "";
 		this.tournamentData = "";
@@ -16,7 +13,8 @@ export default class TournamentRecord extends Component {
 
 	async render() {
 		console.log("render tournament page");
-		let languageId = store.state.languageId;
+
+		const languageId = store.state.languageId;
 		const view = /*html*/ `
             <div class="container mt-5">
                 <row>
@@ -38,27 +36,27 @@ export default class TournamentRecord extends Component {
 		await fetch("/tournament/log")
 			.then((response) => response.json())
 			.then((data) => {
-				console.log(data);
+				// console.log(data);
 				this.tournamentLogData = data;
 				this.populateTournamentList();
 			});
 	}
 
 	async populateTournamentList() {
-		let languageId = store.state.languageId;
+		const languageId = store.state.languageId;
 		// Clear any existing content
 		// Parse the tournament log data and get the tournament list container
 		try {
 			let tournamentData = this.tournamentData;
-			let tournamentLogData = this.tournamentLogData;
-			let tournamentList = this.tournamentList;
+			const tournamentLogData = this.tournamentLogData;
+			const tournamentList = this.tournamentList;
 
 			tournamentData = JSON.parse(tournamentLogData);
 			console.log(tournamentData);
 			console.log(tournamentData.tournamentLog);
 
 			tournamentData.tournamentLog.forEach((tournamentData, index) => {
-				let tournamentItem = document.createElement("li");
+				const tournamentItem = document.createElement("li");
 				tournamentItem.className =
 					"list-group-item shadow mt-4 border rounded";
 				tournamentItem.innerHTML = `<h4>Tournament ${index + 1}</h4>`;
@@ -74,8 +72,7 @@ export default class TournamentRecord extends Component {
 					});
 					tournamentItem.appendChild(gameList);
 				} else {
-					tournamentItem.innerHTML +=
-						`<p>${tournamentRecord[languageId].noGame}.</p>`;
+					tournamentItem.innerHTML += `<p>${tournamentRecord[languageId].noGame}.</p>`;
 				}
 				tournamentList.appendChild(tournamentItem);
 			});
@@ -85,7 +82,7 @@ export default class TournamentRecord extends Component {
 	}
 
 	async createGameItem(game, gameIndex) {
-		let languageId = store.state.languageId;
+		const languageId = store.state.languageId;
 		const gameItem = document.createElement("li");
 
 		gameItem.className = "list-group-item";

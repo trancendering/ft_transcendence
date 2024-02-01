@@ -9,11 +9,8 @@ import InvalidNicknameModal from "./main/invalidNicknameModal.js";
 import { main } from "../utils/languagePack.js";
 
 export default class Main extends Component {
-	constructor(params) {
-		super({
-			store,
-			element: document.getElementById("app"),
-		});
+	constructor() {
+		super({ element: document.getElementById("app") });
 
 		store.events.subscribe("languageIdChange", () => this.renderAll());
 

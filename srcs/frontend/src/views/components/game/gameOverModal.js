@@ -6,10 +6,7 @@ import FrownImg from "../../../static/img/frown.svg";
 
 export default class GameOverModal extends Component {
 	constructor() {
-		super({
-			store,
-			element: document.getElementById("gameOverModal"),
-		});
+		super({ element: document.getElementById("gameOverModal") });
 		this.render();
 		store.events.subscribe("gameStatusChange", async () =>
 			this.showModal()
@@ -47,6 +44,14 @@ export default class GameOverModal extends Component {
 	}
 
 	async handleEvent() {
+		try {
+			const buttonElement = document.getElementById("closeModalBtn");
+			if (!buttonElement) throw new Error("buttonElement is null");
+		} catch (error) {
+			console.log(error);
+			return;
+		}
+
 		document
 			.getElementById("closeModalBtn")
 			.addEventListener("click", () => {
@@ -60,6 +65,8 @@ export default class GameOverModal extends Component {
 		if (store.state.endReason === "userLeft") return;
 
 		this.render();
-		document.getElementById("gameOverModal").style.display = "flex";
+		if (this.element) {
+			this.element.style.display = "flex";
+		}
 	}
 }

@@ -4,7 +4,6 @@
  */
 export default class Component {
 	constructor(props = {}) {
-		// props.store.events.subscribe("stateChange", () => this.render());
 		this.element = props.element;
 		this.components = {};
 	}

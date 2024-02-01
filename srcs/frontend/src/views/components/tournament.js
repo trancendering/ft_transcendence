@@ -2,26 +2,21 @@ import store from "../../store/index.js";
 import Component from "../../library/component.js";
 import GameCanvas from "./game/gameCanvas.js";
 import TournamentBracketModal from "./game/tournamentBracketModal.js";
-import GameOverModal from './game/gameOverModal.js';
+import GameOverModal from "./game/gameOverModal.js";
 
 export default class Tournament extends Component {
-	constructor(params) {
-		super({
-			store,
-			element: document.getElementById("app"),
-		});
+	constructor() {
+		super({ element: document.getElementById("app") });
 		this.render();
 		this.components = {
 			gameCanvas: new GameCanvas(),
 			tournamentBracketModal: new TournamentBracketModal(),
-			gameOverModal: new GameOverModal()
+			gameOverModal: new GameOverModal(),
 		};
 	}
 
 	async render() {
 		console.log("render tournament page");
-
-		const languageId = store.state.languageId;
 
 		const view = /*html*/ `
             <div id="game-controls">

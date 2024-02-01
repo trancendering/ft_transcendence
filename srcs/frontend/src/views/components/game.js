@@ -4,11 +4,8 @@ import GameCanvas from "./game/gameCanvas.js";
 import GameOverModal from './game/gameOverModal.js';
 
 export default class Game extends Component {
-	constructor(params) {
-		super({
-			store,
-			element: document.getElementById("app"),
-		});
+	constructor() {
+		super({ element: document.getElementById("app")});
 		this.render();
 		this.components = {
 			gameCanvas: new GameCanvas(),

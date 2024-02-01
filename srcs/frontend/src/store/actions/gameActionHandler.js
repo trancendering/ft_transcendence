@@ -45,7 +45,7 @@ export default class gameActionHandler {
 	/**
 	 * @description 소켓 이벤트 핸들러 등록
 	 */
-	async bindSocketEvents() {
+	bindSocketEvents() {
 		this.socket.on("connect_error", (error) => {
 			this.printSocketError(error);
 		});
@@ -63,7 +63,7 @@ export default class gameActionHandler {
 		});
 	}
 
-	async printSocketError(error) {
+	printSocketError(error) {
 		console.error("Connection Error:", error);
 	}
 
@@ -74,15 +74,17 @@ export default class gameActionHandler {
 	/**
 	 * @description 새 게임 시작할 때, 좌/우 플레이어 점수 초기화
 	 */
-	async initScores() {
+	initScores() {
+		console.log("initScores: ");
 		this.context.commit("updateLeftUserScore", { leftUserScore: 0 });
 		this.context.commit("updateRightUserScore", { rightUserScore: 0 });
+		console.log("  left=", this.context.state.leftUserScore, " right=", this.context.state.rightUserScore);
 	}
 
 	/**
 	 * @description 새 게임 시작할 때, 볼 및 패들 위치 초기화
 	 */
-	async initPositions() {
+	initPositions() {
 		this.context.commit("updateBallPosition", {
 			ballPosition: {
 				x: 0,
@@ -100,18 +102,21 @@ export default class gameActionHandler {
 	/**
 	 * @description 새 게임 시작할 때, 게임에 참여하는 유저 및 게임룸 정보 초기화
 	 */
-	async updateGameContext() {
+	updateGameContext() {
 		const leftUserIndex = this.matchQueue[0];
 		const rightUserIndex = this.matchQueue[1];
 		const participated =
 			leftUserIndex === this.userIndex ||
 			rightUserIndex === this.userIndex;
-		this.userSide =
-			this.matchQueue.indexOf(this.userIndex) % 2 === 0
-				? Side.LEFT
-				: Side.RIGHT;
+		if (participated) {
+			this.userSide =
+				this.matchQueue.indexOf(this.userIndex) % 2 === 0
+					? Side.LEFT
+					: Side.RIGHT;
+		}
 
 		console.log("updateGameContext: ");
+		console.log("  matchQueue: ", this.matchQueue);
 		console.log(
 			`  leftUserIndex=${leftUserIndex}, rightUserIndex=${rightUserIndex}`
 		);
@@ -119,7 +124,7 @@ export default class gameActionHandler {
 		console.log(
 			`  leftUser=${this.nicknameList[leftUserIndex]}, rightUser=${this.nicknameList[rightUserIndex]}`
 		);
-		console.log(`  userSide=${this.userSide}`);
+		console.log(`  userIndex=${this.userIndex}, userSide=${this.userSide}`);
 
 		this.context.commit("setGameContext", {
 			gameContext: {
@@ -136,7 +141,7 @@ export default class gameActionHandler {
 	 * @description 볼 위치와 패들 위치 업데이트
 	 * @param {object} payload {ballPosition: {x, y}, leftPaddlePosition, rightPaddlePosition}
 	 */
-	async updateGameState(payload) {
+	updateGameState(payload) {
 		const gameContext = this.context.state.gameContext;
 
 		this.context.commit("updateBallPosition", {
@@ -165,7 +170,7 @@ export default class gameActionHandler {
 	 * @description 현재 게임 중인 좌/우 플레이어의 점수 업데이트
 	 * @param {object} payload {leftUserScore, rightUserScore}
 	 */
-	async updateGameScore(payload) {
+	updateGameScore(payload) {
 		console.log(
 			"updateGameScore: left=",
 			payload.leftUserScore,
@@ -186,6 +191,8 @@ export default class gameActionHandler {
 	async emitUserReadyEvent() {
 		const state = this.context.state;
 
+		// if (!this.socket)
+		// 	return;
 		this.socket.emit("userReadyEvent", {
 			roomName: state.gameContext.roomName,
 		});
@@ -209,6 +216,8 @@ export default class gameActionHandler {
 				rightPaddlePosition: paddlePosition,
 			});
 		}
+		// if (!this.socket)
+			// return;
 		this.socket.emit("updatePaddlePosition", {
 			roomName: state.gameContext.roomName,
 			userSide: state.gameContext.userSide,

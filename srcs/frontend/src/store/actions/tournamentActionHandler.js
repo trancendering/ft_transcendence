@@ -31,7 +31,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 	 * @description fullUserEvent 수신 후, tournament 모드 게임 시작 시 호출되는 함수.
 	 * @param {object} payload { roomName, intraId, nickname}
 	 */
-	async startGame(payload) {
+	startGame(payload) {
 		console.log("EVENT: userFullEvent: tournamentActionHandler.startGame");
 		const state = this.context.state;
 
@@ -48,6 +48,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 		this.initTournamentScores();
 		this.initTournamentWinners();
 		this.updateGameContext();
+		this.context.commit("setEndReason", { endReason: "normal" });
 
 		// 게임 페이지로 이동
 		navigateTo("/tournament");
@@ -57,10 +58,11 @@ export default class tournamentActionHandler extends GameActionHandler {
 	/**
 	 * @description tournamentBracketModal이 뜬 이후, 매 라운드 시작 시 호출되는 함수.
 	 */
-	async startRound() {
+	startRound() {
 		this.initScores();
 		this.initPositions();
-		await this.updateGameContext();
+		this.updateGameContext();
+
 		this.context.commit("setGameStatus", { gameStatus: "playing" });
 	}
 
@@ -69,7 +71,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 	 *              다만, round가 마지막 라운드일 경우에는 호출되지 않는다.
 	 * @param {object} payload {round, reason, winnerSide}
 	 */
-	async endRound(payload) {
+	endRound(payload) {
 		const state = this.context.state;
 		console.log("EVENT: endGame: tournamentActionHandler.endRound");
 
@@ -82,7 +84,6 @@ export default class tournamentActionHandler extends GameActionHandler {
 		const winnerIndex =
 			this.matchQueue[payload.winnerSide === Side.LEFT ? 0 : 1];
 		this.matchQueue = this.matchQueue.slice(2);
-		console.log("this.matchQueue: ", this.matchQueue);
 		this.matchQueue.push(winnerIndex);
 		this.context.commit("updateTournamentWinner", {
 			round: payload.round,
@@ -98,7 +99,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 	 *              게임이 종료하는 경우 호출되는 함수.
 	 * @param {object} payload {round, reason, winnerSide}
 	 */
-	async endGame(payload) {
+	endGame(payload) {
 		console.log("EVENT: endGame: tournamentActionHandler.endGame");
 		console.log(" round: ", payload.round, " reason: ", payload.reason);
 		console.log(" winnerSide: ", payload.winnerSide);
@@ -118,7 +119,10 @@ export default class tournamentActionHandler extends GameActionHandler {
 			this.socket = null;
 		}
 		this.context.commit("setEndReason", { endReason: payload.reason });
-		if (state.endReason === "opponentLeft" || state.endReason === "userLeft") {
+		if (
+			state.endReason === "opponentLeft" ||
+			state.endReason === "userLeft"
+		) {
 			this.context.commit("setGameStatus", { gameStatus: "ended" });
 		}
 	}
@@ -126,15 +130,16 @@ export default class tournamentActionHandler extends GameActionHandler {
 	/**
 	 * @description tournament 참여자의 닉네임을 리스트 형태로 tournamentPlayer에 저장
 	 */
-	async initTournamentPlayers() {
+	initTournamentPlayers() {
 		this.context.commit("setTournamentPlayer", {
 			tournamentPlayer: this.nicknameList,
 		});
 	}
+
 	/**
 	 * @description round별로 tournament 참여자의 점수를 초기화
 	 */
-	async initTournamentScores() {
+	initTournamentScores() {
 		this.context.commit("setTournamentScore", {
 			tournamentScore: {
 				round1: ["-", "-"],
@@ -147,7 +152,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 	/**
 	 * @description round별로 tournament 참여자의 우승자를 초기화
 	 */
-	async initTournamentWinners() {
+	initTournamentWinners() {
 		this.context.commit("setTournamentWinner", {
 			tournamentWinner: {
 				round1: "-",

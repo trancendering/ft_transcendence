@@ -30,7 +30,7 @@ export default class singleGameActionHandler extends GameActionHandler {
 	 * @description fullUserEvent 수신 후, single 모드 게임 시작 시 호출되는 함수.
 	 * @param {object} payload { namespace, intraId, nickname, speedUp}
 	 */
-	async startGame(payload) {
+	startGame(payload) {
 		console.log("EVENT: userFullEvent: singleGameActionHandler.startGame");
 
 		const state = this.context.state;
@@ -45,6 +45,7 @@ export default class singleGameActionHandler extends GameActionHandler {
 		this.initScores();
 		this.initPositions();
 		this.updateGameContext();
+		this.context.commit("setEndReason", { endReason: "normal" });
 
 		console.log("  roomName=", payload.roomName);
 		console.log("  intraId=", payload.intraId);
@@ -61,7 +62,7 @@ export default class singleGameActionHandler extends GameActionHandler {
 	 * @description single 게임 모드에서 userFullEvent 발생 시 호출되는 함수.
 	 * @param {object} payload {reason}
 	 */
-	async endGame(payload) {
+	endGame(payload) {
 		console.log("EVENT: endGame: singleGameActionHandler.endGame");
 		console.log(" reason=", payload.reason);
 

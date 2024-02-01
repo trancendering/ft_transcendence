@@ -4,10 +4,7 @@ import Component from "../../../library/component.js";
 
 export default class TournamentBracketModal extends Component {
 	constructor() {
-		super({
-			store,
-			element: document.getElementById("tournamentBracketModal"),
-		});
+		super({ element: document.getElementById("tournamentBracketModal") });
 		this.render();
 		store.events.subscribe("roundChange", () =>
 			this.showTournamentBracketModal()
@@ -121,7 +118,10 @@ export default class TournamentBracketModal extends Component {
 		modal.style.display = "none";
 
 		// 해당 라운드 게임을 시작한다
-		if (store.state.round < 4) store.dispatch("startRound");
-		else store.dispatch("setGameStatus", { gameStatus: "ended" });
+		if (store.state.endReason === "normal" && store.state.round <= 3) {
+			store.dispatch("startRound");
+		} else {
+			store.dispatch("setGameStatus", { gameStatus: "ended" });
+		}
 	}
 }

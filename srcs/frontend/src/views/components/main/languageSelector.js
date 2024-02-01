@@ -4,17 +4,14 @@ import { languageSelector } from "../../utils/languagePack.js";
 
 export default class LanguageSelector extends Component {
 	constructor() {
-		super({
-			store,
-			element: document.getElementById("languageSelector"),
-		});
+		super({ element: document.getElementById("languageSelector") });
 		this.render();
 	}
 
 	async render() {
 		const languageId = store.state.languageId;
 
-		const view = `
+		const view = /*html*/ `
             <div class="dropdown position-absolute top-0 end-0">
                 <button class="btn dropdown-toggle mt-3 me-3" type="button" id="languageMenu" data-bs-toggle="dropdown" aria-expanded="false">
                 	${languageSelector[languageId].language}
@@ -45,7 +42,10 @@ export default class LanguageSelector extends Component {
 				// Change Language State
 				store.dispatch("setLanguage", { languageId });
 
-				const csrfToken = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
+				const csrfToken = document.cookie
+					.split("; ")
+					.find((row) => row.startsWith("csrftoken="))
+					.split("=")[1];
 
 				// Language Change Post Request
 				try {
