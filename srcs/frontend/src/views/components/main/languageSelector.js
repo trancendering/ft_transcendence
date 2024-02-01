@@ -17,9 +17,9 @@ export default class LanguageSelector extends Component {
                 	${languageSelector[languageId].language}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#" data-language-id="en">${languageSelector[languageId].english}</a></li>
-                    <li><a class="dropdown-item" href="#" data-language-id="ko">${languageSelector[languageId].korean}</a></li>
-                    <li><a class="dropdown-item" href="#" data-language-id="zh">${languageSelector[languageId].chinese}</a></li>
+                    <li><a class="dropdown-item" data-link href="" data-language-id="en">${languageSelector[languageId].english}</a></li>
+                    <li><a class="dropdown-item" data-link href="" data-language-id="ko">${languageSelector[languageId].korean}</a></li>
+                    <li><a class="dropdown-item" data-link href="" data-language-id="zh">${languageSelector[languageId].chinese}</a></li>
                 </ul>
             </div>
         `;
