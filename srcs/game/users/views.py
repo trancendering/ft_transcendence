@@ -11,7 +11,6 @@ from django.http import HttpResponseRedirect
 import requests
 import os
 from django.http import JsonResponse
-import json
 
 # Create your views here.
 
@@ -52,7 +51,7 @@ class UserAPIView(APIView):
 
     def get_user_data(self, request):
         if not request.user.is_authenticated:
-            return json.dumps({"user": "AnonymousUser"})
+            return Response({"user": "AnonymousUser"})
         user_serializer = CustomUserSerializer(request.user)
         return user_serializer.data
 
@@ -75,22 +74,18 @@ class UserAPIView(APIView):
 
 
 # TODO: 제출시 삭제하거나 주석처리
-class LoginAPIView(UserOrTokenAPIView):
+class LoginAPIView(UserAPIView):
     def get(self, request):
+        main_url = os.getenv('MAIN_URL')
         user = request.user
         if user.is_authenticated:
-            user_data, token_key = self.get_user_data_and_token_key(request)
-            return Response({"message": "Already logged in",
-                             "user": user_data,
-                             "token": token_key},
-                            status=status.HTTP_200_OK)
+            return redirect(main_url)
 
         client_id = os.getenv('CLIENT_ID')
         redirect_uri = os.getenv('REDIRECT_URI')
 
         if not client_id or not redirect_uri:
-            return Response({"error": "Client ID or Redirect URI is not set in the environment variables."},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return redirect(main_url)
 
         login_url = f"https://api.intra.42.fr/oauth/authorize?client_id={
             client_id}&redirect_uri={redirect_uri}&response_type=code"
@@ -199,7 +194,7 @@ class LogOutAPIView(APIView):
 
 # TODO: 유저 생성 로직 고민, 이미 로그인 됐을 때 로직 고민
 # TODO: 유저가 로그인 이후에 42로그인만 로그아웃 하는 경우
-class OAuthCallbackAPIView(UserOrTokenAPIView):
+class OAuthCallbackAPIView(UserAPIView):
     def get(self, request):
         main_url = os.getenv('MAIN_URL')
         user = request.user
@@ -251,24 +246,33 @@ class OAuthCallbackAPIView(UserOrTokenAPIView):
         login = user_info.get('login')
         email = user_info.get('email')
         user, created = CustomUser.objects.get_or_create(
-            intraId=login, defaults={'email': email}
+            intraId=login, defaults={'username': login, 'email': email}
         )
         if created:
             user.save()
         return user
 
 
-# def change_language(APIView):
-#     def post(self, request):
-#         user = request.user
-#         if user.is_authenticated:
-#             user.preferred_language = request.data['language']
-#             user.save()
-#             return Response({"message": "Language changed successfully",
-#                              "user": self.get_user_data(request)},
-#                             status=status.HTTP_200_OK)
-#         return Response({"message": "Not logged in"},
-#                         status=status.HTTP_400_BAD_REQUEST)
+class LanguageAPIView(APIView):
+    def get(self, reqeust):
+        main_url = os.getenv('MAIN_URL')
+        return redirect(main_url)
+
+    def post(self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return Response({"message": "Not logged in"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        new_language = request.data.get('languageId')
+        if new_language not in dict(CustomUser.preferred_language.field.choices):
+            return Response({"message": "Invalid language choice"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        user.preferred_language = new_language
+        user.save()
+        return Response({"message": "Language changed successfully",
+                         "user": CustomUserSerializer(user).data},
+                        status=status.HTTP_200_OK)
 
 
 def home(request):
