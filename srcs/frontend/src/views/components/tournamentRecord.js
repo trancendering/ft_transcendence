@@ -1,17 +1,11 @@
 import store from "../../store/index.js";
 import Component from "../../library/component.js";
 import { tournamentRecord } from "../utils/languagePack.js";
-import LanguageSelector from "./main/languageSelector.js";
-import mainButton from "./record/mainButton.js";
 
 export default class TournamentRecord extends Component {
 	constructor() {
 		super({ element: document.getElementById("app") });
 		this.render();
-		this.components = {
-			languageSelector: new LanguageSelector(),
-			mainButton: new mainButton(),
-		};
 		this.tournamentLogData = "";
 		this.tournamentData = "";
 		this.tournamentList = document.getElementById("tournamentList");
@@ -22,18 +16,6 @@ export default class TournamentRecord extends Component {
 
 		const languageId = store.state.languageId;
 		const view = /*html*/ `
-
-			<!-- Navbar -->
-			<nav class="navbar navbar-light bg-light">
-			<form class="form-inline">
-					<!-- Language Dropdown -->
-					<div id="languageSelector"></div>
-
-					<!-- Tournament Record -->
-					<div id="mainBtn"></div>
-				</form>
-			</nav>
-
             <div class="container mt-5">
                 <row>
                     <div class="col-md-12 mb-5 mt-4 d-flex align-items-center justify-content-center">
@@ -47,7 +29,6 @@ export default class TournamentRecord extends Component {
         `;
 
 		this.element.innerHTML = view;
-		this.tournamentList = document.getElementById("tournamentList");
 		this.getTournamentLog();
 	}
 
@@ -100,7 +81,7 @@ export default class TournamentRecord extends Component {
 		}
 	}
 
-	createGameItem(game, gameIndex) {
+	async createGameItem(game, gameIndex) {
 		const languageId = store.state.languageId;
 		const gameItem = document.createElement("li");
 
@@ -109,29 +90,8 @@ export default class TournamentRecord extends Component {
 			// gameItem.classList.add('bg-secondary');
 			gameItem.classList.add("text-primary"); // Bootstrap 클래스를 사용하여 배경색 변경
 		}
-		const winnerTemplate = /*html*/ `
-		<div class="row">
-			<div class="col-md-6">
-				<strong>${tournamentRecord[languageId].winner}:</strong>
-				<span class="name">${game.winner.name}</span>
-			</div>
-			<div class="col-md-6">
-				<strong>${tournamentRecord[languageId].score}:</strong>
-				<span class="score">${game.winner.score}</span>
-			</div>
-		</div>`;
-		const loserTemplate = /*html*/ `
-		<div class="row">
-			<div class="col-md-6">
-				<strong>${tournamentRecord[languageId].loser}:</strong>
-				<span class="name">${game.loser.name}</span>
-			</div>
-			<div class="col-md-6">
-				<strong>${tournamentRecord[languageId].score}:</strong>
-				<span class="score">${game.loser.score}</span>
-			</div>
-		</div>`;
-
+		const winnerTemplate = /*html*/ `<strong>${tournamentRecord[languageId].winner}:</strong> <span class="name">${game.winner.name}</span>, <span class="score">${tournamentRecord[languageId].score}: ${game.winner.score}</span>`;
+		const loserTemplate = /*html*/ `<strong>${tournamentRecord[languageId].loser}:</strong> <span class="name">${game.loser.name}</span>, <span class="score">${tournamentRecord[languageId].score}: ${game.loser.score}</span>`;
 		gameItem.innerHTML = /*html*/ `
             <div class="game-item">
                 <div class="text-start game-id">${tournamentRecord[languageId].gameId} ${game.game_id}</div>
@@ -139,7 +99,5 @@ export default class TournamentRecord extends Component {
                 <div class="text-start loser">${loserTemplate}</div>
             </div>
           `;
-
-		return gameItem;
 	}
 }

@@ -31,7 +31,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 	 * @description fullUserEvent 수신 후, tournament 모드 게임 시작 시 호출되는 함수.
 	 * @param {object} payload { roomName, intraId, nickname}
 	 */
-	startGame(payload) {
+	async startGame(payload) {
 		console.log("EVENT: userFullEvent: tournamentActionHandler.startGame");
 		const state = this.context.state;
 
@@ -99,7 +99,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 	 *              게임이 종료하는 경우 호출되는 함수.
 	 * @param {object} payload {round, reason, winnerSide}
 	 */
-	endGame(payload) {
+	async endGame(payload) {
 		console.log("EVENT: endGame: tournamentActionHandler.endGame");
 		console.log(" round: ", payload.round, " reason: ", payload.reason);
 		console.log(" winnerSide: ", payload.winnerSide);

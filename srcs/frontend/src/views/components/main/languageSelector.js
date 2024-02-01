@@ -19,7 +19,7 @@ export default class LanguageSelector extends Component {
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
                     <li><a class="dropdown-item" href="#" data-language-id="en">${languageSelector[languageId].english}</a></li>
                     <li><a class="dropdown-item" href="#" data-language-id="ko">${languageSelector[languageId].korean}</a></li>
-                    <li><a class="dropdown-item" href="#" data-language-id="ch">${languageSelector[languageId].chinese}</a></li>
+                    <li><a class="dropdown-item" href="#" data-language-id="zh">${languageSelector[languageId].chinese}</a></li>
                 </ul>
             </div>
         `;
@@ -36,7 +36,7 @@ export default class LanguageSelector extends Component {
 				// Prevent Default Link Behavior
 				event.preventDefault();
 
-				// Get Language Id (en, ko, ch)
+				// Get Language Id (en, ko, zh)
 				const languageId = item.dataset.languageId;
 
 				// Change Language State

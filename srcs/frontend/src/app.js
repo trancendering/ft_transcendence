@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		try {
 			await checkLoginStatus();
 		} catch (error) {
-			console.error(error);
+			console.log(error);
 			navigateTo("/login");
 			return;
 		}
@@ -62,8 +62,8 @@ async function setUserInfo() {
 
 	const data = await response.json();
 
-	store.dispatch("setIntraId", { intraId: data.intraId });
-	store.dispatch("setLanguage", { languageId: data.preferred_language });
+	store.dispatch("setIntraId", { intraId: data.user.intraId });
+	store.dispatch("setLanguage", { languageId: data.user.preferred_language });
 }
 
 async function checkLoginStatus() {

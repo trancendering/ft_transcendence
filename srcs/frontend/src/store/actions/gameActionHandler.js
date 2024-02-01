@@ -30,9 +30,8 @@ export default class gameActionHandler {
 	 * @description 소켓 연결
 	 * @param {object} payload {namespace, intraId, nickname, speedUp}
 	 */
-	// TODO: env 환경변수로 변경
 	async connectSocket(payload) {
-		const url = `http://localhost:8000/${payload.namespace}`;
+		const url = `https://localhost/${payload.namespace}`;
 
 		this.socket = io(url, {
 			query: {
@@ -192,8 +191,8 @@ export default class gameActionHandler {
 	async emitUserReadyEvent() {
 		const state = this.context.state;
 
-		// if (!this.socket)
-		// 	return;
+		if (!this.socket)
+			return;
 		this.socket.emit("userReadyEvent", {
 			roomName: state.gameContext.roomName,
 		});
@@ -217,8 +216,8 @@ export default class gameActionHandler {
 				rightPaddlePosition: paddlePosition,
 			});
 		}
-		// if (!this.socket)
-			// return;
+		if (!this.socket)
+			return;
 		this.socket.emit("updatePaddlePosition", {
 			roomName: state.gameContext.roomName,
 			userSide: state.gameContext.userSide,
