@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect
 import requests
 import os
 from django.http import JsonResponse
+import json
 
 # Create your views here.
 
@@ -25,15 +26,9 @@ def custom_404(request, exception):
     return render(request, 'users/custom_404.html', {}, status=404)
 
 
-class UserOrTokenAPIView(APIView):
+class UserAPIView(APIView):
     def get(self, request):
-        request_type = request.GET.get('type')
-        if request_type == "user":
-            return self.api_get_user(request)
-        if request_type == "token":
-            return self.api_get_token(request)
-        return Response({"message": "Invalid type"},
-                        status=status.HTTP_400_BAD_REQUEST)
+        return self.api_get_user(request)
 
     def api_get_user(self, request):
         return Response({"message": "Get user success",
@@ -56,6 +51,8 @@ class UserOrTokenAPIView(APIView):
         return user_data, token_key
 
     def get_user_data(self, request):
+        if not request.user.is_authenticated:
+            return json.dumps({"user": "AnonymousUser"})
         user_serializer = CustomUserSerializer(request.user)
         return user_serializer.data
 
