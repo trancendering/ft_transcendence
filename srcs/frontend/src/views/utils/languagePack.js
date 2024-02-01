@@ -210,3 +210,15 @@ export const tournamentRecordButton = {
 		record: "锦标赛记录",
 	},
 }
+
+export const mainButton = {
+	en: {
+		main: "Main",
+	},
+	ko: {
+		main: "메인",
+	},
+	ch: {
+		main: "主页",
+	},
+}
