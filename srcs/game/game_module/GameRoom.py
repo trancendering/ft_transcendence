@@ -23,6 +23,7 @@ class GameRoom(BaseRoom):
         """
         # 초기화 작업 여기서 시행
         self._left_player, self._right_player = self._player
+        self._bar_loc_left, self._bar_loc_right = 0, 0
         self._ball_loc.zero()
         self._reset_ball_velocity()
         await asyncio.sleep(0.5)

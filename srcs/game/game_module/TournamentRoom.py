@@ -34,6 +34,7 @@ class TournamentRoom(BaseRoom):
             self._left_player, self._right_player = self._winner[:2]
         self._score[self._left_player] = 0
         self._score[self._right_player] = 0
+        self._bar_loc_left, self._bar_loc_right = 0, 0
         self._ball_loc.zero()
         self._reset_ball_velocity()
         await asyncio.sleep(0.5)

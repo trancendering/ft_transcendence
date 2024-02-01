@@ -93,7 +93,7 @@ class BaseRoom:
                 task.result()
                 print("Game End!")
             except Exception as e:
-                print(f"Error Occurred!!\nError: {e}")
+                print(f"Error Occurred!!\nError: {e.with_traceback()}")
 
         self._ready[sid] = True
 
@@ -135,7 +135,18 @@ class BaseRoom:
                 else:
                     self._ball_loc.zero()  # 공의 위치 고정
             else:
-                self._ball_move_update()  # 공 위치 갱신
+                try:
+                    self._ball_move_update()  # 공 위치 갱신
+                except Exception as e:
+                    print("\n")
+                    print(e.with_traceback())
+                    print("ball_velo: ", self._ball_velocity)
+                    print("ball_loc: ", self._ball_loc)
+                    print("ball_rad: ", self._ball_rad)
+                    print("correction_val: ", self._correction_val)
+                    print("left_bar: ", self._bar_loc_left)
+                    print("right_bar: ", self._bar_loc_right)
+                    print("\n")
         return True  # 비정상(사용자 탈주 등) 종료
 
     async def _state_send(self):
