@@ -13,6 +13,8 @@ services:
         networks:
             - ts-network
         env_file: .env
+        volumes:
+            - ./middleware/dist:/var/www/html/dist/
 
     django_game:
         image: django_game
