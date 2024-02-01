@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -17,23 +18,31 @@ canvas {
 }
 
 .custom-modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
 }
 
 .custom-modal-dialog {
     position: relative;
-    margin: auto; /* 10% from the top and centered */
+    margin: auto;
+    /* 10% from the top and centered */
     padding: 0;
     width: 80%;
-    box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
     border-radius: 10px;
 }
 
@@ -46,37 +55,42 @@ canvas {
 
 /* Media Queries */
 /* Small devices (sm) */
-@media (min-width: 640px) { 
+@media (min-width: 640px) {
     .custom-modal-dialog {
-        width: 60%; /* Adjusted width */
+        width: 60%;
+        /* Adjusted width */
     }
 }
 
 /* Medium devices (md) */
-@media (min-width: 768px) { 
+@media (min-width: 768px) {
     .custom-modal-dialog {
-        width: 60%; /* Adjusted width */
+        width: 60%;
+        /* Adjusted width */
     }
 }
 
 /* Large devices (lg) */
-@media (min-width: 1024px) { 
+@media (min-width: 1024px) {
     .custom-modal-dialog {
-        width: 60%; /* Adjusted width */
+        width: 60%;
+        /* Adjusted width */
     }
 }
 
 /* Extra large devices (xl) */
-@media (min-width: 1280px) { 
+@media (min-width: 1280px) {
     .custom-modal-dialog {
-        width: 50%; /* Adjusted width */
+        width: 50%;
+        /* Adjusted width */
     }
 }
 
 /* 2x extra large devices (2xl) */
-@media (min-width: 1536px) { 
+@media (min-width: 1536px) {
     .custom-modal-dialog {
-        width: 40%; /* Adjusted width */
+        width: 40%;
+        /* Adjusted width */
     }
 }
 
@@ -166,6 +180,7 @@ canvas {
     0% {
         stroke-dashoffset: 1000;
     }
+
     100% {
         stroke-dashoffset: 0;
     }
@@ -175,6 +190,7 @@ canvas {
     0% {
         stroke-dashoffset: 1000;
     }
+
     100% {
         stroke-dashoffset: 0;
     }
@@ -184,6 +200,7 @@ canvas {
     0% {
         stroke-dashoffset: 1000;
     }
+
     100% {
         stroke-dashoffset: 0;
     }
@@ -193,6 +210,7 @@ canvas {
     0% {
         stroke-dashoffset: 1000;
     }
+
     100% {
         stroke-dashoffset: 0;
     }
@@ -202,6 +220,7 @@ canvas {
     0% {
         stroke-dashoffset: -100;
     }
+
     100% {
         stroke-dashoffset: 900;
     }
@@ -211,6 +230,7 @@ canvas {
     0% {
         stroke-dashoffset: -100;
     }
+
     100% {
         stroke-dashoffset: 900;
     }
@@ -250,24 +270,31 @@ canvas {
 .lds-roller {
     display: inline-block;
     position: relative;
-    width: 92.16px; /* 76.8px * 1.2 */
-    height: 92.16px; /* 76.8px * 1.2 */
+    width: 92.16px;
+    /* 76.8px * 1.2 */
+    height: 92.16px;
+    /* 76.8px * 1.2 */
 }
 
 .lds-roller div {
     animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    transform-origin: 46.08px 46.08px; /* 38.4px * 1.2 */
+    transform-origin: 46.08px 46.08px;
+    /* 38.4px * 1.2 */
 }
 
 .lds-roller div:after {
     content: " ";
     display: block;
     position: absolute;
-    width: 8.64px; /* 7.2px * 1.2 */
-    height: 8.64px; /* 7.2px * 1.2 */
-    border-radius: 60%; /* 50% * 1.2 */
+    width: 8.64px;
+    /* 7.2px * 1.2 */
+    height: 8.64px;
+    /* 7.2px * 1.2 */
+    border-radius: 60%;
+    /* 50% * 1.2 */
     background: #333;
-    margin: -4.32px 0 0 -4.32px; /* -3.6px * 1.2 */
+    margin: -4.32px 0 0 -4.32px;
+    /* -3.6px * 1.2 */
 }
 
 .lds-roller div:nth-child(1) {
@@ -275,8 +302,10 @@ canvas {
 }
 
 .lds-roller div:nth-child(1):after {
-    top: 72px; /* 60px * 1.2 */
-    left: 72px; /* 60px * 1.2 */
+    top: 72px;
+    /* 60px * 1.2 */
+    left: 72px;
+    /* 60px * 1.2 */
 }
 
 .lds-roller div:nth-child(2) {
@@ -284,8 +313,10 @@ canvas {
 }
 
 .lds-roller div:nth-child(2):after {
-    top: 77.76px; /* 64.8px * 1.2 */
-    left: 64.8px; /* 54px * 1.2 */
+    top: 77.76px;
+    /* 64.8px * 1.2 */
+    left: 64.8px;
+    /* 54px * 1.2 */
 }
 
 .lds-roller div:nth-child(3) {
@@ -293,8 +324,10 @@ canvas {
 }
 
 .lds-roller div:nth-child(3):after {
-    top: 82.08px; /* 68.4px * 1.2 */
-    left: 56.16px; /* 46.8px * 1.2 */
+    top: 82.08px;
+    /* 68.4px * 1.2 */
+    left: 56.16px;
+    /* 46.8px * 1.2 */
 }
 
 .lds-roller div:nth-child(4) {
@@ -302,8 +335,10 @@ canvas {
 }
 
 .lds-roller div:nth-child(4):after {
-    top: 83.52px; /* 69.6px * 1.2 */
-    left: 46.08px; /* 38.4px * 1.2 */
+    top: 83.52px;
+    /* 69.6px * 1.2 */
+    left: 46.08px;
+    /* 38.4px * 1.2 */
 }
 
 .lds-roller div:nth-child(5) {
@@ -311,8 +346,10 @@ canvas {
 }
 
 .lds-roller div:nth-child(5):after {
-    top: 82.08px; /* 68.4px * 1.2 */
-    left: 36px; /* 30px * 1.2 */
+    top: 82.08px;
+    /* 68.4px * 1.2 */
+    left: 36px;
+    /* 30px * 1.2 */
 }
 
 .lds-roller div:nth-child(6) {
@@ -320,8 +357,10 @@ canvas {
 }
 
 .lds-roller div:nth-child(6):after {
-    top: 77.76px; /* 64.8px * 1.2 */
-    left: 27.36px; /* 22.8px * 1.2 */
+    top: 77.76px;
+    /* 64.8px * 1.2 */
+    left: 27.36px;
+    /* 22.8px * 1.2 */
 }
 
 .lds-roller div:nth-child(7) {
@@ -329,8 +368,10 @@ canvas {
 }
 
 .lds-roller div:nth-child(7):after {
-    top: 72px; /* 60px * 1.2 */
-    left: 20.16px; /* 16.8px * 1.2 */
+    top: 72px;
+    /* 60px * 1.2 */
+    left: 20.16px;
+    /* 16.8px * 1.2 */
 }
 
 .lds-roller div:nth-child(8) {
@@ -338,17 +379,61 @@ canvas {
 }
 
 .lds-roller div:nth-child(8):after {
-    top: 64.8px; /* 54px * 1.2 */
-    left: 14.4px; /* 12px * 1.2 */
+    top: 64.8px;
+    /* 54px * 1.2 */
+    left: 14.4px;
+    /* 12px * 1.2 */
 }
 
 @keyframes lds-roller {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
 }
 
 
+.game-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.game-item>div {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+.game-item .game-id {
+    background-color: #f8f9fa;
+    color: #343a40;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.game-item .winner {
+    background-color: #d4edda;
+    color: #155724;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.game-item .loser {
+    background-color: #f8d7da;
+    color: #721c24;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.game-item .details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.game-item .details .name,
+.game-item .details .score {
+    margin: 0 10px;
+}
