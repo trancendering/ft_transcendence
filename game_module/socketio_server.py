@@ -1,5 +1,6 @@
-import socketio
 from typing import Dict
+
+import socketio
 
 from .game_ctl import player_ready, bar_move, game_room
 from .game_queue import matching_enqueue, matching_dequeue, \
@@ -28,6 +29,16 @@ def _log(command: str, name: str, sid: str) -> None:
     print(f"[{command}] \nclient: {name} \nsid: {sid}\n")
 
 
+def _is_query_valid(key: str, val: str) -> bool:
+    if key == "nickname":
+        if len(val) > 10 or not val.isalpha():
+            return False
+    elif key == "isSpeedUp":
+        if val != "normal" and val != "fast":
+            return False
+    return True
+
+
 @sio.on("connect", namespace="/single")
 async def connect_game(sid: str, environ: Dict[str, str]) -> None:
     """
@@ -48,7 +59,7 @@ async def connect_game(sid: str, environ: Dict[str, str]) -> None:
 
     # 필수 키가 없는 경우 연결 거부
     for essential in ["nickname", "intraId", "isSpeedUp"]:
-        if essential not in query:
+        if essential not in query or _is_query_valid(essential, query["intraId"]) is False:
             print(f"Connection Fail: no {essential}\n")
             raise ConnectionRefusedError(f"Query has no \"{essential}\" field")
 
