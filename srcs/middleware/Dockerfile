@@ -8,7 +8,7 @@ COPY ./conf/default.conf /etc/nginx/conf.d/default.conf
 COPY tools/docker-entrypoint.sh /docker-entrypoint.sh
 
 ## 도커 파일에서는 보안상의 이유 때문에 상위 디렉토리에 대한 참조가 허용되지 않는다. 
-COPY ./dist /var/www/html/dist/
+# COPY ./dist /var/www/html/dist/
 
 RUN chmod +x /docker-entrypoint.sh
 
