@@ -17,7 +17,7 @@ all: up
 
 up: webpack
 	make makeDirs
-	$(DOCKER_COMPOSE) -f $(YML_PATH) up -d --build
+	$(DOCKER_COMPOSE) -f $(YML_PATH) up --build
 
 # webpack 생성 및 복사 front src만 바뀌었을 때, webpack만 다시 빌드하고, nginx 재시작.
 webpack :

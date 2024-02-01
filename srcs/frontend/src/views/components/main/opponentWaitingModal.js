@@ -3,11 +3,8 @@ import Component from "../../../library/component.js";
 import { opponentWaitingModal } from "../../utils/languagePack.js";
 
 export default class OpponentWaitingModal extends Component {
-	constructor(params) {
-		super({
-			store,
-			element: document.getElementById("opponentWaitingModal"),
-		});
+	constructor() {
+		super({ element: document.getElementById("opponentWaitingModal") });
 		this.render();
 
 		store.events.subscribe("gameStatusChange", async () =>

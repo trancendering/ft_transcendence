@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Not Found</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #000000;
+        }
+        .error-container {
+            text-align: center;
+            padding: 20px;
+        }
+        .error-code {
+            font-size: 80px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .error-message {
+            font-size: 24px;
+        }
+        .error-image {
+            margin: 20px 0;
+            width: 100px; /* Adjust the size as needed */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <img class="error-image" src="{% static '404.png' %}" alt="404 Error" />
+        <div class="error-code">404</div>
+        <div class="error-message">Page Not Found</div>
+    </div>
+</body>
+</html>

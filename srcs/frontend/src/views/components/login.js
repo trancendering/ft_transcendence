@@ -4,11 +4,8 @@ import LoginButton from "./login/loginButton.js";
 import { login } from "../utils/languagePack.js";
 
 export default class Login extends Component {
-	constructor(params) {
-		super({
-			store,
-			element: document.getElementById("app"),
-		});
+	constructor() {
+		super({ element: document.getElementById("app") });
 		this.render();
 		this.components = { loginButton: new LoginButton() };
 	}

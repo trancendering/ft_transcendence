@@ -29,6 +29,8 @@ services:
         networks:
             - ts-network
         env_file: .env
+        depends_on:
+            - database
         volumes:
             - ./game:/game
 

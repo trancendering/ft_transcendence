@@ -5,11 +5,8 @@ import LanguageSelector from "./main/languageSelector.js";
 import mainButton from "./record/mainButton.js";
 
 export default class TournamentRecord extends Component {
-	constructor(params) {
-		super({
-			store,
-			element: document.getElementById("app"),
-		});
+	constructor() {
+		super({ element: document.getElementById("app") });
 		this.render();
 		this.components = {
 			languageSelector: new LanguageSelector(),
@@ -70,8 +67,8 @@ export default class TournamentRecord extends Component {
 		// Parse the tournament log data and get the tournament list container
 		try {
 			let tournamentData = this.tournamentData;
-			let tournamentLogData = this.tournamentLogData;
-			let tournamentList = this.tournamentList;
+			const tournamentLogData = this.tournamentLogData;
+			const tournamentList = this.tournamentList;
 
 			tournamentData = JSON.parse(tournamentLogData);
 			console.log(tournamentData);
@@ -94,8 +91,7 @@ export default class TournamentRecord extends Component {
 					});
 					tournamentItem.appendChild(gameList);
 				} else {
-					tournamentItem.innerHTML +=
-						`<p>${tournamentRecord[languageId].noGame}.</p>`;
+					tournamentItem.innerHTML += `<p>${tournamentRecord[languageId].noGame}.</p>`;
 				}
 				tournamentList.appendChild(tournamentItem);
 			});

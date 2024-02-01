@@ -4,10 +4,7 @@ import { languageSelector } from "../../utils/languagePack.js";
 
 export default class LanguageSelector extends Component {
 	constructor() {
-		super({
-			store,
-			element: document.getElementById("languageSelector"),
-		});
+		super({ element: document.getElementById("languageSelector") });
 		this.render();
 	}
 
@@ -45,12 +42,21 @@ export default class LanguageSelector extends Component {
 				// Change Language State
 				store.dispatch("setLanguage", { languageId });
 
+				const csrfToken = document.cookie
+					.split("; ")
+					.find((row) => row.startsWith("csrftoken="))
+					.split("=")[1];
+
 				// Language Change Post Request
 				try {
-					const response = await fetch("/api/language", {
+					const response = await fetch("api/v1/change-language", {
 						method: "POST",
-						headers: { "Content-Type": "application/json" },
+						headers: {
+							"Content-Type": "application/json",
+							"X-CSRFToken": csrfToken,
+						},
 						body: JSON.stringify({ languageId }),
+						credentials: "include",
 					});
 					const data = await response.json();
 					console.log(data);

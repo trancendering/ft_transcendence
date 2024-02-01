@@ -13,11 +13,8 @@ import createScoreObject from "./object/score.js";
 import { scoreSeparator } from "./object/scoreSeperator.js";
 
 export default class gameCanvas extends Component {
-	constructor(params) {
-		super({
-			store,
-			element: document.getElementById("gameCanvas"),
-		});
+	constructor() {
+		super({ element: document.getElementById("gameCanvas") });
 		store.events.subscribe("gameStatusChange", async () => this.render());
 		store.events.subscribe("leftUserScoreChange", async () =>
 			this.updateLeftUserScore()
@@ -25,6 +22,8 @@ export default class gameCanvas extends Component {
 		store.events.subscribe("rightUserScoreChange", async () =>
 			this.updateRightUserScore()
 		);
+		this.handleEvent();
+		this.handleResize();
 	}
 
 	initRenderer() {
@@ -141,13 +140,16 @@ export default class gameCanvas extends Component {
 		TWEEN.update();
 		this.controls.update();
 		this.renderer.render(this.scene, this.camera);
-		requestAnimationFrame(() => this.gameLoop());
+		const frameId = requestAnimationFrame(() => this.gameLoop());
+		if (store.state.gameStatus === "ended") {
+			cancelAnimationFrame(frameId);
+		}
 	}
 
 	async render() {
 		this.element = document.getElementById("gameCanvas");
-
 		if (store.state.gameStatus !== "playing") return;
+
 		this.initRenderer();
 		this.initCamera();
 		this.initScene();
@@ -155,8 +157,6 @@ export default class gameCanvas extends Component {
 		this.initControls();
 		this.introAnimation();
 		this.gameLoop();
-		this.handleEvent();
-		this.handleResize();
 	}
 
 	async handleEvent() {
@@ -175,6 +175,7 @@ export default class gameCanvas extends Component {
 		window.addEventListener(
 			"resize",
 			() => {
+				if (store.state.gameStatus !== "playing") return;
 				// Update camera aspect ratio
 				this.camera.aspect = window.innerWidth / window.innerHeight;
 				this.camera.updateProjectionMatrix();
