@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['nginx', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     "daphne",
+    "blockchain",
     "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -156,3 +157,9 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 # .env 파일 로드
 load_dotenv()
+
+REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+    ],
+}

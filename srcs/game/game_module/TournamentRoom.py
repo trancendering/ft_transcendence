@@ -1,24 +1,34 @@
-from typing import List
+from typing import List, Dict
 import asyncio
 import time
+import threading
 
 from socketio import AsyncServer
 
 from .BaseRoom import BaseRoom
+from blockchain.executeContract import record_transaction
 
 
 class TournamentRoom(BaseRoom):
+    """
+    유저 네 명이 토너먼트 핑퐁 게임을 할 수 있는 게임방 인스턴스 정의
+
+    BaseRoom 객체를 상속받는다
+    """
     def __init__(self, sio: AsyncServer, player: List[str], room_name: str, mode: str) -> None:
         super().__init__(sio, player, room_name, mode, "/tournament")
-        self._winner: List[str] = []
-        self._round = 0
+        self._winner: List[str] = []  # 이긴 플레이어의 sid
+        self._winner_side: str = ""  # 직전 판에 이긴 플레이어의 방향
+        self._round: int = 0  # 현재 라운드 수
+        self._tournament_log: List[Dict] = []
 
-    async def _new_game(self):
+    async def _new_game(self) -> None:
         """
         새 게임 시작
         """
         # 초기화 작업 여기서 시행
         self._round += 1
+        # 출전 플레이어 설정
         if self._round == 1:
             self._left_player, self._right_player = self._player[:2]
         elif self._round == 2:
@@ -27,6 +37,7 @@ class TournamentRoom(BaseRoom):
             self._left_player, self._right_player = self._winner[:2]
         self._score[self._left_player] = 0
         self._score[self._right_player] = 0
+        self._bar_loc_left, self._bar_loc_right = 0, 0
         self._ball_loc.zero()
         self._reset_ball_velocity()
         await asyncio.sleep(0.5)
@@ -55,9 +66,33 @@ class TournamentRoom(BaseRoom):
         if self._score[player] >= self.ENDSCORE:
             end_game = True
             if self._score[self._left_player] > self._score[self._right_player]:
-                self._winner[self._round - 1] = self._left_player
+                self._winner.append(self._left_player)
+                self._winner_side = "left"
+                self._tournament_log.append({
+                    "game_id": self._round,
+                    "winner": {
+                        "name": await self._server.get_session(self._left_player, namespace="/tournament")["intraId"],
+                        "score": self._score[self._left_player],
+                        },
+                    "loser": {
+                        "name": await self._server.get_session(self._right_player, namespace="/tournament")["intraId"],
+                        "score": self._score[self._right_player],
+                        },
+                })
             else:
-                self._winner[self._round - 1] = self._right_player
+                self._winner.append(self._right_player)
+                self._winner_side = "right"
+                self._tournament_log.append({
+                    "game_id": self._round,
+                    "winner": {
+                        "name": await self._server.get_session(self._right_player, namespace="/tournament")["intraId"],
+                        "score": self._score[self._right_player],
+                        },
+                    "loser": {
+                        "name": await self._server.get_session(self._left_player, namespace="/tournament")["intraId"],
+                        "score": self._score[self._left_player],
+                        },
+                })
         await self._server.emit(
             "updateGameScore", score_data, room=self._room_name, namespace=self._namespace
         )
@@ -67,7 +102,7 @@ class TournamentRoom(BaseRoom):
 
     async def _game_end(self, end_reason: str) -> None:
         """
-        게임이 종료되었을 경우 해당 함수 호출
+        게임(라운드)이 종료되었을 경우 해당 함수 호출
 
         parameter
         * end_reason: 종료 사유
@@ -78,7 +113,7 @@ class TournamentRoom(BaseRoom):
         send_info = {
             "round": self._round,
             "reason": end_reason,
-            "winnerSide": self._winner[self._round - 1]
+            "winnerSide": self._winner_side
         }
         self._game_start = False
         for player_sid in self._ready:
@@ -86,7 +121,12 @@ class TournamentRoom(BaseRoom):
         await self._server.emit(
             "endGame", send_info, room=self._room_name, namespace=self._namespace
         )
+        # 토너먼트 전체 종료. 전체 종료의 경우, 연결을 끊고 방을 닫는다.
         if self._round == 3 or end_reason == "opponentLeft":
+            if self._tournament_log:
+                blockchain_th = threading.Thread(target=record_transaction, args=(self._tournament_log.copy()))
+                blockchain_th.daemon = True
+                blockchain_th.start()
             await self._server.close_room(self._room_name, namespace=self._namespace)
             for player in self._player:
                 await self._server.disconnect(player, namespace=self._namespace)

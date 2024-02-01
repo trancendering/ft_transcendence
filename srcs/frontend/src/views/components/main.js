@@ -1,5 +1,6 @@
 import store from "../../store/index.js";
 import Component from "../../library/component.js";
+import TournamentRecordButton from "./record/tournamentRecordButton.js";
 import LanguageSelector from "./main/languageSelector.js";
 import GameModeCard from "./main/gameModeCard.js";
 import GameCustomizationModal from "./main/gameCustomizationModal.js";
@@ -18,6 +19,7 @@ export default class Main extends Component {
 
 		this.render();
 		this.components = {
+			tournamentRecordButton: new TournamentRecordButton(),
 			languageSelector: new LanguageSelector(),
 			gameModeCard1: new GameModeCard({
 				id: "singleGameMode",
@@ -44,10 +46,20 @@ export default class Main extends Component {
 	async render() {
 		const languageId = store.state.languageId;
 
-		const view = /*html*/`
-            <!-- Language Dropdown -->
-            <div id="languageSelector"></div>
-                
+		const view = /*html*/ `
+
+		<!-- Navbar -->
+		<nav class="navbar navbar-light bg-light">
+		<form class="form-inline">
+				<!-- Language Dropdown -->
+				<div id="languageSelector"></div>
+
+				<!-- Tournament Record -->
+				<div id="tournamentRecordBtn"></div>
+			</form>
+		</nav>
+
+
             <main class="d-flex flex-column align-items-center justify-content-center vh-100">
                 <!-- Game Mode Selection -->
                 <div>
@@ -65,15 +77,15 @@ export default class Main extends Component {
 						-->
                     </div>
                 </div>
-                
+
                 <!-- Game Customization Modal -->
-                <div id="gameCustomizationModal" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true"></div>
-                
+                <div id="gameCustomizationModal" class="custom-modal"></div>
+
                 <!-- Waiting Opponent Modal -->
-                <div id="opponentWaitingModal" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false"></div>
-                
+                <div id="opponentWaitingModal" class="custom-modal"></div>
+
                 <!-- Invalid Nickname Modal -->
-                <div id="invalidNicknameModal" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false"></div>
+                <div id="invalidNicknameModal" class="custom-modal"></div>
             </main>
         `;
 

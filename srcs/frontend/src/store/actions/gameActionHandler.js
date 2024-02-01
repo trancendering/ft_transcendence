@@ -59,7 +59,7 @@ export default class gameActionHandler {
 			this.updateGameScore(data);
 		});
 		this.socket.on("endGame", (data) => {
-			this.endGame({ reason: data.reason });
+			this.endGame(data);
 		});
 	}
 
@@ -85,15 +85,15 @@ export default class gameActionHandler {
 	async initPositions() {
 		this.context.commit("updateBallPosition", {
 			ballPosition: {
-				x: Game.CANVAS_WIDTH / 2,
-				y: Game.CANVAS_HEIGHT / 2,
+				x: 0,
+				y: 0,
 			},
 		});
 		this.context.commit("updateLeftPaddlePosition", {
-			leftPaddlePosition: Game.CANVAS_HEIGHT / 2,
+			leftPaddlePosition: 0,
 		});
 		this.context.commit("updateRightPaddlePosition", {
-			rightPaddlePosition: Game.CANVAS_HEIGHT / 2,
+			rightPaddlePosition: 0,
 		});
 	}
 
@@ -106,6 +106,10 @@ export default class gameActionHandler {
 		const participated =
 			leftUserIndex === this.userIndex ||
 			rightUserIndex === this.userIndex;
+		this.userSide =
+			this.matchQueue.indexOf(this.userIndex) % 2 === 0
+				? Side.LEFT
+				: Side.RIGHT;
 
 		console.log("updateGameContext: ");
 		console.log(
@@ -115,6 +119,7 @@ export default class gameActionHandler {
 		console.log(
 			`  leftUser=${this.nicknameList[leftUserIndex]}, rightUser=${this.nicknameList[rightUserIndex]}`
 		);
+		console.log(`  userSide=${this.userSide}`);
 
 		this.context.commit("setGameContext", {
 			gameContext: {
@@ -161,6 +166,12 @@ export default class gameActionHandler {
 	 * @param {object} payload {leftUserScore, rightUserScore}
 	 */
 	async updateGameScore(payload) {
+		console.log(
+			"updateGameScore: left=",
+			payload.leftUserScore,
+			"right=",
+			payload.rightUserScore
+		);
 		this.context.commit("updateLeftUserScore", {
 			leftUserScore: payload.leftUserScore,
 		});
@@ -218,7 +229,7 @@ export default class gameActionHandler {
 				: state.rightPaddlePosition;
 		const newPosition = Math.min(
 			curPosition + 10,
-			Game.CANVAS_HEIGHT - Game.PADDLE_HEIGHT / 2
+			Game.CANVAS_HEIGHT / 2 - Game.PADDLE_HEIGHT / 2
 		);
 		if (newPosition === undefined) {
 			console.log("moveUserPaddleUp: new position undefined");
@@ -239,7 +250,10 @@ export default class gameActionHandler {
 			state.gameContext.userSide === Side.LEFT
 				? state.leftPaddlePosition
 				: state.rightPaddlePosition;
-		const newPosition = Math.max(curPosition - 10, Game.PADDLE_HEIGHT / 2);
+		const newPosition = Math.max(
+			curPosition - 10,
+			-Game.CANVAS_HEIGHT / 2 + Game.PADDLE_HEIGHT / 2
+		);
 		if (newPosition === undefined) {
 			console.log("moveUserPaddleDown: new position undefined");
 			return;

@@ -1,7 +1,8 @@
-export const tableWidth = 8.6;
+export const sideMargin = 0.6;
+export const tableWidth = 8;
 export const tableHeight = 4;
 
-export const horizontalWallWidth = tableWidth;
+export const horizontalWallWidth = tableWidth + sideMargin;
 export const horizontalWallHeight = 0.2;
 export const horizontalWallDepth = 0.2;
 

@@ -1,33 +1,34 @@
 import store from "../../../store/index.js";
 import Component from "../../../library/component.js";
-import { Modal } from 'bootstrap'
 // import { tournamentBracketModal } from "../../utils/languagePack.js";
 
 export default class TournamentBracketModal extends Component {
-    constructor() {
-        super({
-            store,
-            element: document.getElementById("tournamentBracketModal"),
-        });
-        this.render();
-        store.events.subscribe("roundChange", () =>
-            this.showTournamentBracketModal()
-        );
-    }
+	constructor() {
+		super({
+			store,
+			element: document.getElementById("tournamentBracketModal"),
+		});
+		this.render();
+		store.events.subscribe("roundChange", () =>
+			this.showTournamentBracketModal()
+		);
+	}
 
 	async render() {
-        // const languageId = store.state.languageId;
-        console.log("render tournament bracket modal");
+		// const languageId = store.state.languageId;
+		console.log("render tournament bracket modal");
 		const player = store.state.tournamentPlayer;
 		const score = store.state.tournamentScore;
 		const winner = store.state.tournamentWinner;
 
-		const view = /*html*/`
-        <div class="modal-dialog modal-m modal-dialog-centered ">
-            <div class="modal-content">
+		console.log(player);
+		console.log(score);
+		console.log(winner);
+		const view = /*html*/ `
+        <div class="custom-modal-dialog">
+            <div class="custom-modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="tournamentBracketModalLabel">Tournament Bracket</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="background bracket">
@@ -70,18 +71,17 @@ export default class TournamentBracketModal extends Component {
                         </div>
 
                         <div class="round two">
-                            <div class="match winner-bottom">
+                            <div class="match">
                                 <div class="match-top team">
                                     <span class="name">${winner.round1}</span>
                                     <span class="score">${score.round3[0]}</span>
                                 </div>
                                 <div class="match-bottom team">
                                     <span class="name">${winner.round2}</span>
-                                    <span class="score"${score.round3[1]}</span>
+                                    <span class="score">${score.round3[1]}</span>
                                 </div>
                                 <div class="match-lines">
                                     <div class="line one"></div>
-                                    <!-- <div class="line two"></div> -->
                                 </div>
                                 <div class="match-lines alt">
                                     <div class="line one"></div>
@@ -113,21 +113,15 @@ export default class TournamentBracketModal extends Component {
 		console.log("show tournament bracket modal");
 
 		this.render();
-        
-        // 2.5초 후에 모달을 닫는다 
-		// const modalInstance = Modal.getInstance(this.element);
-        const modalInstance = Modal.getOrCreateInstance(
-			document.getElementById("tournamentBracketModal")
-		);
-        if (modalInstance) modalInstance.show();
-		await new Promise((resolve) => setTimeout(resolve, 2500));
-        if (modalInstance) modalInstance.hide();
 
-        // 해당 라운드 게임을 시작한다
-        if (store.state.round != 0)
-            store.dispatch("startRound");
-        else
-            store.dispatch("setGameStatus", { gameStatus: "ended" });
-        
+		// 2.5초 후에 모달을 닫는다
+		const modal = document.getElementById("tournamentBracketModal");
+		modal.style.display = "flex";
+		await new Promise((resolve) => setTimeout(resolve, 2500));
+		modal.style.display = "none";
+
+		// 해당 라운드 게임을 시작한다
+		if (store.state.round < 4) store.dispatch("startRound");
+		else store.dispatch("setGameStatus", { gameStatus: "ended" });
 	}
 }

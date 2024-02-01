@@ -93,17 +93,28 @@ function setTournamentWinner(state, payload) {
 	return state;
 }
 
+/**
+ *
+ * @param {object} state
+ * @param {object} payload {round, leftUserScore, rightUserScore}
+ * @returns
+ */
 function updateTournamentScore(state, payload) {
 	const newTournamentScore = { ...state.tournamentScore };
-	newTournamentScore[payload.round] = [payload.leftScore, payload.rightScore];
+	newTournamentScore[`round${payload.round}`] = [
+		payload.leftUserScore,
+		payload.rightUserScore,
+	];
 	state.tournamentScore = newTournamentScore;
+	console.log("updateTournamentScore: ", state.tournamentScore);
 	return state;
 }
 
 function updateTournamentWinner(state, payload) {
 	const newTournamentWinner = { ...state.tournamentWinner };
-	newTournamentWinner[payload.round] = payload.winner;
+	newTournamentWinner[`round${payload.round}`] = payload.winner;
 	state.tournamentWinner = newTournamentWinner;
+	console.log("updateTournamentWinner: ", state.tournamentWinner);
 	return state;
 }
 

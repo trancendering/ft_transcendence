@@ -14,7 +14,7 @@ export default class LanguageSelector extends Component {
 	async render() {
 		const languageId = store.state.languageId;
 
-		const view = /*html*/`
+		const view = `
             <div class="dropdown position-absolute top-0 end-0">
                 <button class="btn dropdown-toggle mt-3 me-3" type="button" id="languageMenu" data-bs-toggle="dropdown" aria-expanded="false">
                 	${languageSelector[languageId].language}

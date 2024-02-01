@@ -16,7 +16,7 @@ export default class Login extends Component {
 	async render() {
 		const languageId = store.state.languageId;
 
-		const view = /*html*/`
+		const view = /*html*/ `
             <div class="d-flex align-items-center justify-content-center vh-100 bg-light">
                   <div class="card shadow p-3 mb-5 bg-white rounded" style="max-width: 18rem;">
                       <div class="card-body text-center">

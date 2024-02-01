@@ -12,7 +12,6 @@ window.addEventListener("popstate", (event) => {
 		event.preventDefault();
 		console.log("leave game");
 		store.dispatch("leaveGame");
-		return;
 	}
 	if (
 		window.location.pathname === "/game" ||
@@ -63,14 +62,10 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		});
 
-		if (
-			store.state.gameStatus !== "playing" &&
-			(window.location.pathname === "/game" ||
-				window.location.pathname === "/tournament")
-		) {
-			navigateTo("/");
-		} else {
-			router();
-		}
+    if (store.state.gameStatus !== "playing"
+        && window.location.pathname === "/game") {
+		navigateTo("/");
+	} else {
+		router();
 	}
 });

@@ -1,7 +1,6 @@
 import store from "../../../store/index.js";
 import Component from "../../../library/component.js";
 import { gameCustomizationModal } from "../../utils/languagePack.js";
-import { Modal } from "bootstrap";
 
 export default class GameCustomizationModal extends Component {
 	constructor(params) {
@@ -15,10 +14,10 @@ export default class GameCustomizationModal extends Component {
 	async render() {
 		const languageId = store.state.languageId;
 
-		const view = /*html*/`
-                    <div class="modal-dialog modal- modal-m modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-body text-center p-lg-4">
+		const view = /*html*/ `
+					<div class="custom-modal-dialog">
+                        <div class="custom-modal-content">
+                            <div class="text-center p-lg-4">
 
 			                	<form id="gameCustomizationForm">
 									<h3 class="text-dark mt-3">${gameCustomizationModal[languageId].setting}</h3>
@@ -54,10 +53,10 @@ export default class GameCustomizationModal extends Component {
 											</div>
 										</div>
 									</div>
-										
+
 									<div class="row mt-4 justify-content-center">
 										<div class="col-4 text-center mt-4">
-											<button type="button" class="btn btn-danger w-100" data-bs-dismiss="modal">${gameCustomizationModal[languageId].close}</button>
+											<button id="gameCustomizationModalCloseBtn" type="button" class="btn btn-danger w-100">${gameCustomizationModal[languageId].close}</button>
 										</div>
 										<div class="col-4 text-center mt-4 ">
 											<button id="gameStartBtn" type="submit" class="btn btn-success w-100">${gameCustomizationModal[languageId].start}</button>
@@ -66,7 +65,7 @@ export default class GameCustomizationModal extends Component {
 								</form>
                      	   </div>
                     	</div>
-                	</div>
+					</div>
 		`;
 
 		this.element = document.getElementById("gameCustomizationModal");
@@ -76,9 +75,14 @@ export default class GameCustomizationModal extends Component {
 
 	async handleEvent() {
 		// Reset Form When Modal Closes
-		this.element.addEventListener("hide.bs.modal", () => {
-			this.element.querySelector("#gameCustomizationForm").reset();
-		});
+		document
+			.getElementById("gameCustomizationModalCloseBtn")
+			.addEventListener("click", () => {
+				this.element.querySelector("#gameCustomizationForm").reset();
+				document.getElementById(
+					"gameCustomizationModal"
+				).style.display = "none";
+			});
 
 		this.element
 			.querySelector("#gameStartBtn")
@@ -86,12 +90,18 @@ export default class GameCustomizationModal extends Component {
 				// Prevent Default Submit Behavior
 				event.preventDefault();
 
-				// Check Nickname is Empty
-				if (this.element.querySelector("#nickname").value === "") {
-					Modal.getOrCreateInstance(
-						document.getElementById("invalidNicknameModal")
-					).show();
-					document.getElementById("closeInvalidNicknameModalBtn").focus();
+				// Check Nickname is Empty or too long or non-English
+				const nickname = this.element.querySelector("#nickname").value;
+				const englishCheck = /^[A-Za-z0-9]*$/;
+
+				if (
+					nickname === "" ||
+					nickname.length > 10 ||
+					!englishCheck.test(nickname)
+				) {
+					document.getElementById(
+						"invalidNicknameModal"
+					).style.display = "flex";
 					return;
 				}
 
@@ -116,25 +126,18 @@ export default class GameCustomizationModal extends Component {
 				store.dispatch("setIntraId", { intraId: makeRandomName() });
 
 				// Set Game Customization State
-				const nickname = this.element.querySelector("#nickname").value;
 				const speedUp = this.element.querySelector(
 					'#speedOption input[name="speedBtn"]:checked'
 				).value;
 
-				// // Hide Game Customization Modal
-				Modal.getInstance(
-					document.getElementById("gameCustomizationModal")
-				).hide();
+				// Hide Game Customization Modal
+				document.getElementById(
+					"gameCustomizationModal"
+				).style.display = "none";
 
 				// Show Opponent Waiting Modal
-				console.log("show opponent waiting modal");
-				Modal.getOrCreateInstance(
-					document.getElementById("opponentWaitingModal")
-				).show();
-				// const opponentWaitingModal = new Modal(
-				// 	document.getElementById("opponentWaitingModal")
-				// );
-				// opponentWaitingModal.show();
+				document.getElementById("opponentWaitingModal").style.display =
+					"flex";
 
 				// Join Game and connect socket
 				// store.dispatch(`join${store.state.gameMode}Game`, {
@@ -151,12 +154,5 @@ export default class GameCustomizationModal extends Component {
 					speedUp: speedUp,
 				});
 			});
-	}
-
-	async hideGameCustomizationModal() {
-		if (store.state.gameStatus !== "playing") return;
-		console.log("hide game customization modal");
-		const modalInstance = Modal.getInstance(this.element);
-		if (modalInstance) modalInstance.hide();
 	}
 }

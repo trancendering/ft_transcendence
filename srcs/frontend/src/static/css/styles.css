@@ -10,12 +10,77 @@ html, body {
 }
 
 canvas {
-    background-color: #000;
-    display: block;
-    margin: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    outline: none;
 }
 
-#gameOverModal {
+.custom-modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.custom-modal-dialog {
+    position: relative;
+    margin: auto; /* 10% from the top and centered */
+    padding: 0;
+    width: 80%;
+    box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    border-radius: 10px;
+}
+
+.custom-modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+}
+
+/* Media Queries */
+/* Small devices (sm) */
+@media (min-width: 640px) { 
+    .custom-modal-dialog {
+        width: 60%; /* Adjusted width */
+    }
+}
+
+/* Medium devices (md) */
+@media (min-width: 768px) { 
+    .custom-modal-dialog {
+        width: 60%; /* Adjusted width */
+    }
+}
+
+/* Large devices (lg) */
+@media (min-width: 1024px) { 
+    .custom-modal-dialog {
+        width: 60%; /* Adjusted width */
+    }
+}
+
+/* Extra large devices (xl) */
+@media (min-width: 1280px) { 
+    .custom-modal-dialog {
+        width: 50%; /* Adjusted width */
+    }
+}
+
+/* 2x extra large devices (2xl) */
+@media (min-width: 1536px) { 
+    .custom-modal-dialog {
+        width: 40%; /* Adjusted width */
+    }
+}
+
+/* #gameOverModal {
     position: fixed;
     z-index: 1;
     left: 0;
@@ -24,7 +89,7 @@ canvas {
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
 }
@@ -36,7 +101,7 @@ canvas {
     border: 1px solid #888;
     width: 80%;
     text-align: center;
-}
+} */
 
 .modal#statusSuccessModal .modal-content,
 .modal#statusErrorsModal .modal-content,
@@ -163,17 +228,15 @@ canvas {
     }
 }
 
-/
-
 /* Spinner Wrapper */
-.loader {
+/* .loader {
     width: 100vw;
     height: 100vh;
     background: #fff;
     position: fixed;
     top: 0;
     left: 0;
-}
+} */
 
 .loader-inner {
     position: absolute;
