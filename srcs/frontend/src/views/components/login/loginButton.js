@@ -15,8 +15,9 @@ export default class Login extends Component {
 	async render() {
 		const languageId = store.state.languageId;
 
+		// TODO: 환경변수 불러와서 base url 적용하기
 		const view = /*html*/`
-            <a href="https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-0f605dab356f53b97f60db2a5b5d6a1c102b0ad2a94b1719c1becd32e46a3209&redirect_uri=https%3A%2F%2F127.0.0.1%3A443%2Foauth&response_type=code" class="btn btn-primary text-white" role="button">
+            <a href="https://localhost:443/api/v1/login" class="btn btn-primary text-white" role="button">
                 <img src="${logo}" width="24" height="24" class="mr-2 align-middle" alt="42_logo">
                 ${loginButton[languageId].loginDescription}
             </a>
