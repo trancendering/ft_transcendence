@@ -1,5 +1,6 @@
-import socketio
 from typing import Dict
+
+import socketio
 
 from .game_ctl import player_ready, bar_move, game_room
 from .game_queue import matching_enqueue, matching_dequeue, \
@@ -28,6 +29,16 @@ def _log(command: str, name: str, sid: str) -> None:
     print(f"[{command}] \nclient: {name} \nsid: {sid}\n")
 
 
+def _is_query_valid(key: str, val: str) -> bool:
+    if key == "nickname":
+        if len(val) > 10 or not val.isalpha():
+            return False
+    elif key == "isSpeedUp":
+        if val != "normal" and val != "fast":
+            return False
+    return True
+
+
 @sio.on("connect", namespace="/single")
 async def connect_game(sid: str, environ: Dict[str, str]) -> None:
     """
@@ -48,7 +59,7 @@ async def connect_game(sid: str, environ: Dict[str, str]) -> None:
 
     # 필수 키가 없는 경우 연결 거부
     for essential in ["nickname", "intraId", "isSpeedUp"]:
-        if essential not in query:
+        if essential not in query or _is_query_valid(essential, query["intraId"]) is False:
             print(f"Connection Fail: no {essential}\n")
             raise ConnectionRefusedError(f"Query has no \"{essential}\" field")
 
@@ -74,10 +85,10 @@ async def disconnect_game(sid: str) -> None:
     _log("Disconnect", session["intraId"], sid)
     if session["isSpeedUp"] == "normal" and sid in normal_matching_queue:
         matching_dequeue(sio, sid, "normal")
-    elif session["isSpeedUp"] == "speed" and sid in speed_matching_queue:
-        matching_dequeue(sio, sid, "speed")
+    elif session["isSpeedUp"] == "fast" and sid in speed_matching_queue:
+        matching_dequeue(sio, sid, "fast")
     if "room_name" in session and session["room_name"] in game_room:
-        game_room[session["room_name"]].kill_room()
+        await game_room[session["room_name"]].kill_room()
         if session["room_name"] in game_room:
             del game_room[session["room_name"]]
 
@@ -128,16 +139,19 @@ async def disconnect_tournament(sid: str) -> None:
     _log("Disconnect", session["intraId"], sid)
     if session["isSpeedUp"] == "normal" and sid in normal_tournament_queue:
         tournament_dequeue(sio, sid, "normal")
-    elif session["isSpeedUp"] == "speed" and sid in speed_tournament_queue:
-        tournament_dequeue(sio, sid, "speed")
+    elif session["isSpeedUp"] == "fast" and sid in speed_tournament_queue:
+        tournament_dequeue(sio, sid, "fast")
     if "room_name" in session and session["room_name"] in game_room:
-        game_room[session["room_name"]].kill_room()
+        await game_room[session["room_name"]].kill_room()
         if session["room_name"] in game_room:
             del game_room[session["room_name"]]
 
 
 @sio.on("ping", namespace="*")
 async def ping(namespace: str, sid: str, data: str) -> str:
+    """
+    디버깅용으로 쓸려고 만들...었는데 안 써봄 흑흑
+    """
     session: Dict[str, str] = await sio.get_session(sid, namespace=namespace)
     _log("PING", session["name"], sid, data)
     return "pong"
