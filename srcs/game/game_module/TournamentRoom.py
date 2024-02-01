@@ -124,7 +124,7 @@ class TournamentRoom(BaseRoom):
         # 토너먼트 전체 종료. 전체 종료의 경우, 연결을 끊고 방을 닫는다.
         if self._round == 3 or end_reason == "opponentLeft":
             if self._tournament_log:
-                blockchain_th = threading.Thread(target=record_transaction, args=(self._tournament_log.copy()))
+                blockchain_th = threading.Thread(target=record_transaction, args=(self._tournament_log.copy(),))
                 blockchain_th.daemon = True
                 blockchain_th.start()
             await self._server.close_room(self._room_name, namespace=self._namespace)
