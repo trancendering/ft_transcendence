@@ -1,6 +1,21 @@
 #!/bin/bash
 set -e
 
+# Function to wait for the database to be ready
+wait_for_db() {
+    echo "Waiting for database to be ready..."
+    retries=5
+    while ! nc -z database 5432; do
+        sleep 1
+        retries=$((retries - 1))
+        if [ $retries -le 0 ]; then
+            echo "Database is not available, exiting..."
+            exit 1
+        fi
+    done
+    echo "Database is ready!"
+}
+
 # Generate openssl certificate
 mkdir -p /etc/daphne/ssl
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
@@ -10,10 +25,14 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
         > /dev/null 2>&1
 
 # TODO: 고칠 수 있으면 고치기
-sleep 10
-python manage.py makemigrations
-python manage.py migrate
-python manage.py createsuperuser
+
+wait_for_db
+
+if [ "$DJANGO_INITIAL_SETUP" = "true" ]; then
+    python manage.py makemigrations
+    python manage.py migrate
+    python manage.py createsuperuser
+fi
 
 # Execute da
 
