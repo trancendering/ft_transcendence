@@ -6,20 +6,24 @@ export default class OpponentWaitingModal extends Component {
 	constructor(params) {
 		super({
 			store,
-			element: document.getElementById("opponent-waiting-modal"),
+			element: document.getElementById("opponentWaitingModal"),
 		});
 		this.render();
 
-		store.events.subscribe("gameStatusChange", async ()=>this.hideOpponentWaitingModal());
+		store.events.subscribe("gameStatusChange", async () =>
+			this.hideOpponentWaitingModal()
+		);
 	}
 
 	async render() {
+		console.log("render opponent waiting modal");
 		const languageId = store.state.languageId;
 
-		const view = `
-            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-                <div class="modal-content">
-                    <div class="modal-body text-center p-lg-4">
+		const view = /*html*/ `
+            <div class="custom-modal-dialog">
+				<div class="custom-modal-content">
+                    <div class="text-center p-lg-4">
+
                         <!-- Loading Spinner Wrapper-->
                         <div class="loader text-center mt-3">
                             <!-- Animated Spinner -->
@@ -34,22 +38,23 @@ export default class OpponentWaitingModal extends Component {
                                 <div></div>
                             </div>
                         </div>
-                        <h4 class="text-center mt-3">${opponentWaitingModal[languageId].waiting} 1 / 2</h4>
+
+                        <h4 class="text-center mt-3">${opponentWaitingModal[languageId].waiting}</h4>
                         <p class="mt-3">${opponentWaitingModal[languageId].description}</p>
-                        <button id="cancel-match-btn" type="button" class="btn btn-sm mt-3 btn-secondary" data-bs-dismiss="modal">${opponentWaitingModal[languageId].cancel}</button>
+                        <button id="cancelMatchBtn" type="button" class="btn btn-sm mt-3 btn-secondary">${opponentWaitingModal[languageId].cancel}</button>
                     </div>
                 </div>
-            </div>
+			</div>
 		`;
 
-		this.element = document.getElementById("opponent-waiting-modal");
+		this.element = document.getElementById("opponentWaitingModal");
 		this.element.innerHTML = view;
 		this.handleEvent();
 	}
 
 	async handleEvent() {
 		document
-			.getElementById("cancel-match-btn")
+			.getElementById("cancelMatchBtn")
 			.addEventListener("click", async (event) => {
 				console.log("cancel match making");
 
@@ -61,12 +66,23 @@ export default class OpponentWaitingModal extends Component {
 
 				// Cancel Match Making Post Request
 				// TODO 소켓 Connection 끊는 로직
+				store.dispatch("leaveGame");
+
+				// Hide Opponent Waiting Modal
+				document.getElementById("opponentWaitingModal").style.display =
+					"none";
+
+				// Reset Form
+				document.getElementById("gameCustomizationForm").reset();
 			});
 	}
 
 	async hideOpponentWaitingModal() {
-		if (store.state.gameStatus !== "playing") return;
-		console.log("hide Opponent Waiting Modal");
-		document.querySelectorAll('.modal-backdrop').forEach(elem => elem.remove());
+		const opponentWaitingModal = document.getElementById(
+			"opponentWaitingModal"
+		);
+		if (opponentWaitingModal) {
+			opponentWaitingModal.style.display = "none";
+		}
 	}
 }

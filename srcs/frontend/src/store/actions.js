@@ -1,6 +1,11 @@
-// import { io } from "socket.io-client";
-import { Side, Game } from "../enum/constant.js";
-import socketHandler from "./socketHandler.js";
+import SingleGameActionHandler from "./actions/singleGameActionHandler.js";
+import TournamentActionHandler from "./actions/tournamentActionHandler.js";
+
+function getGameHandler(context) {
+	return context.state.gameMode === "Single"
+		? SingleGameActionHandler.getInstance(context)
+		: TournamentActionHandler.getInstance(context);
+}
 
 function logIn(context) {
 	context.commit("logIn");
@@ -26,122 +31,47 @@ function setFancyBall(context, payload) {
 	context.commit("setFancyBall", payload);
 }
 
-function joinSingleGame(context, payload) {
-	console.log("joinSingleGame: ");
-	const socket = socketHandler.connectSocket(context, {
-		...payload,
-		namespace: "single",
-	});
+function joinGame(context, payload) {
+	console.log("joinGame: ");
 
-	socket.on("connect_error", (error) => {
-		socketHandler.printSocketError(error);
-	});
-	socket.on("userFullEvent", (data) => {
-		socketHandler.startGame(context, data);
-	});
-	socket.on("updateGameStatus", (data) => {
-		socketHandler.updateGameState(context, data);
-	});
-	socket.on("updateGameScore", (data) => {
-		socketHandler.updateGameScore(context, data);
-	});
-	socket.on("endGame", (data) => {
-		socketHandler.endGame(context, { reason: data.reason });
-	});
+	const gameHandler = getGameHandler(context);
+	gameHandler.connectSocket(payload);
+	gameHandler.bindSocketEvents();
+}
+
+function startRound(context) {
+	console.log("startRound: ");
+
+	const gameHandler = getGameHandler(context);
+	gameHandler.startRound();
 }
 
 function leaveGame(context) {
-	// nest.js 서버 테스트시 사용. django 서버는 emit 문 주석 제거할 것
-	socketHandler.endGame(context, { reason: "opponentLeft" });
+	console.log("leaveGame: ");
+
+	const gameHandler = getGameHandler(context);
+	gameHandler.endGame({ reason: "userLeft" });
 }
 
-function userIsReady(context) {
-	context.state.socket.emit("userReadyEvent", {
-		roomName: context.state.gameInfo.roomName,
-	});
-}
+function emitUserReadyEvent(context) {
+	console.log("emitUserReadyEvent: ");
 
-function initPositions(context) {
-	context.commit("updateBallPosition", {
-		ballPosition: {
-			x: Game.CANVAS_WIDTH / 2,
-			y: Game.CANVAS_HEIGHT / 2,
-		},
-	});
-	context.commit("updateLeftPaddlePosition", {
-		leftPaddlePosition: Game.CANVAS_HEIGHT / 2
-	});
-	context.commit("updateRightPaddlePosition", {
-		rightPaddlePosition: Game.CANVAS_HEIGHT / 2
-	});
-}
-
-function initScores(context) {
-	context.commit("updateLeftUserScore", { leftUserScore: 0 });
-	context.commit("updateRightUserScore", { rightUserScore: 0 });
+	const gameHandler = getGameHandler(context);
+	gameHandler.emitUserReadyEvent();
 }
 
 function moveUserPaddleUp(context) {
-	if (context.state.gameStatus !== "playing") return;
-
-	const curPosition =
-		context.state.gameInfo.userSide === Side.LEFT
-			? context.state.leftPaddlePosition
-			: context.state.rightPaddlePosition;
-	const newPosition = Math.max(curPosition - 10, Game.PADDLE_HEIGHT / 2);
-
-	if (newPosition === undefined) {
-		console.log("moveUserPaddleUp: new position undefined");
-		return;
-	}
-
-	console.log(`moveUserPaddleUp: position=${newPosition}`);
-
-	if (context.state.gameInfo.userSide === Side.LEFT) {
-		context.commit("updateLeftPaddlePosition", {
-			leftPaddlePosition: newPosition,
-		});
-	} else {
-		context.commit("updateRightPaddlePosition", {
-			rightPaddlePosition: newPosition,
-		});
-	}
-	socketHandler.updatePaddlePosition(context, {
-		paddlePosition: newPosition,
-	});
+	const gameHandler = getGameHandler(context);
+	gameHandler.moveUserPaddleUp();
 }
 
 function moveUserPaddleDown(context) {
-	if (context.state.gameStatus !== "playing") return;
+	const gameHandler = getGameHandler(context);
+	gameHandler.moveUserPaddleDown();
+}
 
-	const curPosition =
-		context.state.gameInfo.userSide === Side.LEFT
-			? context.state.leftPaddlePosition
-			: context.state.rightPaddlePosition;
-	const newPosition = Math.min(
-		curPosition + 10,
-		Game.CANVAS_HEIGHT - Game.PADDLE_HEIGHT / 2
-	);
-
-	if (newPosition === undefined) {
-		console.log("moveUserPaddleDown: new position undefined");
-		return;
-	}
-	console.log(`moveUserPaddleDown: position=${newPosition}`);
-
-	if (context.state.gameInfo.userSide == Side.LEFT) {
-		context.commit("updateLeftPaddlePosition", {
-			leftPaddlePosition: newPosition,
-		});
-	} else {
-		context.commit("updateRightPaddlePosition", {
-			rightPaddlePosition: newPosition,
-		});
-	}
-
-	socketHandler.updatePaddlePosition(context, {
-		paddlePosition: newPosition,
-	});
+function setGameStatus(context, payload) {
+	context.commit("setGameStatus", payload);
 }
 
 export default {
@@ -151,11 +81,11 @@ export default {
 	setLanguage,
 	setGameMode,
 	setFancyBall,
-	joinSingleGame,
+	joinGame,
+	startRound,
 	leaveGame,
-	userIsReady,
-	initPositions,
-	initScores,
+	emitUserReadyEvent,
 	moveUserPaddleDown,
 	moveUserPaddleUp,
+	setGameStatus,
 };

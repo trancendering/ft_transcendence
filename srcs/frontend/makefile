@@ -1,13 +1,13 @@
-
 # Makefile for the frontend
-PHONY: all clean re
+.PHONY: all clean re
 
-all :
-	npm install 
+all: run
+
+run:
+	npm install
 	npm run build
 
-clean :
-	rm -rf node_modules
+clean:
 	rm -rf dist
 
-re : clean all
+re: clean all

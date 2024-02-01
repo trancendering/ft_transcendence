@@ -17,7 +17,7 @@ module.exports = {
         historyApiFallback: true,
     },
     plugins: [
-        new HtmlWebpackPlugin({ template: './src/index.html' })
+        new HtmlWebpackPlugin({template: './src/index.html'})
     ],
     module: {
         rules: [
@@ -28,10 +28,23 @@ module.exports = {
                         loader: 'file-loader',
                         options: {
                             name: '[name].[ext]',
-                            outputPath: './static/img',
+                            outputPath: 'static/img',
                         },
                     },
                 ],
+            },
+            {
+                test: /\.json$/,
+                type: 'javascript/auto',
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: 'static/fonts'
+                        }
+                    }
+                ]
             },
             {
                 test: /\.css$/,

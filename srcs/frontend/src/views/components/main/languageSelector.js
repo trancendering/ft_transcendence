@@ -1,12 +1,12 @@
 import store from "../../../store/index.js";
 import Component from "../../../library/component.js";
-import { languageSelector } from "../../utils/languagePack.js"
+import { languageSelector } from "../../utils/languagePack.js";
 
 export default class LanguageSelector extends Component {
 	constructor() {
 		super({
 			store,
-			element: document.getElementById("language-selector"),
+			element: document.getElementById("languageSelector"),
 		});
 		this.render();
 	}
@@ -14,9 +14,9 @@ export default class LanguageSelector extends Component {
 	async render() {
 		const languageId = store.state.languageId;
 
-		const view = `
+		const view = /*html*/ `
             <div class="dropdown position-absolute top-0 end-0">
-                <button class="btn dropdown-toggle mt-3 me-3" type="button" id="Language_menu" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn dropdown-toggle mt-3 me-3" type="button" id="languageMenu" data-bs-toggle="dropdown" aria-expanded="false">
                 	${languageSelector[languageId].language}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
@@ -27,7 +27,7 @@ export default class LanguageSelector extends Component {
             </div>
         `;
 
-		this.element = document.getElementById("language-selector");
+		this.element = document.getElementById("languageSelector");
 		this.element.innerHTML = view;
 		this.handleEvent();
 	}

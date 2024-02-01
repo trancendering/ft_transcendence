@@ -1,0 +1,10 @@
+# http://editorconfig.org
+root = true
+
+[*.{js,ts,tsx,json,yml,yaml}]
+charset = utf-8
+end_of_line = lf # line-break 설정
+indent_style = tab # hard-tab(tab), soft-tab(space) 설정
+indent_size = 4 # 들여쓰기 크기
+insert_final_newline = true  # 파일의 끝에 빈 줄 추가 여부
+trim_trailing_whitespace = true # 파일의 끝에 공백 문자 제거 여부
