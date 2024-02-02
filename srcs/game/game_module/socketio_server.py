@@ -1,4 +1,5 @@
 from typing import Dict
+import sys
 
 import socketio
 
@@ -26,7 +27,7 @@ def _log(command: str, name: str, sid: str) -> None:
     * name: 클라이언트 이름
     * sid: 클라이언트 sid
     """
-    print(f"[{command}] \nclient: {name} \nsid: {sid}\n")
+    print(f"[{command}] \nclient: {name} \nsid: {sid}\n", file=sys.stderr)
 
 
 def _is_query_valid(key: str, val: str) -> bool:
@@ -66,6 +67,7 @@ async def connect_game(sid: str, environ: Dict[str, str]) -> None:
     # 클라이언트 세션 저장
     await sio.save_session(sid, query, namespace="/single")
     _log("Connect", query["intraId"], sid)
+    print("single", query, "\n\n", file=sys.stderr)
     await matching_enqueue(sio, sid, query["isSpeedUp"])
 
 
@@ -120,6 +122,7 @@ async def connect_tournament(sid: str, environ: Dict[str, str]) -> None:
     # 클라이언트 세션 저장
     await sio.save_session(sid, query, namespace="/tournament")
     _log("Connect", query["intraId"], sid)
+    print("tour", query, "\n\n", file=sys.stderr)
     await tournament_enqueue(sio, sid, query["isSpeedUp"])
 
 

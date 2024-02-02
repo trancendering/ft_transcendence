@@ -30,6 +30,7 @@ export default class gameActionHandler {
 	 * @description 소켓 연결
 	 * @param {object} payload {namespace, intraId, nickname, speedUp}
 	 */
+
 	connectSocket(payload) {
 		const url = `${process.env.SOCKET_URL}/${payload.namespace}`;
 
