@@ -34,14 +34,10 @@ build:
 
 # 인스턴스와 이미지 및 네트워크 등 삭제
 clean:
-	make -C ./srcs/frontend/ clean
-	rm -rf ./srcs/middleware/dist
 	$(DOCKER_COMPOSE) -f $(YML_PATH) down -v
 
 # 로컬 저장소를 포함하여 전부 삭제
 fclean:
-#make -C ./srcs/frontend/ clean
-#rm -rf ./srcs/middleware/dist
 	$(DOCKER_COMPOSE) -f $(YML_PATH) down -v --rmi all 	
 
 # $$는 $를 이스케이프하기 위한 것으로, 쉘에서 $를 쓴 것과 동일함
