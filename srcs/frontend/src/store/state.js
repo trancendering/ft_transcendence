@@ -28,7 +28,7 @@ export default {
 
 	// tournament 정보
 	round: 0,
-	tournamentPlayers: ["", "", "", ""], // [player1_nickname, player2_nickname, player3_nickname, player4_nickname]
+	tournamentPlayer: ["", "", "", ""], // [player1_nickname, player2_nickname, player3_nickname, player4_nickname]
 	tournamentScore: {
 		round1: ["-", "-"], // [leftScore, rightScore]
 		round2: ["-", "-"],
