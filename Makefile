@@ -17,6 +17,7 @@ all: up
 
 up: webpack
 	make makeDirs
+	if [ ! -d ./srcs/database ]; then mkdir -p ./srcs/database; fi
 	$(DOCKER_COMPOSE) -f $(YML_PATH) up --build
 
 # webpack 생성 및 복사 front src만 바뀌었을 때, webpack만 다시 빌드하고, nginx 재시작.
@@ -42,6 +43,8 @@ stop:
 build:
 	$(DOCKER_COMPOSE) -f $(YML_PATH) build
 
+clean_db:
+	rm -rf ./srcs/database
 
 # TODO: 필요한 도커 이미지만 삭제하도록, 암살 가능성 농후함
 # 인스턴스와 이미지 및 네트워크 등 삭제
