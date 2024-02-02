@@ -36,7 +36,6 @@ function joinGame(context, payload) {
 
 	const gameHandler = getGameHandler(context);
 	gameHandler.connectSocket(payload);
-	gameHandler.bindSocketEvents();
 }
 
 function startRound(context) {

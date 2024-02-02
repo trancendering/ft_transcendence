@@ -18,6 +18,7 @@ export default class gameActionHandler {
 	constructor(context) {
 		this.context = context;
 		this.socket = null;
+		this.gameEnded = true;
 		this.roomName = "";
 		this.intraIdList = [];
 		this.nicknameList = [];
@@ -33,19 +34,34 @@ export default class gameActionHandler {
 	connectSocket(payload) {
 		const url = `https://localhost/${payload.namespace}`;
 
-		this.socket = io(url, {
-			query: {
-				intraId: payload.intraId,
-				nickname: payload.nickname,
-				isSpeedUp: payload.speedUp,
-			},
-		});
+		console.log("connectSocket:");
+		console.log(" - url=", url);
+		console.log(" - intraId=", payload.intraId);
+		console.log(" - nickname=", payload.nickname);
+		console.log(" - speedUp=", payload.speedUp);
+
+		if (!this.socket) {
+			this.socket = io(url, {
+				query: {
+					intraId: payload.intraId,
+					nickname: payload.nickname,
+					isSpeedUp: payload.speedUp,
+				},
+				forceNew: true,
+			});
+			this.bindSocketEvents();
+		} else {
+			this.socket.io.opts.query = `intraId=${payload.intraId}&nickname=${payload.nickname}&isSpeedUp=${payload.speedUp}`;
+			this.socket.connect();
+		}
+		this.gameEnded = false;
 	}
 
 	/**
 	 * @description 소켓 이벤트 핸들러 등록
 	 */
 	bindSocketEvents() {
+		console.log("bindSocketEvents:");
 		this.socket.on("connect_error", (error) => {
 			this.printSocketError(error);
 		});
@@ -78,13 +94,14 @@ export default class gameActionHandler {
 		console.log("initScores: ");
 		this.context.commit("updateLeftUserScore", { leftUserScore: 0 });
 		this.context.commit("updateRightUserScore", { rightUserScore: 0 });
-		console.log("  left=", this.context.state.leftUserScore, " right=", this.context.state.rightUserScore);
+		console.log(" - left=", this.context.state.leftUserScore, " right=", this.context.state.rightUserScore);
 	}
 
 	/**
 	 * @description 새 게임 시작할 때, 볼 및 패들 위치 초기화
 	 */
 	initPositions() {
+		console.log("initPositions: ");
 		this.context.commit("updateBallPosition", {
 			ballPosition: {
 				x: 0,
@@ -116,15 +133,14 @@ export default class gameActionHandler {
 		}
 
 		console.log("updateGameContext: ");
-		console.log("  matchQueue: ", this.matchQueue);
-		console.log(
-			`  leftUserIndex=${leftUserIndex}, rightUserIndex=${rightUserIndex}`
-		);
-		console.log(`  participated=${participated}`);
-		console.log(
-			`  leftUser=${this.nicknameList[leftUserIndex]}, rightUser=${this.nicknameList[rightUserIndex]}`
-		);
-		console.log(`  userIndex=${this.userIndex}, userSide=${this.userSide}`);
+		console.log(" - matchQueue=", this.matchQueue);
+		console.log(" - leftUserIndex=", leftUserIndex);
+		console.log(" - rightUserIndex=", rightUserIndex);
+		console.log(" - leftUser=", this.nicknameList[leftUserIndex]);
+		console.log(" - rightUser=", this.nicknameList[rightUserIndex]);
+		console.log(" - participated=", participated);
+		console.log(" - userIndex=", this.userIndex);
+		console.log(" - userSide=", this.userSide);
 
 		this.context.commit("setGameContext", {
 			gameContext: {
@@ -171,12 +187,11 @@ export default class gameActionHandler {
 	 * @param {object} payload {leftUserScore, rightUserScore}
 	 */
 	updateGameScore(payload) {
-		console.log(
-			"updateGameScore: left=",
-			payload.leftUserScore,
-			"right=",
-			payload.rightUserScore
-		);
+		console.groupCollapsed("EVENT: updateGameScore");
+		console.log(" - left=", payload.leftUserScore);
+		console.log(" - right=", payload.rightUserScore);
+		console.groupEnd();
+
 		this.context.commit("updateLeftUserScore", {
 			leftUserScore: payload.leftUserScore,
 		});
@@ -191,8 +206,7 @@ export default class gameActionHandler {
 	emitUserReadyEvent() {
 		const state = this.context.state;
 
-		if (!this.socket)
-			return;
+		if (this.gameEnded) return;
 		this.socket.emit("userReadyEvent", {
 			roomName: state.gameContext.roomName,
 		});
@@ -216,8 +230,7 @@ export default class gameActionHandler {
 				rightPaddlePosition: paddlePosition,
 			});
 		}
-		if (!this.socket)
-			return;
+		if (this.gameEnded) return;
 		this.socket.emit("updatePaddlePosition", {
 			roomName: state.gameContext.roomName,
 			userSide: state.gameContext.userSide,
