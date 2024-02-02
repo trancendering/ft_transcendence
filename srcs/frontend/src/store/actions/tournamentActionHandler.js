@@ -32,7 +32,9 @@ export default class tournamentActionHandler extends GameActionHandler {
 	 * @param {object} payload { roomName, intraId, nickname}
 	 */
 	async startGame(payload) {
-		console.log("EVENT: userFullEvent: tournamentActionHandler.startGame");
+		console.groupCollapsed(
+			"EVENT: userFullEvent: tournamentActionHandler.startGame"
+		);
 		const state = this.context.state;
 
 		// 게임 시작 시 게임 정보 초기화
@@ -42,6 +44,13 @@ export default class tournamentActionHandler extends GameActionHandler {
 		this.userIndex = this.intraIdList.indexOf(state.intraId);
 		this.userSide = this.userIndex % 2 === 0 ? Side.LEFT : Side.RIGHT;
 		this.matchQueue = [0, 1, 2, 3];
+
+		console.log(" - roomName=", payload.roomName);
+		console.log(" - intraId=", payload.intraId);
+		console.log(" - nickname=", payload.nickname);
+		console.log(" - userIndex=", this.userIndex);
+		console.log(" - userSide=", this.userSide);
+
 		this.initScores();
 		this.initPositions();
 		this.initTournamentPlayers();
@@ -53,6 +62,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 		// 게임 페이지로 이동
 		navigateTo("/game");
 		this.context.commit("setRound", { round: 1 });
+		console.groupEnd();
 	}
 
 	/**
@@ -100,7 +110,9 @@ export default class tournamentActionHandler extends GameActionHandler {
 	 * @param {object} payload {round, reason, winnerSide}
 	 */
 	async endGame(payload) {
-		console.log("EVENT: endGame: tournamentActionHandler.endGame");
+		console.groupCollapsed(
+			"EVENT: endGame: tournamentActionHandler.endGame"
+		);
 		console.log(" round: ", payload.round, " reason: ", payload.reason);
 		console.log(" winnerSide: ", payload.winnerSide);
 		const state = this.context.state;
@@ -108,15 +120,16 @@ export default class tournamentActionHandler extends GameActionHandler {
 		if (payload.reason === "normal") {
 			this.endRound(payload);
 			if (payload.round < 3) {
+				console.groupEnd();
 				return;
 			}
 			this.context.commit("setWinner", {
 				winner: state.tournamentWinner.round3,
 			});
 		}
-		if (this.socket) {
+		if (!this.gameEnded) {
 			this.socket.disconnect();
-			this.socket = null;
+			this.gameEnded = true;
 		}
 		this.context.commit("setEndReason", { endReason: payload.reason });
 		if (
@@ -125,12 +138,14 @@ export default class tournamentActionHandler extends GameActionHandler {
 		) {
 			this.context.commit("setGameStatus", { gameStatus: "ended" });
 		}
+		console.groupEnd();
 	}
 
 	/**
 	 * @description tournament 참여자의 닉네임을 리스트 형태로 tournamentPlayer에 저장
 	 */
 	initTournamentPlayers() {
+		console.log("initTournamentPlayers: ");
 		this.context.commit("setTournamentPlayer", {
 			tournamentPlayer: this.nicknameList,
 		});
@@ -140,6 +155,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 	 * @description round별로 tournament 참여자의 점수를 초기화
 	 */
 	initTournamentScores() {
+		console.log("initTournamentScores: ");
 		this.context.commit("setTournamentScore", {
 			tournamentScore: {
 				round1: ["-", "-"],
@@ -153,6 +169,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 	 * @description round별로 tournament 참여자의 우승자를 초기화
 	 */
 	initTournamentWinners() {
+		console.log("initTournamentWinners: ");
 		this.context.commit("setTournamentWinner", {
 			tournamentWinner: {
 				round1: "-",
