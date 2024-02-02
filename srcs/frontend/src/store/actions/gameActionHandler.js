@@ -31,7 +31,7 @@ export default class gameActionHandler {
 	 * @param {object} payload {namespace, intraId, nickname, speedUp}
 	 */
 	connectSocket(payload) {
-		const url = `https://localhost/${payload.namespace}`;
+		const url = `${process.env.SOCKET_URL}/${payload.namespace}`;
 
 		this.socket = io(url, {
 			query: {
