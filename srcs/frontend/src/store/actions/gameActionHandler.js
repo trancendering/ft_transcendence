@@ -30,7 +30,7 @@ export default class gameActionHandler {
 	 * @description 소켓 연결
 	 * @param {object} payload {namespace, intraId, nickname, speedUp}
 	 */
-	async connectSocket(payload) {
+	connectSocket(payload) {
 		const url = `https://localhost/${payload.namespace}`;
 
 		this.socket = io(url, {
