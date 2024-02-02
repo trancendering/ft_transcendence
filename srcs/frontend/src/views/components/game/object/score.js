@@ -5,7 +5,7 @@ import { Side } from "../../../../enum/constant.js";
 import { tableHeight } from "./config/sizeConfig.js";
 import helvetiker_regular from "../../../../static/fonts/helvetiker_regular.typeface.json";
 
-export default function createScoreObject(score, side) {
+function createScoreObject(score, side) {
 	const loader = new FontLoader();
 	let scoreObject = new THREE.Group();
 
@@ -43,3 +43,5 @@ export default function createScoreObject(score, side) {
 
 	return scoreObject;
 }
+
+export { createScoreObject };

@@ -4,13 +4,19 @@ import { Side } from "../../../enum/constant.js";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import TWEEN from "@tweenjs/tween.js";
-import { table } from "./object/table.js";
-import { northWall, southWall, eastWall, westWall } from "./object/wall.js";
-import { ball } from "./object/ball.js";
-import { leftPaddle, rightPaddle } from "./object/paddle.js";
-import createNicknameObject from "./object/nickname.js";
-import createScoreObject from "./object/score.js";
-import { scoreSeparator } from "./object/scoreSeperator.js";
+import {
+	table,
+	northWall,
+	southWall,
+	eastWall,
+	westWall,
+	leftPaddle,
+	rightPaddle,
+	scoreSeparator,
+	createBallObject,
+	createNicknameObject,
+	createScoreObject,
+} from "./object";
 
 export default class gameCanvas extends Component {
 	constructor() {
@@ -66,26 +72,48 @@ export default class gameCanvas extends Component {
 			Side.RIGHT
 		);
 
+		// Use the updated createBallObject function
+		const { ball, pointLight } = createBallObject(store.state.fancyBall);
+		this.ball = ball;
+		this.pointLight = pointLight;
+
+		// Add the ball to the scene
+		this.scene.add(this.ball);
+
+		// Conditionally add the pointLight to the scene if it exists
+		if (this.pointLight) {
+			this.scene.add(this.pointLight);
+		}
+
 		this.scene.add(
 			table,
 			northWall,
 			southWall,
 			eastWall,
 			westWall,
-			ball,
 			leftPaddle,
 			rightPaddle,
+			scoreSeparator,
+			this.ball,
 			leftNicknameObject,
 			rightNicknameObject,
-			scoreSeparator,
 			this.leftScoreObject,
 			this.rightScoreObject
 		);
 	}
 
 	initLighting() {
-		const ambient = new THREE.AmbientLight(0xa0a0fc, 0.82);
-		const sunLight = new THREE.DirectionalLight(0xe8c37b, 1.96);
+		let ambientIntensity = 0.82;
+		let sunLightIntensity = 1.96;
+
+		// Darker ambient and sun light for fancy ball
+		if (store.state.fancyBall === "fancy") {
+			ambientIntensity = 0.5;
+			sunLightIntensity = 1.2;
+		}
+
+		const ambient = new THREE.AmbientLight(0xa0a0fc, ambientIntensity);
+		const sunLight = new THREE.DirectionalLight(0xe8c37b, sunLightIntensity);
 		sunLight.position.set(-15, 40, 80);
 		this.scene.add(ambient, sunLight);
 	}
@@ -134,8 +162,13 @@ export default class gameCanvas extends Component {
 		leftPaddle.position.y = store.state.leftPaddlePosition / 100;
 		rightPaddle.position.y = store.state.rightPaddlePosition / 100;
 
-		ball.position.x = store.state.ballPosition.x / 100;
-		ball.position.y = store.state.ballPosition.y / 100;
+		this.ball.position.x = store.state.ballPosition.x / 100;
+		this.ball.position.y = store.state.ballPosition.y / 100;
+
+		if (this.pointLight) {
+			this.pointLight.position.x = this.ball.position.x;
+			this.pointLight.position.y = this.ball.position.y;
+		}
 
 		TWEEN.update();
 		this.controls.update();
