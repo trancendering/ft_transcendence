@@ -10,7 +10,7 @@ all: up
 	
 
 up: webpack
-	$(DOCKER_COMPOSE) -f $(YML_PATH) up -d
+	$(DOCKER_COMPOSE) -f $(YML_PATH) up -d --build
 
 # webpack 생성 및 복사 front src만 바뀌었을 때, webpack만 다시 빌드하고, nginx 재시작.
 webpack :
