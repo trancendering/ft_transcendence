@@ -11,9 +11,7 @@ const ModalHandler = (() => {
 		const modal = getModalById(modalId);
 		if (modal) {
 			modal.style.display = "flex";
-			document
-				.getElementsByTagName("body")[0]
-				.classList.add("overflow-y-hidden");
+			document.getElementsByTagName("body")[0].classList.add("overflow-y-hidden");
 		}
 	};
 
@@ -22,9 +20,7 @@ const ModalHandler = (() => {
 		const modal = getModalById(modalId);
 		if (modal) {
 			modal.style.display = "none";
-			document
-				.getElementsByTagName("body")[0]
-				.classList.remove("overflow-y-hidden");
+			document.getElementsByTagName("body")[0].classList.remove("overflow-y-hidden");
 			clearModal(modalId);
 		}
 	};
@@ -39,17 +35,13 @@ const ModalHandler = (() => {
 		const modal = getModalById(modalId);
 
 		// Clear all text inputs, textareas, and number inputs
-		const textInputs = modal.querySelectorAll(
-			'input[type="text"], input[type="number"], textarea'
-		);
+		const textInputs = modal.querySelectorAll('input[type="text"], input[type="number"], textarea');
 		textInputs.forEach((input) => {
 			input.value = "";
 		});
 
 		// Reset all checkboxes and radio buttons to their default state
-		const checkboxesAndRadios = modal.querySelectorAll(
-			'input[type="checkbox"], input[type="radio"]'
-		);
+		const checkboxesAndRadios = modal.querySelectorAll('input[type="checkbox"], input[type="radio"]');
 		checkboxesAndRadios.forEach((input) => {
 			input.checked = input.defaultChecked;
 		});
@@ -57,9 +49,7 @@ const ModalHandler = (() => {
 		// Reset all select elements to their default selected option
 		const selects = modal.querySelectorAll("select");
 		selects.forEach((select) => {
-			select.value =
-				select.querySelector("option[selected]")?.value ||
-				select.options[0].value;
+			select.value = select.querySelector("option[selected]")?.value || select.options[0].value;
 		});
 	};
 

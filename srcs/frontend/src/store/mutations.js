@@ -101,10 +101,7 @@ function setTournamentWinner(state, payload) {
  */
 function updateTournamentScore(state, payload) {
 	const newTournamentScore = { ...state.tournamentScore };
-	newTournamentScore[`round${payload.round}`] = [
-		payload.leftUserScore,
-		payload.rightUserScore,
-	];
+	newTournamentScore[`round${payload.round}`] = [payload.leftUserScore, payload.rightUserScore];
 	state.tournamentScore = newTournamentScore;
 	console.log("updateTournamentScore: ", state.tournamentScore);
 	return state;

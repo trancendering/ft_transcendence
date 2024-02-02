@@ -22,12 +22,8 @@ export default class gameCanvas extends Component {
 	constructor() {
 		super({ element: document.getElementById("gameCanvas") });
 		store.events.subscribe("gameStatusChange", async () => this.render());
-		store.events.subscribe("leftUserScoreChange", async () =>
-			this.updateLeftUserScore()
-		);
-		store.events.subscribe("rightUserScoreChange", async () =>
-			this.updateRightUserScore()
-		);
+		store.events.subscribe("leftUserScoreChange", async () => this.updateLeftUserScore());
+		store.events.subscribe("rightUserScoreChange", async () => this.updateRightUserScore());
 		this.handleEvent();
 		this.handleResize();
 	}
@@ -42,35 +38,18 @@ export default class gameCanvas extends Component {
 	}
 
 	initCamera() {
-		this.camera = new THREE.PerspectiveCamera(
-			100,
-			window.innerWidth / window.innerHeight,
-			1,
-			1000
-		);
+		this.camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 1, 1000);
 	}
 
 	initScene() {
 		this.scene = new THREE.Scene();
 		this.scene.background = new THREE.Color("#065535");
 
-		const leftNicknameObject = createNicknameObject(
-			store.state.gameContext,
-			Side.LEFT
-		);
-		const rightNicknameObject = createNicknameObject(
-			store.state.gameContext,
-			Side.RIGHT
-		);
+		const leftNicknameObject = createNicknameObject(store.state.gameContext, Side.LEFT);
+		const rightNicknameObject = createNicknameObject(store.state.gameContext, Side.RIGHT);
 
-		this.leftScoreObject = createScoreObject(
-			store.state.leftUserScore,
-			Side.LEFT
-		);
-		this.rightScoreObject = createScoreObject(
-			store.state.rightUserScore,
-			Side.RIGHT
-		);
+		this.leftScoreObject = createScoreObject(store.state.leftUserScore, Side.LEFT);
+		this.rightScoreObject = createScoreObject(store.state.rightUserScore, Side.RIGHT);
 
 		// Use the updated createBallObject function
 		const { ball, pointLight } = createBallObject(store.state.fancyBall);
@@ -119,10 +98,7 @@ export default class gameCanvas extends Component {
 	}
 
 	initControls() {
-		this.controls = new OrbitControls(
-			this.camera,
-			this.renderer.domElement
-		);
+		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 	}
 
 	setOrbitControlsLimits() {
@@ -140,9 +116,7 @@ export default class gameCanvas extends Component {
 	introAnimation() {
 		this.controls.enabled = false;
 
-		const cameraTween = new TWEEN.Tween(
-			this.camera.position.set(30, 30, -25)
-		)
+		const cameraTween = new TWEEN.Tween(this.camera.position.set(30, 30, -25))
 			.to({ x: 0, y: 0, z: 3.5 }, 3500)
 			.delay(1000)
 			.easing(TWEEN.Easing.Quartic.InOut)
@@ -214,9 +188,7 @@ export default class gameCanvas extends Component {
 				this.camera.updateProjectionMatrix();
 
 				this.renderer.setSize(window.innerWidth, window.innerHeight);
-				this.renderer.setPixelRatio(
-					Math.min(window.devicePixelRatio, 2)
-				);
+				this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 			},
 			false
 		);
@@ -225,20 +197,14 @@ export default class gameCanvas extends Component {
 	async updateLeftUserScore() {
 		if (store.state.gameStatus !== "playing") return;
 		this.scene.remove(this.leftScoreObject);
-		this.leftScoreObject = createScoreObject(
-			store.state.leftUserScore,
-			Side.LEFT
-		);
+		this.leftScoreObject = createScoreObject(store.state.leftUserScore, Side.LEFT);
 		this.scene.add(this.leftScoreObject);
 	}
 
 	async updateRightUserScore() {
 		if (store.state.gameStatus !== "playing") return;
 		this.scene.remove(this.rightScoreObject);
-		this.rightScoreObject = createScoreObject(
-			store.state.rightUserScore,
-			Side.RIGHT
-		);
+		this.rightScoreObject = createScoreObject(store.state.rightUserScore, Side.RIGHT);
 		this.scene.add(this.rightScoreObject);
 	}
 }

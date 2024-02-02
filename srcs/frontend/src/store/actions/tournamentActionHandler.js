@@ -20,9 +20,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 	static getInstance(context) {
 		console.log("getInstance of tournamentActionHandler");
 		if (!tournamentActionHandler.instance) {
-			tournamentActionHandler.instance = new tournamentActionHandler(
-				context
-			);
+			tournamentActionHandler.instance = new tournamentActionHandler(context);
 		}
 		return tournamentActionHandler.instance;
 	}
@@ -32,9 +30,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 	 * @param {object} payload { roomName, intraId, nickname}
 	 */
 	async startGame(payload) {
-		console.groupCollapsed(
-			"EVENT: userFullEvent: tournamentActionHandler.startGame"
-		);
+		console.groupCollapsed("EVENT: userFullEvent: tournamentActionHandler.startGame");
 		const state = this.context.state;
 
 		// 게임 시작 시 게임 정보 초기화
@@ -91,8 +87,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 			rightUserScore: state.rightUserScore,
 		});
 
-		const winnerIndex =
-			this.matchQueue[payload.winnerSide === Side.LEFT ? 0 : 1];
+		const winnerIndex = this.matchQueue[payload.winnerSide === Side.LEFT ? 0 : 1];
 		this.matchQueue = this.matchQueue.slice(2);
 		this.matchQueue.push(winnerIndex);
 		this.context.commit("updateTournamentWinner", {
@@ -110,9 +105,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 	 * @param {object} payload {round, reason, winnerSide}
 	 */
 	async endGame(payload) {
-		console.groupCollapsed(
-			"EVENT: endGame: tournamentActionHandler.endGame"
-		);
+		console.groupCollapsed("EVENT: endGame: tournamentActionHandler.endGame");
 		console.log(" round: ", payload.round, " reason: ", payload.reason);
 		console.log(" winnerSide: ", payload.winnerSide);
 		const state = this.context.state;
@@ -132,10 +125,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 			this.gameEnded = true;
 		}
 		this.context.commit("setEndReason", { endReason: payload.reason });
-		if (
-			state.endReason === "opponentLeft" ||
-			state.endReason === "userLeft"
-		) {
+		if (state.endReason === "opponentLeft" || state.endReason === "userLeft") {
 			this.context.commit("setGameStatus", { gameStatus: "ended" });
 		}
 		console.groupEnd();

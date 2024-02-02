@@ -9,8 +9,7 @@ function createNicknameObject(gameContext, side) {
 	const loader = new FontLoader();
 	let nicknameObject = new THREE.Group();
 
-	let nickname =
-		side === Side.LEFT ? gameContext.leftUser : gameContext.rightUser;
+	let nickname = side === Side.LEFT ? gameContext.leftUser : gameContext.rightUser;
 	if (gameContext.userSide === side && gameContext.participated) {
 		nickname += " (ME)";
 	}
@@ -35,17 +34,9 @@ function createNicknameObject(gameContext, side) {
 		const nicknameSpacing = 0.5;
 
 		if (side === Side.LEFT) {
-			text.position.set(
-				-(tableWidth + sideMargin) / 2 + nicknameSpacing,
-				tableHeight / 2 + 0.5,
-				0
-			);
+			text.position.set(-(tableWidth + sideMargin) / 2 + nicknameSpacing, tableHeight / 2 + 0.5, 0);
 		} else if (side === Side.RIGHT) {
-			text.position.set(
-				(tableWidth + sideMargin) / 2 - textSize.x - nicknameSpacing,
-				tableHeight / 2 + 0.5,
-				0
-			);
+			text.position.set((tableWidth + sideMargin) / 2 - textSize.x - nicknameSpacing, tableHeight / 2 + 0.5, 0);
 		}
 
 		nicknameObject.add(text);

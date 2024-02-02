@@ -19,9 +19,7 @@ export default class singleGameActionHandler extends GameActionHandler {
 
 	static getInstance(context, payload) {
 		if (!singleGameActionHandler.instance) {
-			singleGameActionHandler.instance = new singleGameActionHandler(
-				context
-			);
+			singleGameActionHandler.instance = new singleGameActionHandler(context);
 		}
 		return singleGameActionHandler.instance;
 	}
@@ -31,9 +29,7 @@ export default class singleGameActionHandler extends GameActionHandler {
 	 * @param {object} payload { namespace, intraId, nickname, speedUp}
 	 */
 	async startGame(payload) {
-		console.groupCollapsed(
-			"EVENT: userFullEvent: singleGameActionHandler.startGame"
-		);
+		console.groupCollapsed("EVENT: userFullEvent: singleGameActionHandler.startGame");
 
 		const state = this.context.state;
 
@@ -67,18 +63,14 @@ export default class singleGameActionHandler extends GameActionHandler {
 	 * @param {object} payload {reason}
 	 */
 	async endGame(payload) {
-		console.groupCollapsed(
-			"EVENT: endGame: singleGameActionHandler.endGame"
-		);
+		console.groupCollapsed("EVENT: endGame: singleGameActionHandler.endGame");
 		console.log(" reason=", payload.reason);
 
 		const state = this.context.state;
 
 		if (payload.reason === "normal") {
 			const winner =
-				state.leftUserScore > state.rightUserScore
-					? state.gameContext.leftUser
-					: state.gameContext.rightUser;
+				state.leftUserScore > state.rightUserScore ? state.gameContext.leftUser : state.gameContext.rightUser;
 			this.context.commit("setWinner", { winner: winner });
 		}
 

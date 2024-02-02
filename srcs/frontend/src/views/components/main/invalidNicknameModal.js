@@ -38,11 +38,8 @@ export default class InvalidNicknameModal extends Component {
 	}
 
 	async handleEvent() {
-		document
-			.getElementById("invalidNicknameModalCloseBtn")
-			.addEventListener("click", () => {
-				document.getElementById("invalidNicknameModal").style.display =
-					"none";
-			});
+		document.getElementById("invalidNicknameModalCloseBtn").addEventListener("click", () => {
+			document.getElementById("invalidNicknameModal").style.display = "none";
+		});
 	}
 }
