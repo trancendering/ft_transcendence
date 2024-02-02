@@ -45,7 +45,7 @@ clean:
 fclean:
 	make -C ./srcs/frontend/ 
 	rm -rf ./srcs/middleware/dist
-	@docker compose -f srcs/docker-compose.yml down -v --rmi all 	
+	$(DOCKER_COMPOSE) -f $(YML_PATH) down -v--rmi all 	
 
 # $$는 $를 이스케이프하기 위한 것으로, 쉘에서 $를 쓴 것과 동일함
 
