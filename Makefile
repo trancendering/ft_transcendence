@@ -1,7 +1,7 @@
 
 DOCKER_COMPOSE := docker compose
 YML_PATH = ./srcs/docker-compose.yml
-DATEBASE_DIR=./srcs/database/
+DATEBASE_DIR=./srcs/database
 
 # 기본 실행
 all: up
@@ -10,7 +10,9 @@ all: up
 	
 
 up: webpack
+	if [ ! -d DATEBASE_DIR ]; then mkdir -p DATEBASE_DIR; fi
 	$(DOCKER_COMPOSE) -f $(YML_PATH) up -d --build
+
 
 # webpack 생성 및 복사 front src만 바뀌었을 때, webpack만 다시 빌드하고, nginx 재시작.
 webpack :
@@ -35,14 +37,19 @@ stop:
 build:
 	$(DOCKER_COMPOSE) -f $(YML_PATH) build
 
+clean_db:
+	rm -rf ./srcs/database
+
+# TODO: 필요한 도커 이미지만 삭제하도록, 암살 가능성 농후함
 # 인스턴스와 이미지 및 네트워크 등 삭제
 clean:
 	make -C ./srcs/frontend/ clean
 	rm -rf ./srcs/middleware/dist
 	$(DOCKER_COMPOSE) -f $(YML_PATH) down -v
 
+# TODO: 필요한 도커 이미지만 삭제하도록, 암살 가능성 농후함
 # 로컬 저장소를 포함하여 전부 삭제
-fclean:
+fclean: clean_db
 	make -C ./srcs/frontend/ clean
 	rm -rf ./srcs/middleware/dist
 	$(DOCKER_COMPOSE) -f $(YML_PATH) down -v --rmi all 	
