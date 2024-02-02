@@ -72,77 +72,56 @@ export default class GameCustomizationModal extends Component {
 
 	async handleEvent() {
 		// Reset Form When Modal Closes
-		document
-			.getElementById("gameCloseBtn")
-			.addEventListener("click", () => {
-				this.element.querySelector("#gameCustomizationForm").reset();
-				document.getElementById(
-					"gameCustomizationModal"
-				).style.display = "none";
+		document.getElementById("gameCloseBtn").addEventListener("click", () => {
+			this.element.querySelector("#gameCustomizationForm").reset();
+			document.getElementById("gameCustomizationModal").style.display = "none";
+		});
+
+		this.element.querySelector("#gameStartBtn").addEventListener("click", async (event) => {
+			// Prevent Default Submit Behavior
+			event.preventDefault();
+
+			// Check Nickname is Empty or too long or non-English
+			const nickname = this.element.querySelector("#nickname").value;
+			const englishCheck = /^[A-Za-z]+$/;
+
+			if (nickname === "" || nickname.length > 10 || !englishCheck.test(nickname)) {
+				document.getElementById("invalidNicknameModal").style.display = "flex";
+				return;
+			}
+
+			// Set Fancy Ball State
+			const fancyBallValue = this.element.querySelector(
+				'#ballDesignOption input[name="ballDesignBtn"]:checked'
+			).value;
+			store.dispatch("setFancyBall", { fancyBall: fancyBallValue });
+
+			// 임시 랜덤 intraId 생성
+			// TODO: auth 로직 구현 후 삭제
+			function makeRandomName() {
+				var name = "";
+				var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+				for (var i = 0; i < 5; i++) name += possible.charAt(Math.floor(Math.random() * possible.length));
+				return name;
+			}
+			store.dispatch("setIntraId", { intraId: makeRandomName() });
+
+			// Set Game Customization State
+			const speedUp = this.element.querySelector('#speedOption input[name="speedBtn"]:checked').value;
+
+			// Hide Game Customization Modal
+			document.getElementById("gameCustomizationModal").style.display = "none";
+
+			// Show Opponent Waiting Modal
+			document.getElementById("opponentWaitingModal").style.display = "flex";
+
+			// Join Game
+			store.dispatch("joinGame", {
+				namespace: store.state.gameMode.toLowerCase(),
+				intraId: store.state.intraId,
+				nickname: nickname,
+				speedUp: speedUp,
 			});
-
-		this.element
-			.querySelector("#gameStartBtn")
-			.addEventListener("click", async (event) => {
-				// Prevent Default Submit Behavior
-				event.preventDefault();
-
-				// Check Nickname is Empty or too long or non-English
-				const nickname = this.element.querySelector("#nickname").value;
-				const englishCheck = /^[A-Za-z]+$/;
-
-				if (
-					nickname === "" ||
-					nickname.length > 10 ||
-					!englishCheck.test(nickname)
-				) {
-					document.getElementById(
-						"invalidNicknameModal"
-					).style.display = "flex";
-					return;
-				}
-
-				// Set Fancy Ball State
-				const fancyBallValue = this.element.querySelector(
-					'#ballDesignOption input[name="ballDesignBtn"]:checked'
-				).value;
-				store.dispatch("setFancyBall", { fancyBall: fancyBallValue });
-
-				// 임시 랜덤 intraId 생성
-				// TODO: auth 로직 구현 후 삭제
-				function makeRandomName() {
-					var name = "";
-					var possible =
-						"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-					for (var i = 0; i < 5; i++)
-						name += possible.charAt(
-							Math.floor(Math.random() * possible.length)
-						);
-					return name;
-				}
-				store.dispatch("setIntraId", { intraId: makeRandomName() });
-
-				// Set Game Customization State
-				const speedUp = this.element.querySelector(
-					'#speedOption input[name="speedBtn"]:checked'
-				).value;
-
-				// Hide Game Customization Modal
-				document.getElementById(
-					"gameCustomizationModal"
-				).style.display = "none";
-
-				// Show Opponent Waiting Modal
-				document.getElementById("opponentWaitingModal").style.display =
-					"flex";
-
-				// Join Game
-				store.dispatch("joinGame", {
-					namespace: store.state.gameMode.toLowerCase(),
-					intraId: store.state.intraId,
-					nickname: nickname,
-					speedUp: speedUp,
-				});
-			});
+		});
 	}
 }

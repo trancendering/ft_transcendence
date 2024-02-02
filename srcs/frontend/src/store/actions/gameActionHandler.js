@@ -123,14 +123,9 @@ export default class gameActionHandler {
 	updateGameContext() {
 		const leftUserIndex = this.matchQueue[0];
 		const rightUserIndex = this.matchQueue[1];
-		const participated =
-			leftUserIndex === this.userIndex ||
-			rightUserIndex === this.userIndex;
+		const participated = leftUserIndex === this.userIndex || rightUserIndex === this.userIndex;
 		if (participated) {
-			this.userSide =
-				this.matchQueue.indexOf(this.userIndex) % 2 === 0
-					? Side.LEFT
-					: Side.RIGHT;
+			this.userSide = this.matchQueue.indexOf(this.userIndex) % 2 === 0 ? Side.LEFT : Side.RIGHT;
 		}
 
 		console.log("updateGameContext: ");
@@ -165,18 +160,12 @@ export default class gameActionHandler {
 			ballPosition: payload.ballPosition,
 		});
 
-		if (
-			gameContext.participated === false ||
-			gameContext.userSide === Side.LEFT
-		) {
+		if (gameContext.participated === false || gameContext.userSide === Side.LEFT) {
 			this.context.commit("updateRightPaddlePosition", {
 				rightPaddlePosition: payload.rightPaddlePosition,
 			});
 		}
-		if (
-			gameContext.participated === false ||
-			gameContext.userSide === Side.RIGHT
-		) {
+		if (gameContext.participated === false || gameContext.userSide === Side.RIGHT) {
 			this.context.commit("updateLeftPaddlePosition", {
 				leftPaddlePosition: payload.leftPaddlePosition,
 			});
@@ -247,13 +236,8 @@ export default class gameActionHandler {
 		const state = context.state;
 
 		const curPosition =
-			state.gameContext.userSide === Side.LEFT
-				? state.leftPaddlePosition
-				: state.rightPaddlePosition;
-		const newPosition = Math.min(
-			curPosition + 10,
-			Game.CANVAS_HEIGHT / 2 - Game.PADDLE_HEIGHT / 2
-		);
+			state.gameContext.userSide === Side.LEFT ? state.leftPaddlePosition : state.rightPaddlePosition;
+		const newPosition = Math.min(curPosition + 10, Game.CANVAS_HEIGHT / 2 - Game.PADDLE_HEIGHT / 2);
 		if (newPosition === undefined) {
 			console.log("moveUserPaddleUp: new position undefined");
 			return;
@@ -270,13 +254,8 @@ export default class gameActionHandler {
 		const state = context.state;
 
 		const curPosition =
-			state.gameContext.userSide === Side.LEFT
-				? state.leftPaddlePosition
-				: state.rightPaddlePosition;
-		const newPosition = Math.max(
-			curPosition - 10,
-			-Game.CANVAS_HEIGHT / 2 + Game.PADDLE_HEIGHT / 2
-		);
+			state.gameContext.userSide === Side.LEFT ? state.leftPaddlePosition : state.rightPaddlePosition;
+		const newPosition = Math.max(curPosition - 10, -Game.CANVAS_HEIGHT / 2 + Game.PADDLE_HEIGHT / 2);
 		if (newPosition === undefined) {
 			console.log("moveUserPaddleDown: new position undefined");
 			return;
