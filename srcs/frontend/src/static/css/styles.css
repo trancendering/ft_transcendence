@@ -28,6 +28,14 @@ canvas {
     background-color: rgba(0, 0, 0, 0.4);
 }
 
+#gameOverModal {
+    z-index: 3;
+}
+
+#tournamentBracketModal {
+    z-index: 2;
+}
+
 .custom-modal-dialog {
     position: relative;
     margin: auto;
@@ -395,7 +403,7 @@ canvas {
     justify-content: space-between;
 }
 
-.game-item .details .name,
+game-item .details .name,
 .game-item .details .score {
     margin: 0 10px;
 }
