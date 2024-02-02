@@ -4,7 +4,6 @@ import Component from "../../../library/component.js";
 export default class TournamentBracketModal extends Component {
 	constructor() {
 		super({ element: document.getElementById("tournamentBracketModal") });
-		this.render();
 		store.events.subscribe("roundChange", () =>
 			this.showTournamentBracketModal()
 		);
