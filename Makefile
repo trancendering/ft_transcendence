@@ -42,6 +42,8 @@ stop:
 build:
 	$(DOCKER_COMPOSE) -f $(YML_PATH) build
 
+
+# TODO: 필요한 도커 이미지만 삭제하도록, 암살 가능성 농후함
 # 인스턴스와 이미지 및 네트워크 등 삭제
 clean:
 	make down
@@ -49,6 +51,7 @@ clean:
 	rm -rf ./srcs/middleware/dist
 	docker system prune -f --all
 
+# TODO: 필요한 도커 이미지만 삭제하도록, 암살 가능성 농후함
 # 로컬 저장소를 포함하여 전부 삭제
 fclean: 
 	make clean
