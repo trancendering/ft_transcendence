@@ -19,9 +19,7 @@ export default class singleGameActionHandler extends GameActionHandler {
 
 	static getInstance(context, payload) {
 		if (!singleGameActionHandler.instance) {
-			singleGameActionHandler.instance = new singleGameActionHandler(
-				context
-			);
+			singleGameActionHandler.instance = new singleGameActionHandler(context);
 		}
 		return singleGameActionHandler.instance;
 	}
@@ -31,7 +29,7 @@ export default class singleGameActionHandler extends GameActionHandler {
 	 * @param {object} payload { namespace, intraId, nickname, speedUp}
 	 */
 	async startGame(payload) {
-		console.log("EVENT: userFullEvent: singleGameActionHandler.startGame");
+		console.groupCollapsed("EVENT: userFullEvent: singleGameActionHandler.startGame");
 
 		const state = this.context.state;
 
@@ -42,20 +40,22 @@ export default class singleGameActionHandler extends GameActionHandler {
 		this.userIndex = this.intraIdList.indexOf(state.intraId);
 		this.userSide = this.userIndex % 2 === 0 ? Side.LEFT : Side.RIGHT;
 		this.matchQueue = [0, 1];
+
+		console.log(" - roomName=", payload.roomName);
+		console.log(" - intraId=", payload.intraId);
+		console.log(" - nickname=", payload.nickname);
+		console.log(" - userIndex=", this.userIndex);
+		console.log(" - userSide=", this.userSide);
+
 		this.initScores();
 		this.initPositions();
 		this.updateGameContext();
 		this.context.commit("setEndReason", { endReason: "normal" });
 
-		console.log("  roomName=", payload.roomName);
-		console.log("  intraId=", payload.intraId);
-		console.log("  nickname=", payload.nickname);
-		console.log("  userIndex=", this.userIndex);
-		console.log("  userSide=", this.userSide);
-
 		// 게임 페이지로 이동
 		navigateTo("/game");
 		this.context.commit("setGameStatus", { gameStatus: "playing" });
+		console.groupEnd();
 	}
 
 	/**
@@ -63,24 +63,23 @@ export default class singleGameActionHandler extends GameActionHandler {
 	 * @param {object} payload {reason}
 	 */
 	async endGame(payload) {
-		console.log("EVENT: endGame: singleGameActionHandler.endGame");
+		console.groupCollapsed("EVENT: endGame: singleGameActionHandler.endGame");
 		console.log(" reason=", payload.reason);
 
 		const state = this.context.state;
 
 		if (payload.reason === "normal") {
 			const winner =
-				state.leftUserScore > state.rightUserScore
-					? state.gameContext.leftUser
-					: state.gameContext.rightUser;
+				state.leftUserScore > state.rightUserScore ? state.gameContext.leftUser : state.gameContext.rightUser;
 			this.context.commit("setWinner", { winner: winner });
 		}
 
-		if (this.socket) {
+		if (!this.gameEnded) {
 			this.socket.disconnect();
-			this.socket = null;
+			this.gameEnded = true;
 		}
 		this.context.commit("setEndReason", { endReason: payload.reason });
 		this.context.commit("setGameStatus", { gameStatus: "ended" });
+		console.groupEnd();
 	}
 }

@@ -2,7 +2,6 @@ html,
 body {
     margin: 0;
     padding: 0;
-    overflow: hidden;
 }
 
 #game-controls {
@@ -19,27 +18,27 @@ canvas {
 
 .custom-modal {
     display: none;
-    /* Hidden by default */
     position: fixed;
-    /* Stay in place */
     z-index: 1;
-    /* Sit on top */
     left: 0;
     top: 0;
     width: 100%;
-    /* Full width */
     height: 100%;
-    /* Full height */
     overflow: auto;
-    /* Enable scroll if needed */
     background-color: rgba(0, 0, 0, 0.4);
-    /* Black w/ opacity */
+}
+
+#gameOverModal {
+    z-index: 3;
+}
+
+#tournamentBracketModal {
+    z-index: 2;
 }
 
 .custom-modal-dialog {
     position: relative;
     margin: auto;
-    /* 10% from the top and centered */
     padding: 0;
     width: 80%;
     box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
@@ -58,7 +57,6 @@ canvas {
 @media (min-width: 640px) {
     .custom-modal-dialog {
         width: 60%;
-        /* Adjusted width */
     }
 }
 
@@ -66,7 +64,6 @@ canvas {
 @media (min-width: 768px) {
     .custom-modal-dialog {
         width: 60%;
-        /* Adjusted width */
     }
 }
 
@@ -74,7 +71,6 @@ canvas {
 @media (min-width: 1024px) {
     .custom-modal-dialog {
         width: 60%;
-        /* Adjusted width */
     }
 }
 
@@ -82,7 +78,6 @@ canvas {
 @media (min-width: 1280px) {
     .custom-modal-dialog {
         width: 50%;
-        /* Adjusted width */
     }
 }
 
@@ -90,32 +85,8 @@ canvas {
 @media (min-width: 1536px) {
     .custom-modal-dialog {
         width: 40%;
-        /* Adjusted width */
     }
 }
-
-/* #gameOverModal {
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-    display: none;
-    align-items: center;
-    justify-content: center;
-}
-
-#gameOverModal p {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    text-align: center;
-} */
 
 .modal#statusSuccessModal .modal-content,
 .modal#statusErrorsModal .modal-content,
@@ -394,7 +365,6 @@ canvas {
         transform: rotate(360deg);
     }
 }
-
 
 .game-item {
     display: flex;

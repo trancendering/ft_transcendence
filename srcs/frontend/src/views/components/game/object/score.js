@@ -31,11 +31,7 @@ function createScoreObject(score, side) {
 		if (side === Side.LEFT) {
 			text.position.set(-scoreSpacing, tableHeight / 2 + 0.5, 0);
 		} else if (side === Side.RIGHT) {
-			text.position.set(
-				scoreSpacing - textSize.x,
-				tableHeight / 2 + 0.5,
-				0
-			);
+			text.position.set(scoreSpacing - textSize.x, tableHeight / 2 + 0.5, 0);
 		}
 
 		scoreObject.add(text);

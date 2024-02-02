@@ -8,9 +8,7 @@ export default class GameOverModal extends Component {
 	constructor() {
 		super({ element: document.getElementById("gameOverModal") });
 		this.render();
-		store.events.subscribe("gameStatusChange", async () =>
-			this.showModal()
-		);
+		store.events.subscribe("gameStatusChange", async () => this.showModal());
 	}
 
 	async render() {
@@ -52,11 +50,9 @@ export default class GameOverModal extends Component {
 			return;
 		}
 
-		document
-			.getElementById("closeModalBtn")
-			.addEventListener("click", () => {
-				document.getElementById("gameOverModal").style.display = "none";
-			});
+		document.getElementById("closeModalBtn").addEventListener("click", () => {
+			document.getElementById("gameOverModal").style.display = "none";
+		});
 	}
 
 	async showModal() {

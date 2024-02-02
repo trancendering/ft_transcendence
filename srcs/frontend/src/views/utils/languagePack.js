@@ -197,7 +197,7 @@ export const tournamentRecord = {
 		score: "分数",
 		gameId: "游戏 ID",
 	},
-}
+};
 
 export const tournamentRecordButton = {
 	en: {
@@ -209,7 +209,7 @@ export const tournamentRecordButton = {
 	zh: {
 		record: "锦标赛记录",
 	},
-}
+};
 
 export const mainButton = {
 	en: {
@@ -221,5 +221,4 @@ export const mainButton = {
 	zh: {
 		main: "主页",
 	},
-}
-
+};

@@ -4,6 +4,7 @@ import random
 import asyncio
 import time
 import math
+import sys
 
 from socketio import AsyncServer
 
@@ -114,10 +115,8 @@ class BaseRoom:
         조정된 거리만큼 다음 프레임에서 추가적으로 이동
         """
         while not self._kill:
-            # 게임 현재 상태 전송
-            await self._state_send()
-            # update 연산 간 딜레이
-            await asyncio.sleep(1 / self.UPDATE_FREQUENCY)
+            # 게임 현재 상태 전송 및 연산 간 딜레이 생성
+            await asyncio.gather(self._state_send(), asyncio.sleep(1 / self.UPDATE_FREQUENCY))
 
             # 우측 득점
             if self._ball_loc.x <= -self.FIELD_WIDTH / 2:
@@ -138,15 +137,14 @@ class BaseRoom:
                 try:
                     self._ball_move_update()  # 공 위치 갱신
                 except Exception as e:
-                    print("\n")
-                    print(e.with_traceback())
-                    print("ball_velo: ", self._ball_velocity)
-                    print("ball_loc: ", self._ball_loc)
-                    print("ball_rad: ", self._ball_rad)
-                    print("correction_val: ", self._correction_val)
-                    print("left_bar: ", self._bar_loc_left)
-                    print("right_bar: ", self._bar_loc_right)
-                    print("\n")
+                    print("\n", file=sys.stderr)
+                    print("ball_velo: ", self._ball_velocity, file=sys.stderr)
+                    print("ball_loc: ", self._ball_loc, file=sys.stderr)
+                    print("ball_rad: ", self._ball_rad, file=sys.stderr)
+                    print("correction_val: ", self._correction_val, file=sys.stderr)
+                    print("left_bar: ", self._bar_loc_left, file=sys.stderr)
+                    print("right_bar: ", self._bar_loc_right, file=sys.stderr)
+                    print("\n", file=sys.stderr)
                     raise e
         return True  # 비정상(사용자 탈주 등) 종료
 
@@ -180,6 +178,20 @@ class BaseRoom:
             if self._ball_velocity.x > 0:
                 bar_top = self._bar_loc_right + self.BAR_SIZE/2
                 bar_bottom = self._bar_loc_right - self.BAR_SIZE/2
+
+                if self._ball_loc.x > self.FIELD_WIDTH/2 - self.BALL_SIZE:
+                    if bar_bottom <= self._ball_loc.y <= bar_top:
+                        return Collusion.SIDE_COLLUSION
+                    ball_to_top_edge = Vector(self.FIELD_WIDTH/2 - self._ball_loc.x, self._ball_loc.y - bar_top)
+                    if bar_top < self._ball_loc.y and \
+                            ball_to_top_edge.size() < self.BALL_SIZE:
+                        return Collusion.TOP_EDGE_COLLUSION
+                    ball_to_bot_edge = Vector(self.FIELD_WIDTH/2 - self._ball_loc.x, bar_bottom - self._ball_loc.y)
+                    if bar_bottom > self._ball_loc.y and \
+                            ball_to_bot_edge.size() < self.BALL_SIZE:
+                        return Collusion.BOT_EDGE_COLLUSION
+                    return Collusion.NO_COLLUSION
+
                 collusion_baseline = (
                     (self.FIELD_WIDTH/2 - self._ball_loc.x)
                     * (self._ball_velocity.y / self._ball_velocity.x)
@@ -191,8 +203,7 @@ class BaseRoom:
                 bottom_side_bound = bar_bottom + (
                     self.BALL_SIZE * (self._ball_velocity.y / self._ball_velocity.x)
                 )
-                if self._ball_loc.x <= self.FIELD_WIDTH/2 - self.BALL_SIZE and \
-                        bottom_side_bound <= collusion_baseline <= top_side_bound:
+                if bottom_side_bound <= collusion_baseline <= top_side_bound:
                     return Collusion.SIDE_COLLUSION
                 if self._ball_velocity.y > 0:
                     if (
@@ -214,6 +225,20 @@ class BaseRoom:
             else:
                 bar_top = self._bar_loc_left + self.BAR_SIZE/2
                 bar_bottom = self._bar_loc_left - self.BAR_SIZE/2
+
+                if self._ball_loc.x < -self.FIELD_WIDTH/2 + self.BALL_SIZE:
+                    if bar_bottom <= self._ball_loc.y <= bar_top:
+                        return Collusion.SIDE_COLLUSION
+                    ball_to_top_edge = Vector(self.FIELD_WIDTH/2 - self._ball_loc.x, self._ball_loc.y - bar_top)
+                    if bar_top < self._ball_loc.y and \
+                            ball_to_top_edge.size() < self.BALL_SIZE:
+                        return Collusion.TOP_EDGE_COLLUSION
+                    ball_to_bot_edge = Vector(self.FIELD_WIDTH/2 - self._ball_loc.x, bar_bottom - self._ball_loc.y)
+                    if bar_bottom > self._ball_loc.y and \
+                            ball_to_bot_edge.size() < self.BALL_SIZE:
+                        return Collusion.BOT_EDGE_COLLUSION
+                    return Collusion.NO_COLLUSION
+
                 collusion_baseline = (
                     (-self.FIELD_WIDTH/2 - self._ball_loc.x)
                     * (self._ball_velocity.y / self._ball_velocity.x)
@@ -224,8 +249,7 @@ class BaseRoom:
                 bottom_side_bound = bar_bottom - (
                     self.BALL_SIZE * (self._ball_velocity.y / self._ball_velocity.x)
                 )
-                if self._ball_loc.x >= -self.FIELD_WIDTH/2 + self.BALL_SIZE and \
-                        bottom_side_bound <= collusion_baseline <= top_side_bound:
+                if bottom_side_bound <= collusion_baseline <= top_side_bound:
                     return Collusion.SIDE_COLLUSION
                 if self._ball_velocity.y > 0:
                     if (
@@ -260,9 +284,23 @@ class BaseRoom:
             b_to_e_other_basis = ball_to_edge.basis_translate(
                 norm_velocity, Vector(-norm_velocity.y, norm_velocity.x)
             )
-            ball_to_edge_dencity = b_to_e_other_basis.x - math.sqrt(
-                self.BALL_SIZE ** 2 - b_to_e_other_basis.y ** 2
-            )
+            try:
+                ball_to_edge_dencity = b_to_e_other_basis.x - math.sqrt(
+                    self.BALL_SIZE ** 2 - b_to_e_other_basis.y ** 2
+                )
+            except Exception as e:
+                print("\n", file=sys.stderr)
+                print("norm_velocity: ", norm_velocity, file=sys.stderr)
+                print("ball_to_edge: ", ball_to_edge, file=sys.stderr)
+                print("b_to_e_other_basis: ", b_to_e_other_basis, file=sys.stderr)
+                print("ball_velo: ", self._ball_velocity, file=sys.stderr)
+                print("ball_loc: ", self._ball_loc, file=sys.stderr)
+                print("ball_rad: ", self._ball_rad, file=sys.stderr)
+                print("correction_val: ", self._correction_val, file=sys.stderr)
+                print("left_bar: ", self._bar_loc_left, file=sys.stderr)
+                print("right_bar: ", self._bar_loc_right, file=sys.stderr)
+                print("\n", file=sys.stderr)
+                raise e
             modified_val = ball_to_edge_dencity / self._ball_speed
             return (modified_val, self._ball_loc + (self._ball_velocity * modified_val))
 
@@ -355,8 +393,8 @@ class BaseRoom:
                     self._ball_rad += 2 * math.pi
         # 충돌하지 않음, 속도에 따른 공 위치 갱신
         else:
-            self._ball_loc += self._ball_velocity * (1 + self._correction_val)
-            self._correction_val = 0
+            self._ball_loc += self._ball_velocity * (1 + min(0.1, self._correction_val))
+            self._correction_val -= min(0.1, self._correction_val)
 
             # 데드라인에 도달한 경우 이동을 데드라인에서 중단한 것처럼 보이게 함, 렌더링이 겹치는 것을 막기 위함
             if self._ball_loc.x < -self.FIELD_WIDTH / 2:

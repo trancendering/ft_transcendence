@@ -23,9 +23,7 @@ loader.load(helvetiker_regular, function (font) {
 	scoreSeparator = new THREE.Mesh(geometry, material); // Create the THREE.Mesh object here
 
 	scoreSeparator.geometry.computeBoundingBox();
-	const textSize = scoreSeparator.geometry.boundingBox.getSize(
-		new THREE.Vector3()
-	);
+	const textSize = scoreSeparator.geometry.boundingBox.getSize(new THREE.Vector3());
 
 	scoreSeparator.position.set(-(textSize.x / 2), tableHeight / 2 + 0.5, 0);
 });

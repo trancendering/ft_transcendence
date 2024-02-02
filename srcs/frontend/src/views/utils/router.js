@@ -13,8 +13,7 @@ const routes = [
 
 const viewCache = {};
 
-const pathToRegex = (path) =>
-	new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
+const pathToRegex = (path) => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 
 const navigateTo = (url) => {
 	history.pushState(null, null, url);
@@ -29,9 +28,7 @@ const router = async () => {
 		};
 	});
 
-	let match = potentialMatches.find(
-		(potentialMatch) => potentialMatch.result !== null
-	);
+	let match = potentialMatches.find((potentialMatch) => potentialMatch.result !== null);
 
 	if (!match) {
 		match = {

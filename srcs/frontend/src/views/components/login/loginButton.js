@@ -13,7 +13,7 @@ export default class Login extends Component {
 		const languageId = store.state.languageId;
 
 		const view = /*html*/ `
-            <a href="https://localhost/api/v1/login" class="btn btn-primary text-white" role="button">
+            <a href="${process.env.LOGIN_URL}" class="btn btn-primary text-white" role="button">
                 <img src="${logo}" width="24" height="24" class="mr-2 align-middle" alt="42_logo">
                 ${loginButton[languageId].loginDescription}
             </a>

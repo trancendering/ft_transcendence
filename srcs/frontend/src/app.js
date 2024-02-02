@@ -80,10 +80,7 @@ async function checkLoginStatus() {
 }
 
 function handleInitialRoute() {
-	if (
-		!store.state.gameStatus === "playing" &&
-		["/game"].includes(window.location.pathname)
-	) {
+	if (!store.state.gameStatus === "playing" && ["/game"].includes(window.location.pathname)) {
 		navigateTo("/");
 	} else {
 		router();

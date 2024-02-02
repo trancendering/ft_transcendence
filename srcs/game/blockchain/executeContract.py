@@ -40,21 +40,27 @@ def retrieve_transaction():
     tournament_log = []
     for tournament in tournaments:
         tournament_dict = []
-        for game in tournament:
-            game_id, winner, loser = game
-            game_dict = {
-                "game_id": game_id,
-                "winner": {"name": winner[0], "score": winner[1]},
-                "loser": {"name": loser[0], "score": loser[1]},
-            }
-            tournament_dict.append(game_dict)
+
+        for idx, game in enumerate(tournament):
+            if idx < 3:  # 3번만 반복하도록 조건 추가
+                game_id, winner, loser = game
+                game_dict = {
+                    "game_id": game_id,
+                    "winner": {"name": winner[0], "score": winner[1]},
+                    "loser": {"name": loser[0], "score": loser[1]},
+                }
+                tournament_dict.append(game_dict)
+        tournament_dict.append({"timestamp": tournament[3]})
+
         tournament_log.append({"tournament": tournament_dict})
 
-    tournament_log_data = {"tournamentLog": tournament_log}
+    tournament_log_data = {
+        "tournamentLog": tournament_log,
+        "etherscan": "https://goerli.etherscan.io/address/{}".format(contract_address),
+    }
 
     # 딕셔너리를 JSON 형태로 변환
     json_data = json.dumps(tournament_log_data, ensure_ascii=False, indent=4)
-
     return json_data
 
 
