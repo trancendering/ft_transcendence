@@ -1,6 +1,18 @@
 const path = require('path');
 const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+const dotenv = require('dotenv');
+
+// Load environment variables from .env file, fallback to .env.development if not specified
+const envPath = path.join(__dirname, `.env`);
+const env = dotenv.config({ path: envPath }).parsed;
+
+// Reduce the env variables to a nice object for DefinePlugin
+const envKeys = env ? Object.keys(env).reduce((prev, next) => {
+	prev[`process.env.${next}`] = JSON.stringify(env[next]);
+	return prev;
+  }, {}) : {};
 
 module.exports = {
     mode: 'development',
@@ -17,7 +29,8 @@ module.exports = {
         historyApiFallback: true,
     },
     plugins: [
-        new HtmlWebpackPlugin({template: './src/index.html'})
+        new HtmlWebpackPlugin({template: './src/index.html'}),
+		new webpack.DefinePlugin(envKeys),
     ],
     module: {
         rules: [
