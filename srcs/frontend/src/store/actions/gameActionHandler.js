@@ -188,7 +188,7 @@ export default class gameActionHandler {
 	/**
 	 * @description 유저가 준비되었다는 이벤트를 서버로 보냄
 	 */
-	async emitUserReadyEvent() {
+	emitUserReadyEvent() {
 		const state = this.context.state;
 
 		if (!this.socket)
