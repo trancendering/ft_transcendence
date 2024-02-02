@@ -39,9 +39,9 @@ export default class TournamentRecord extends Component {
 
             <div class="container mt-5">
                 <row>
-                    <div class="col-md-12 mb-5 mt-4 d-flex align-items-center justify-content-center">
-                        <h1>${tournamentRecord[languageId].title}</h1>
-                    </div>
+				<div id="etherscan" class="col-md-12 mb-5 mt-4 d-flex align-items-center justify-content-center")">
+					<h1>${tournamentRecord[languageId].title}</h1>
+				</div>
                 </row>
                 <ul id="tournamentList" class="list-group">
                     <!-- Tournament data will be appended here -->
@@ -69,29 +69,46 @@ export default class TournamentRecord extends Component {
 		// Clear any existing content
 		// Parse the tournament log data and get the tournament list container
 		try {
-			let tournamentData = this.tournamentData;
 			let tournamentLogData = this.tournamentLogData;
+			let tournamentData = this.tournamentData;
 			let tournamentList = this.tournamentList;
 
 			tournamentData = JSON.parse(tournamentLogData);
-			console.log(tournamentData);
-			console.log(tournamentData.tournamentLog);
 
-			tournamentData.tournamentLog.forEach((tournamentData, index) => {
+			this.renderLogComponent(tournamentData);
+
+			const latestTournament = tournamentData.tournamentLog.reverse();
+			latestTournament.forEach((tournamentData, index) => {
 				const tournamentItem = document.createElement("li");
-				tournamentItem.className =
-					"list-group-item shadow mt-4 border rounded";
-				tournamentItem.innerHTML = `<h4>Tournament ${index + 1}</h4>`;
+				tournamentItem.className = "list-group-item shadow mt-4 border rounded";
+
+
+				// Unix timestamp to formatted date
+				const unix_timestamp = tournamentData.tournament[3].timestamp;
+				const formattedDate = this.createFormattedDate(unix_timestamp);
+
+				tournamentItem.innerHTML = `
+				<table style="width:100%">
+					<tr>
+						<th style-"text-align: letf;">Tournament ${(index + 1)}</th>
+						<th style="text-align: right">Time: ${formattedDate}</th>
+						</tr>
+				</table>`;
+
+
 
 				// check if there are games in the tournament
 				if (tournamentData.tournament.length > 0) {
 					const gameList = document.createElement("ul");
 					gameList.className = "list-group ";
+					for (const [gameIndex, game] of tournamentData.tournament.entries()) {
+						if (gameIndex === 3) {
+							break;
+						}
 
-					tournamentData.tournament.forEach((game, gameIndex) => {
 						const gameItem = this.createGameItem(game, gameIndex);
 						gameList.appendChild(gameItem);
-					});
+					}
 					tournamentItem.appendChild(gameList);
 				} else {
 					tournamentItem.innerHTML +=
@@ -99,6 +116,9 @@ export default class TournamentRecord extends Component {
 				}
 				tournamentList.appendChild(tournamentItem);
 			});
+
+
+
 		} catch (error) {
 			console.error("Error parsing tournament data: ", error);
 		}
@@ -146,4 +166,39 @@ export default class TournamentRecord extends Component {
 
 		return gameItem;
 	}
+
+	renderLogComponent(tournamentData) {
+		const languageId = store.state.languageId;
+
+		const newComponent = document.createElement("div");
+		newComponent.id = "etherscan";
+		newComponent.className = "btn btn-outline-dark shadow col-md-12 mb-5 mt-4 d-flex align-items-center justify-content-center";
+		newComponent.innerHTML = `<h1>${tournamentRecord[languageId].title}</h1>`;
+
+		// Add click event to open window
+		const link = tournamentData.etherscan;
+		newComponent.onclick = function () {
+			window.open(link, "_blank");
+		};
+
+
+		const originalComponent = document.getElementById("etherscan");
+		originalComponent.parentNode.replaceChild(newComponent, originalComponent);
+	}
+
+	createFormattedDate(unix_timestamp) {
+		const date = new Date(unix_timestamp * 1000); // timestamp는 초 단위이므로 1000을 곱해 밀리초로 변환
+		const formattedDate = new Intl.DateTimeFormat("en-US", {
+			year: "numeric",
+			month: "2-digit",
+			day: "2-digit",
+			hour: "2-digit",
+			minute: "2-digit",
+			second: "2-digit",
+			timeZone: "Asia/Seoul"
+		}).format(date);
+		return formattedDate;
+	}
+
+
 }
