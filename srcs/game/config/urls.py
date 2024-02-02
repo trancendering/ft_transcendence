@@ -15,10 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.conf.urls import handler404
+from users.views import custom_404
 from blockchain.views import TournamentLogView
 
+handler404 = custom_404
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('', include('users.urls')),
     path("tournament/log", TournamentLogView.as_view()),
 ]

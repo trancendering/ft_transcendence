@@ -3,11 +3,8 @@ import Component from "../../../library/component.js";
 import { gameCustomizationModal } from "../../utils/languagePack.js";
 
 export default class GameCustomizationModal extends Component {
-	constructor(params) {
-		super({
-			store,
-			element: document.getElementById("gameCustomizationModal"),
-		});
+	constructor() {
+		super({ element: document.getElementById("gameCustomizationModal") });
 		this.render();
 	}
 
@@ -31,7 +28,7 @@ export default class GameCustomizationModal extends Component {
 									<!-- speed Option -->
 									<div class="btn-group d-flex justify-content-center" role="group" id="speedOption">
 										<div class="form-group mt-4">
-											<label for="speed" class="col-form-label">${gameCustomizationModal[languageId].speed}</label>
+											<span class="col-form-label">${gameCustomizationModal[languageId].speed}</span>
 											<div class="btn-group d-flex justify-content-center mt-2" role="group" aria-label="speedOption">
 												<input type="radio" name="speedBtn" class="btn-check" id="normalSpeed" checked value="normal">
 												<label class="btn btn-outline-primary me-2" for="normalSpeed">${gameCustomizationModal[languageId].normalSpeed}</label>
@@ -44,8 +41,8 @@ export default class GameCustomizationModal extends Component {
 									<!-- ballDesign Option -->
 									<div class="btn-group d-flex justify-content-center" role="group" id="ballDesignOption">
 										<div class="form-group mt-4">
-											<label for="ballDesign" class="col-form-label">${gameCustomizationModal[languageId].ballDesign}</label>
-											<div class="btn-group d-flex justify-content-center mt-2" role="group" aria-label="ballDesignOption">
+											<span class="col-form-label">${gameCustomizationModal[languageId].ballDesign}</span>
+											<div class="btn-group d-flex justify-content-center mt-2" role="group" aria-label="ballDesignOption" id>
 												<input type="radio" name="ballDesignBtn" class="btn-check" id="normalBall" checked value="normal">
 												<label class="btn btn-outline-primary me-2" for="normalBall">${gameCustomizationModal[languageId].normalBall}</label>
 												<input type="radio" name="ballDesignBtn" class="btn-check" id="fancyBall" value="fancy">
@@ -56,7 +53,7 @@ export default class GameCustomizationModal extends Component {
 
 									<div class="row mt-4 justify-content-center">
 										<div class="col-4 text-center mt-4">
-											<button id="gameCustomizationModalCloseBtn" type="button" class="btn btn-danger w-100">${gameCustomizationModal[languageId].close}</button>
+											<button id="gameCloseBtn" type="button" class="btn btn-danger w-100">${gameCustomizationModal[languageId].close}</button>
 										</div>
 										<div class="col-4 text-center mt-4 ">
 											<button id="gameStartBtn" type="submit" class="btn btn-success w-100">${gameCustomizationModal[languageId].start}</button>
@@ -76,7 +73,7 @@ export default class GameCustomizationModal extends Component {
 	async handleEvent() {
 		// Reset Form When Modal Closes
 		document
-			.getElementById("gameCustomizationModalCloseBtn")
+			.getElementById("gameCloseBtn")
 			.addEventListener("click", () => {
 				this.element.querySelector("#gameCustomizationForm").reset();
 				document.getElementById(
@@ -92,7 +89,7 @@ export default class GameCustomizationModal extends Component {
 
 				// Check Nickname is Empty or too long or non-English
 				const nickname = this.element.querySelector("#nickname").value;
-				const englishCheck = /^[A-Za-z0-9]*$/;
+				const englishCheck = /^[A-Za-z]+$/;
 
 				if (
 					nickname === "" ||
@@ -138,13 +135,6 @@ export default class GameCustomizationModal extends Component {
 				// Show Opponent Waiting Modal
 				document.getElementById("opponentWaitingModal").style.display =
 					"flex";
-
-				// Join Game and connect socket
-				// store.dispatch(`join${store.state.gameMode}Game`, {
-				// 	intraId: store.state.intraId,
-				// 	nickname: nickname,
-				// 	speedUp: speedUp,
-				// });
 
 				// Join Game
 				store.dispatch("joinGame", {

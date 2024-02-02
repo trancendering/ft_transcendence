@@ -44,8 +44,7 @@ wsproto==1.2.0
 zope.interface==6.1
 psycopg2-binary==2.9.2
 Twisted[tls,http2]
-
-
+python-dotenv
+requests
 web3==6.15.0
 py-solc-x
-python-dotenv

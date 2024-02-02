@@ -5,7 +5,7 @@ export const login = {
 	ko: {
 		title: "로그인",
 	},
-	ch: {
+	zh: {
 		title: "登录",
 	},
 };
@@ -17,7 +17,7 @@ export const loginButton = {
 	ko: {
 		loginDescription: "42 Intra 로그인",
 	},
-	ch: {
+	zh: {
 		loginDescription: "使用 42 Intra 登录",
 	},
 };
@@ -29,7 +29,7 @@ export const main = {
 	ko: {
 		title: "퐁 모드를 선택하세요",
 	},
-	ch: {
+	zh: {
 		title: "选择您的乒乓模式",
 	},
 };
@@ -47,7 +47,7 @@ export const languageSelector = {
 		korean: "한국어",
 		chinese: "중국어",
 	},
-	ch: {
+	zh: {
 		language: "语言",
 		english: "英语",
 		korean: "韩语",
@@ -66,7 +66,7 @@ export const gameModeCard = {
 		Single: "싱글",
 		Tournament: "토너먼트",
 	},
-	ch: {
+	zh: {
 		play: "玩",
 		Single: "单人",
 		Tournament: "锦标赛",
@@ -98,7 +98,7 @@ export const gameCustomizationModal = {
 		close: "닫기",
 		start: "시작",
 	},
-	ch: {
+	zh: {
 		setting: "设置",
 		nickname: "昵称",
 		speed: "球速",
@@ -123,7 +123,7 @@ export const opponentWaitingModal = {
 		description: "상대방을 기다리는 중입니다",
 		cancel: "취소",
 	},
-	ch: {
+	zh: {
 		waiting: "等待",
 		description: "等待另一位玩家",
 		cancel: "取消",
@@ -141,7 +141,7 @@ export const invalidNicknameModal = {
 		description: "다른 닉네임을 입력해주세요",
 		ok: "확인",
 	},
-	ch: {
+	zh: {
 		title: "无效昵称",
 		description: "请尝试其他昵称",
 		ok: "好的",
@@ -161,7 +161,7 @@ export const gameOverModal = {
 		abnormalEnd: "상대방이 나갔습니다!",
 		closeButton: "닫기",
 	},
-	ch: {
+	zh: {
 		gameOver: "游戏结束",
 		normalEnd: "赢家是",
 		abnormalEnd: "有人离开了游戏！",
@@ -188,7 +188,7 @@ export const tournamentRecord = {
 		score: "점수",
 		gameId: "게임 ID",
 	},
-	ch: {
+	zh: {
 		title: "锦标赛记录",
 		tournament: "锦标赛",
 		noGame: "此锦标赛中没有游戏。",
@@ -206,7 +206,7 @@ export const tournamentRecordButton = {
 	ko: {
 		record: "토너먼트 기록",
 	},
-	ch: {
+	zh: {
 		record: "锦标赛记录",
 	},
 }
@@ -218,7 +218,8 @@ export const mainButton = {
 	ko: {
 		main: "메인",
 	},
-	ch: {
+	zh: {
 		main: "主页",
 	},
 }
+

@@ -4,7 +4,7 @@ set -e
 
 if [ ! -d ".venv" ]; then
     echo "Creating virtual environment...\n"
-	python3 -m venv .venv
+	python3.12 -m venv .venv
 else
     echo ".venv folder already exists.\n"
 fi

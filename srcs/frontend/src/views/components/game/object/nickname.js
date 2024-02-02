@@ -5,7 +5,7 @@ import { Side } from "../../../../enum/constant.js";
 import { tableHeight, tableWidth, sideMargin } from "./config/sizeConfig.js";
 import helvetiker_regular from "../../../../static/fonts/helvetiker_regular.typeface.json";
 
-export default function createNicknameObject(gameContext, side) {
+function createNicknameObject(gameContext, side) {
 	const loader = new FontLoader();
 	let nicknameObject = new THREE.Group();
 
@@ -53,3 +53,5 @@ export default function createNicknameObject(gameContext, side) {
 
 	return nicknameObject;
 }
+
+export { createNicknameObject };

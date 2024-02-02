@@ -1,12 +1,12 @@
 ### Issue Type
 <!-- Please check the one that applies to this issue using "[x]" -->
 
-- [ ] Bug (¿À·ù)
-- [ ] Feature Request (±â´É ¿äÃ»)
-- [ ] Performance (¼º´É ¹®Á¦)
-- [ ] UI/Design (UI/µğÀÚÀÎ °ü·Ã)
-- [ ] Documentation (¹®¼­ °ü·Ã)
-- [ ] Enhancement (°³¼± Á¦¾È)
+- [ ] Bug (ì˜¤ë¥˜)
+- [ ] Feature Request (ê¸°ëŠ¥ ìš”ì²­)
+- [ ] Performance (ì„±ëŠ¥ ë¬¸ì œ)
+- [ ] UI/Design (UI/ë””ìì¸ ê´€ë ¨)
+- [ ] Documentation (ë¬¸ì„œ ê´€ë ¨)
+- [ ] Enhancement (ê°œì„  ì œì•ˆ)
 - [ ] Other - Please Describe:
 
 ### Priority

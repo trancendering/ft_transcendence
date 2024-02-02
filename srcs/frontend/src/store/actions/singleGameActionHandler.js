@@ -45,6 +45,7 @@ export default class singleGameActionHandler extends GameActionHandler {
 		this.initScores();
 		this.initPositions();
 		this.updateGameContext();
+		this.context.commit("setEndReason", { endReason: "normal" });
 
 		console.log("  roomName=", payload.roomName);
 		console.log("  intraId=", payload.intraId);

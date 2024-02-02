@@ -4,10 +4,7 @@ import { languageSelector } from "../../utils/languagePack.js";
 
 export default class LanguageSelector extends Component {
 	constructor() {
-		super({
-			store,
-			element: document.getElementById("languageSelector"),
-		});
+		super({ element: document.getElementById("languageSelector") });
 		this.render();
 	}
 
@@ -20,9 +17,9 @@ export default class LanguageSelector extends Component {
                 	${languageSelector[languageId].language}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#" data-language-id="en">${languageSelector[languageId].english}</a></li>
-                    <li><a class="dropdown-item" href="#" data-language-id="ko">${languageSelector[languageId].korean}</a></li>
-                    <li><a class="dropdown-item" href="#" data-language-id="ch">${languageSelector[languageId].chinese}</a></li>
+                    <li><a class="dropdown-item" data-link href="" data-language-id="en">${languageSelector[languageId].english}</a></li>
+                    <li><a class="dropdown-item" data-link href="" data-language-id="ko">${languageSelector[languageId].korean}</a></li>
+                    <li><a class="dropdown-item" data-link href="" data-language-id="zh">${languageSelector[languageId].chinese}</a></li>
                 </ul>
             </div>
         `;
@@ -39,18 +36,27 @@ export default class LanguageSelector extends Component {
 				// Prevent Default Link Behavior
 				event.preventDefault();
 
-				// Get Language Id (en, ko, ch)
+				// Get Language Id (en, ko, zh)
 				const languageId = item.dataset.languageId;
 
 				// Change Language State
 				store.dispatch("setLanguage", { languageId });
 
+				const csrfToken = document.cookie
+					.split("; ")
+					.find((row) => row.startsWith("csrftoken="))
+					.split("=")[1];
+
 				// Language Change Post Request
 				try {
-					const response = await fetch("/api/language", {
+					const response = await fetch("api/v1/change-language", {
 						method: "POST",
-						headers: { "Content-Type": "application/json" },
+						headers: {
+							"Content-Type": "application/json",
+							"X-CSRFToken": csrfToken,
+						},
 						body: JSON.stringify({ languageId }),
+						credentials: "include",
 					});
 					const data = await response.json();
 					console.log(data);

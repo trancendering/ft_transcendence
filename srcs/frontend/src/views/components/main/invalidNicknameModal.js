@@ -3,11 +3,8 @@ import Component from "../../../library/component.js";
 import { invalidNicknameModal } from "../../utils/languagePack.js";
 
 export default class InvalidNicknameModal extends Component {
-	constructor(params) {
-		super({
-			store,
-			element: document.getElementById("invalidNicknameModal"),
-		});
+	constructor() {
+		super({ element: document.getElementById("invalidNicknameModal") });
 		this.render();
 	}
 
@@ -41,8 +38,11 @@ export default class InvalidNicknameModal extends Component {
 	}
 
 	async handleEvent() {
-		document.getElementById("invalidNicknameModalCloseBtn").addEventListener("click", () => {
-			document.getElementById("invalidNicknameModal").style.display = "none";
-		});
+		document
+			.getElementById("invalidNicknameModalCloseBtn")
+			.addEventListener("click", () => {
+				document.getElementById("invalidNicknameModal").style.display =
+					"none";
+			});
 	}
 }
