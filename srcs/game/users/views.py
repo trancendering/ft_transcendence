@@ -73,7 +73,6 @@ class UserAPIView(APIView):
         return token.key
 
 
-# TODO: 제출시 삭제하거나 주석처리
 class LoginAPIView(UserAPIView):
     def get(self, request):
         main_url = os.getenv('MAIN_URL')
@@ -98,10 +97,97 @@ class LogOutAPIView(APIView):
         user = request.user
         if user.is_authenticated:
             logout(request)
-            return Response({"message": "Logout successful"},
-                            status=status.HTTP_200_OK)
-        return Response({"message": "Not logged in"},
-                        status=status.HTTP_400_BAD_REQUEST)
+        main_url = os.getenv('MAIN_URL')
+        return redirect(main_url)
+        #     return Response({"message": "Logout successful"},
+        #                     status=status.HTTP_200_OK)
+        # return Response({"message": "Not logged in"},
+        #                 status=status.HTTP_400_BAD_REQUEST)
+
+
+class OAuthCallbackAPIView(UserAPIView):
+    def get(self, request):
+        main_url = os.getenv('MAIN_URL')
+        user = request.user
+        if user.is_authenticated:
+            return HttpResponseRedirect(main_url)
+
+        code = request.GET.get("code")
+        error = request.GET.get("error")
+        if error is not None:
+            return HttpResponseRedirect(main_url)
+
+        access_token = self.get_access_token_data(code)
+        if 'error' in access_token or 'access_token' not in access_token:
+            return HttpResponseRedirect(main_url)
+        user_info = self.get_user_info(access_token['access_token'])
+        if 'error' in user_info:
+            return HttpResponseRedirect(main_url)
+
+        user = self.get_or_create_user(user_info)
+        login(request, user)
+        return HttpResponseRedirect(main_url)
+
+    def get_access_token_data(self, code):
+        data = {
+            "grant_type": "authorization_code",
+            "client_id": os.getenv("CLIENT_ID"),
+            "client_secret": os.getenv("CLIENT_SECRET"),
+            "code": code,
+            "redirect_uri": os.getenv("REDIRECT_URI"),
+            "scope": "public"
+        }
+        try:
+            response = requests.post('https://api.intra.42.fr/oauth/token', data=data)
+            response.raise_for_status()
+            return response.json()
+        except requests.RequestException as e:
+            return {"error": str(e)}
+
+    def get_user_info(self, access_token):
+        try:
+            response = requests.get('https://api.intra.42.fr/v2/me',
+                                    headers={'Authorization': f'Bearer {access_token}'})
+            response.raise_for_status()
+            return response.json()
+        except requests.RequestException as e:
+            return {"error": str(e)}
+
+    def get_or_create_user(self, user_info):
+        login = user_info.get('login')
+        email = user_info.get('email')
+        user, created = CustomUser.objects.get_or_create(
+            intraId=login, defaults={'username': login, 'email': email}
+        )
+        if created:
+            user.save()
+        return user
+
+
+class LanguageAPIView(APIView):
+    def get(self, reqeust):
+        main_url = os.getenv('MAIN_URL')
+        return redirect(main_url)
+
+    def post(self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return Response({"message": "Not logged in"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        new_language = request.data.get('languageId')
+        if new_language not in dict(CustomUser.preferred_language.field.choices):
+            return Response({"message": "Invalid language choice"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        user.preferred_language = new_language
+        user.save()
+        return Response({"message": "Language changed successfully",
+                         "user": CustomUserSerializer(user).data},
+                        status=status.HTTP_200_OK)
+
+
+def home(request):
+    return render(request, 'users/home.html')
 
 # # json 형태로 리턴하는 기존 함수
 # class OAuthCallbackAPIView(UserOrTokenAPIView):
@@ -190,90 +276,3 @@ class LogOutAPIView(APIView):
 #         if created:
 #             user.save()
 #         return user
-
-
-# TODO: 유저 생성 로직 고민, 이미 로그인 됐을 때 로직 고민
-# TODO: 유저가 로그인 이후에 42로그인만 로그아웃 하는 경우
-class OAuthCallbackAPIView(UserAPIView):
-    def get(self, request):
-        main_url = os.getenv('MAIN_URL')
-        user = request.user
-        if user.is_authenticated:
-            return HttpResponseRedirect(main_url)
-
-        code = request.GET.get("code")
-        error = request.GET.get("error")
-        if error is not None:
-            return HttpResponseRedirect(main_url)
-
-        access_token = self.get_access_token_data(code)
-        if 'error' in access_token or 'access_token' not in access_token:
-            return HttpResponseRedirect(main_url)
-        user_info = self.get_user_info(access_token['access_token'])
-        if 'error' in user_info:
-            return HttpResponseRedirect(main_url)
-
-        user = self.get_or_create_user(user_info)
-        login(request, user)
-        return HttpResponseRedirect(main_url)
-
-    def get_access_token_data(self, code):
-        data = {
-            "grant_type": "authorization_code",
-            "client_id": os.getenv("CLIENT_ID"),
-            "client_secret": os.getenv("CLIENT_SECRET"),
-            "code": code,
-            "redirect_uri": os.getenv("REDIRECT_URI"),
-            "scope": "public"
-        }
-        try:
-            response = requests.post('https://api.intra.42.fr/oauth/token', data=data)
-            response.raise_for_status()
-            return response.json()
-        except requests.RequestException as e:
-            return {"error": str(e)}
-
-    def get_user_info(self, access_token):
-        try:
-            response = requests.get('https://api.intra.42.fr/v2/me',
-                                    headers={'Authorization': f'Bearer {access_token}'})
-            response.raise_for_status()
-            return response.json()
-        except requests.RequestException as e:
-            return {"error": str(e)}
-
-    def get_or_create_user(self, user_info):
-        login = user_info.get('login')
-        email = user_info.get('email')
-        user, created = CustomUser.objects.get_or_create(
-            intraId=login, defaults={'username': login, 'email': email}
-        )
-        if created:
-            user.save()
-        return user
-
-
-class LanguageAPIView(APIView):
-    def get(self, reqeust):
-        main_url = os.getenv('MAIN_URL')
-        return redirect(main_url)
-
-    def post(self, request):
-        user = request.user
-        if not user.is_authenticated:
-            return Response({"message": "Not logged in"},
-                            status=status.HTTP_400_BAD_REQUEST)
-        new_language = request.data.get('languageId')
-        if new_language not in dict(CustomUser.preferred_language.field.choices):
-            return Response({"message": "Invalid language choice"},
-                            status=status.HTTP_400_BAD_REQUEST)
-
-        user.preferred_language = new_language
-        user.save()
-        return Response({"message": "Language changed successfully",
-                         "user": CustomUserSerializer(user).data},
-                        status=status.HTTP_200_OK)
-
-
-def home(request):
-    return render(request, 'users/home.html')
