@@ -13,16 +13,12 @@ window.addEventListener("popstate", (event) => {
 		console.log("leave game");
 		store.dispatch("leaveGame");
 	}
-	if (
-		window.location.pathname === "/game" ||
-		window.location.pathname === "/tournament"
-	) {
+	if (window.location.pathname === "/game") {
 		event.preventDefault();
 		console.log("can't go back to game or tournament page");
 		navigateTo("/");
 		return;
 	}
-
 	// Route to new page
 	router();
 });
@@ -86,7 +82,7 @@ async function checkLoginStatus() {
 function handleInitialRoute() {
 	if (
 		!store.state.gameStatus === "playing" &&
-		["/game", "/tournament"].includes(window.location.pathname)
+		["/game"].includes(window.location.pathname)
 	) {
 		navigateTo("/");
 	} else {

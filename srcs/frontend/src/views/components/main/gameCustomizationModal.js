@@ -53,7 +53,7 @@ export default class GameCustomizationModal extends Component {
 
 									<div class="row mt-4 justify-content-center">
 										<div class="col-4 text-center mt-4">
-											<button id="gameCustomizationModalCloseBtn" type="button" class="btn btn-danger w-100">${gameCustomizationModal[languageId].close}</button>
+											<button id="gameCloseBtn" type="button" class="btn btn-danger w-100">${gameCustomizationModal[languageId].close}</button>
 										</div>
 										<div class="col-4 text-center mt-4 ">
 											<button id="gameStartBtn" type="submit" class="btn btn-success w-100">${gameCustomizationModal[languageId].start}</button>
@@ -73,7 +73,7 @@ export default class GameCustomizationModal extends Component {
 	async handleEvent() {
 		// Reset Form When Modal Closes
 		document
-			.getElementById("gameCustomizationModalCloseBtn")
+			.getElementById("gameCloseBtn")
 			.addEventListener("click", () => {
 				this.element.querySelector("#gameCustomizationForm").reset();
 				document.getElementById(
@@ -135,13 +135,6 @@ export default class GameCustomizationModal extends Component {
 				// Show Opponent Waiting Modal
 				document.getElementById("opponentWaitingModal").style.display =
 					"flex";
-
-				// Join Game and connect socket
-				// store.dispatch(`join${store.state.gameMode}Game`, {
-				// 	intraId: store.state.intraId,
-				// 	nickname: nickname,
-				// 	speedUp: speedUp,
-				// });
 
 				// Join Game
 				store.dispatch("joinGame", {
