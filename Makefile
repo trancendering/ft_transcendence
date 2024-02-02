@@ -1,13 +1,7 @@
 
 DOCKER_COMPOSE := docker compose
 YML_PATH = ./srcs/docker-compose.yml
-ifeq ($(shell uname), Darwin)
-# macOS인 경우
-	DATA_DIR := /Users/${USER}/docker-data
-else
-# Linux인 경우
-	DATA_DIR := /home/$(USER)/data
-endif
+DATEBASE_DIR=./srcs/database/
 
 # 기본 실행
 all: up
@@ -16,8 +10,7 @@ all: up
 	
 
 up: webpack
-	make makeDirs
-	$(DOCKER_COMPOSE) -f $(YML_PATH) up --build
+	$(DOCKER_COMPOSE) -f $(YML_PATH) up -d --build
 
 # webpack 생성 및 복사 front src만 바뀌었을 때, webpack만 다시 빌드하고, nginx 재시작.
 webpack :
@@ -44,17 +37,16 @@ build:
 
 # 인스턴스와 이미지 및 네트워크 등 삭제
 clean:
-	make down
-	make -C ./srcs/frontend/ 
+	make -C ./srcs/frontend/ clean
 	rm -rf ./srcs/middleware/dist
-	docker system prune -f --all
+	$(DOCKER_COMPOSE) -f $(YML_PATH) down -v
 
 # 로컬 저장소를 포함하여 전부 삭제
-fclean: 
-	make clean
-	docker builder prune -f
-	sudo rm -rf $(DATA_DIR)
-	docker volume rm $$(docker volume ls -q)
+fclean:
+	make -C ./srcs/frontend/ clean
+	rm -rf ./srcs/middleware/dist
+	$(DOCKER_COMPOSE) -f $(YML_PATH) down -v --rmi all 	
+
 # $$는 $를 이스케이프하기 위한 것으로, 쉘에서 $를 쓴 것과 동일함
 
 # 컨테이너 로그 확인
@@ -75,8 +67,4 @@ show:
 re : clean all
 
 
-# 바인딩할 로컬 디렉토리 생성
-makeDirs:
-# mkdir -p $(DATA_DIR)/nginx > /dev/null 2>&1
-
-.PHONY: all up down restart stop build clean fclean bash logs show makeDirs
+.PHONY: all up down restart stop build clean fclean bash logs show 
