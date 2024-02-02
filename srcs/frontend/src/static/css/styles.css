@@ -403,7 +403,7 @@ canvas {
     justify-content: space-between;
 }
 
-game-item .details .name,
+.game-item .details .name,
 .game-item .details .score {
     margin: 0 10px;
 }
