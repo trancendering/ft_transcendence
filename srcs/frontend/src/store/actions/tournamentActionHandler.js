@@ -51,7 +51,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 		this.context.commit("setEndReason", { endReason: "normal" });
 
 		// 게임 페이지로 이동
-		navigateTo("/tournament");
+		navigateTo("/game");
 		this.context.commit("setRound", { round: 1 });
 	}
 

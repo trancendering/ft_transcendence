@@ -1,6 +1,5 @@
 import store from "../../../store/index.js";
 import Component from "../../../library/component.js";
-// import { tournamentBracketModal } from "../../utils/languagePack.js";
 
 export default class TournamentBracketModal extends Component {
 	constructor() {
