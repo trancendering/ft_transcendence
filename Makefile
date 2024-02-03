@@ -16,10 +16,7 @@ up: webpack
 
 # webpack 생성 및 복사 front src만 바뀌었을 때, webpack만 다시 빌드하고, nginx 재시작.
 webpack :
-	make -C ./srcs/frontend/ all
-	rm -rf ./srcs/middleware/dist
-	cp -r ./srcs/frontend/dist ./srcs/middleware/
-	$(DOCKER_COMPOSE) -f $(YML_PATH) restart middleware
+	$(DOCKER_COMPOSE) -f $(YML_PATH) restart frontend
 
 # 컨테이너 인스턴스 삭제
 down:
@@ -43,15 +40,12 @@ clean_db:
 # TODO: 필요한 도커 이미지만 삭제하도록, 암살 가능성 농후함
 # 인스턴스와 이미지 및 네트워크 등 삭제
 clean:
-	make -C ./srcs/frontend/ clean
-	rm -rf ./srcs/middleware/dist
 	$(DOCKER_COMPOSE) -f $(YML_PATH) down -v
 
 # TODO: 필요한 도커 이미지만 삭제하도록, 암살 가능성 농후함
 # 로컬 저장소를 포함하여 전부 삭제
+
 fclean: clean_db
-	make -C ./srcs/frontend/ clean
-	rm -rf ./srcs/middleware/dist
 	$(DOCKER_COMPOSE) -f $(YML_PATH) down -v --rmi all 	
 
 # $$는 $를 이스케이프하기 위한 것으로, 쉘에서 $를 쓴 것과 동일함

@@ -29,7 +29,13 @@ SECRET_KEY = "django-insecure-*vko47^b1o*3sy=$9e$sbzh3curt4g@%o04m7o390)+=@aaq5r
 DEBUG = True
 # DEBUG = False
 
-ALLOWED_HOSTS = ['nginx', 'localhost', '127.0.0.1', '10.18.230.197']
+
+import urllib.parse
+
+parsed_url = urllib.parse.urlparse(os.environ.get("MAIN_URL"))
+host_ip = parsed_url.hostname
+
+ALLOWED_HOSTS = ["nginx", host_ip]
 
 # Application definition
 
@@ -43,9 +49,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'rest_framework',
-    'rest_framework.authtoken',
-    'users',
+    "rest_framework",
+    "rest_framework.authtoken",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -152,7 +158,7 @@ STATIC_URL = "dist/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # 유저 추가 필드
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = "users.CustomUser"
 # settings.py 내용 예시
 
 # .env 파일 로드
