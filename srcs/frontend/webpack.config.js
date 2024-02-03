@@ -11,11 +11,12 @@ const env = dotenv.config({ path: envPath }).parsed;
 
 // Reduce the env variables to a nice object for DefinePlugin
 const envKeys = env ? Object.keys(env).reduce((prev, next) => {
-	prev[`process.env.${next}`] = JSON.stringify(env[next]);
-	return prev;
-  }, {}) : {};
+    prev[`process.env.${next}`] = JSON.stringify(env[next]);
+    return prev;
+}, {}) : {};
 
 module.exports = {
+    watch: true,
     mode: 'development',
     entry: './src/app.js',
     output: {
@@ -30,6 +31,7 @@ module.exports = {
         historyApiFallback: true,
     },
     plugins: [
+
         new HtmlWebpackPlugin({template: './src/index.html'}),
 		new webpack.DefinePlugin(envKeys),
 		new FaviconsWebpackPlugin('./src/static/img/favicon.ico'),

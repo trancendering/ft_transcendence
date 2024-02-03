@@ -34,6 +34,7 @@ def retrieve_transaction():
 
     # Retrieve the log from the contract
     tournaments = tournament_contract.functions.retrieve().call()
+    tournaments = sorted(tournaments, key=lambda x: x[-1])
 
     # Convert the log into a dictionary
 

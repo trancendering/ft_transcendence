@@ -47,6 +47,7 @@ class BaseRoom:
         self._player: List[str] = player  # 플레이어 sid
         self._room_name: str = room_name  # 방 이름
         self._game_start: bool = False  # 게임 시작 여부
+        self._game_expire: bool = False  # 게임 방 종료 여부
         self._ready: Dict[str, str] = {player_sid: False for player_sid in self._player}  # 클라이언트 준비 여부
         self._game_mode: str = mode  # 게임 모드(normal, speed)
         self._stay_state: bool = True  # 게임 진행 중단 여부(라운드 간 초기화 후 공 잠깐 멈춤)

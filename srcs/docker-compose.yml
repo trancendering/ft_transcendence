@@ -1,4 +1,4 @@
-version: '3' # docker compose version
+version: '3.8' # docker compose version
 
 services:
     middleware:
@@ -16,7 +16,9 @@ services:
         depends_on:
             - django_game
         volumes:
-            - ./middleware/dist:/var/www/html/dist/
+            - dist:/var/www/html/dist/
+        depends_on:
+            - frontend
 
     django_game:
         image: django_game
@@ -48,7 +50,24 @@ services:
             - "5432" # postgresql port
         networks:
             - ts-network
+
+    frontend:
+        build: ./frontend
+        container_name: frontend
+        restart: always
+        volumes:
+            - dist:/app/dist
+            - ./frontend:/app
+
 networks:
     ts-network:
         # transcendence network 생성
         driver: bridge # bridge driver, 호스트에 노출되지 않는 네트워크를 생성
+
+volumes:
+    dist:
+
+        #link dist of frontend to middleware dist
+        #So, you can see the changes in frontend without rebuilding the middleware    
+
+
