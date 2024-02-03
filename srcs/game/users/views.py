@@ -91,7 +91,6 @@ class LoginAPIView(UserAPIView):
         return redirect(login_url)
 
 
-# TODO: 제출시 삭제, 개발용 로그아웃
 class LogOutAPIView(APIView):
     def get(self, request):
         user = request.user
@@ -99,10 +98,6 @@ class LogOutAPIView(APIView):
             logout(request)
         main_url = os.getenv('MAIN_URL')
         return redirect(main_url)
-        #     return Response({"message": "Logout successful"},
-        #                     status=status.HTTP_200_OK)
-        # return Response({"message": "Not logged in"},
-        #                 status=status.HTTP_400_BAD_REQUEST)
 
 
 class OAuthCallbackAPIView(UserAPIView):

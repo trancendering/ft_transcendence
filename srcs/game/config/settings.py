@@ -14,6 +14,9 @@ from dotenv import load_dotenv
 import os
 from pathlib import Path
 
+# .env 파일 로드
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,14 +24,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# TODO: env로 빼기
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-*vko47^b1o*3sy=$9e$sbzh3curt4g@%o04m7o390)+=@aaq5r"
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
+
+# TODO: 제출시 debug 모드 끄기
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 
+# <<<<<<< fix/chore
+# ALLOWED_HOSTS = ['nginx', 'localhost', os.getenv('MAIN_URL')]
+# =======
 
 import urllib.parse
 
@@ -36,6 +43,7 @@ parsed_url = urllib.parse.urlparse(os.environ.get("MAIN_URL"))
 host_ip = parsed_url.hostname
 
 ALLOWED_HOSTS = ["nginx", host_ip]
+# >>>>>>> main
 
 # Application definition
 
@@ -68,7 +76,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "config.urls"
 
-# TODO: 이게 머지?
+# TODO: cors 발생시 url 여기에 추가
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3001",
 ]
@@ -160,9 +168,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # 유저 추가 필드
 AUTH_USER_MODEL = "users.CustomUser"
 # settings.py 내용 예시
-
-# .env 파일 로드
-load_dotenv()
 
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
