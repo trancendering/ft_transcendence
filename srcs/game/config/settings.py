@@ -30,10 +30,12 @@ DEBUG = True
 # DEBUG = False
 
 
-base_url = os.environ.get("BASE_URL")
+import urllib.parse
 
+parsed_url = urllib.parse.urlparse(os.environ.get("MAIN_URL"))
+host_ip = parsed_url.hostname
 
-ALLOWED_HOSTS = ["nginx", "localhost", base_url]
+ALLOWED_HOSTS = ["nginx", host_ip]
 
 # Application definition
 
