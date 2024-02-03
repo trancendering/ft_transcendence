@@ -15,10 +15,9 @@ services:
         env_file: .env
         depends_on:
             - django_game
+            - frontend
         volumes:
             - dist:/var/www/html/dist/
-        depends_on:
-            - frontend
 
     django_game:
         image: django_game
