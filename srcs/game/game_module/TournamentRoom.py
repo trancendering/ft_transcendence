@@ -112,6 +112,8 @@ class TournamentRoom(BaseRoom):
         normal: 정상 종료
         opponentLeft: 상대가 나감
         """
+        if self._game_expire is True:
+            return
         send_info = {
             "round": self._round,
             "reason": end_reason,
@@ -125,7 +127,8 @@ class TournamentRoom(BaseRoom):
         )
         # 토너먼트 전체 종료. 전체 종료의 경우, 연결을 끊고 방을 닫는다.
         if self._round == 3 or end_reason == "opponentLeft":
-            if self._tournament_log:
+            self._game_expire = True
+            if self._tournament_log and len(self._tournament_log) == 3:
                 self._tournament_log.append(int(time.time()))
                 loop = asyncio.get_running_loop()
                 await loop.run_in_executor(None, record_transaction, self._tournament_log.copy())
