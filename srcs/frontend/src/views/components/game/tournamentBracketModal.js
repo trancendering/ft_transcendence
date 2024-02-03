@@ -8,7 +8,6 @@ export default class TournamentBracketModal extends Component {
 	}
 
 	async render() {
-		// const languageId = store.state.languageId;
 		console.log("render tournament bracket modal");
 		const player = store.state.tournamentPlayer;
 		const score = store.state.tournamentScore;

@@ -3,6 +3,7 @@ const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const dotenv = require('dotenv');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 // Load environment variables from .env file, fallback to .env.development if not specified
 const envPath = path.join(__dirname, `.env`);
@@ -30,8 +31,10 @@ module.exports = {
         historyApiFallback: true,
     },
     plugins: [
-        new HtmlWebpackPlugin({ template: './src/index.html' }),
-        new webpack.DefinePlugin(envKeys),
+
+        new HtmlWebpackPlugin({template: './src/index.html'}),
+		new webpack.DefinePlugin(envKeys),
+		new FaviconsWebpackPlugin('./src/static/img/favicon.ico'),
     ],
     module: {
         rules: [

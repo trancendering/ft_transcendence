@@ -24,8 +24,6 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
         -subj "/C=KR/L=Seoul/O=42Seoul/CN=nginx" \
         > /dev/null 2>&1
 
-# TODO: 고칠 수 있으면 고치기
-
 wait_for_db
 
 if [ "$DJANGO_INITIAL_SETUP" = "true" ]; then
