@@ -9,8 +9,8 @@ all: up
 # 이미지 빌드 후 컨테이너 인스턴스 생성
 	
 
-up: webpack
-	if [ ! -d DATEBASE_DIR ]; then mkdir -p DATEBASE_DIR; fi
+up:
+	if [ ! -d $(DATEBASE_DIR) ]; then mkdir -p $(DATEBASE_DIR); fi
 	$(DOCKER_COMPOSE) -f $(YML_PATH) up -d --build
 
 
