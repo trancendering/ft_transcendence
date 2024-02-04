@@ -10,10 +10,10 @@ CONTRACT_ADDRESS = os.path.join(OUTPUTS_DIR, "contract_address.json")
 
 # Set the environment variables
 load_dotenv()
-w3 = Web3(Web3.HTTPProvider(os.environ.get("WEB3_PROVIDER")))
+w3 = os.environ.get("WEB3_PROVIDER", None)
 chain_id = int(os.environ.get("CHAIN_ID"))
-my_address = os.environ.get("MY_ADDRESS")
-private_key = os.getenv("PRIVATE_OWNER_KEY")
+my_address = os.environ.get("MY_ADDRESS", None)
+private_key = os.getenv("PRIVATE_OWNER_KEY", None)
 
 
 def load_json_file(path, key):
@@ -28,6 +28,12 @@ contract_address = load_json_file(CONTRACT_ADDRESS, "contractAddress")
 
 
 def retrieve_transaction():
+
+    # If env variables are missing, return an error for runnning the django server
+    if w3 is None or chain_id == 0 or my_address is None or private_key is None:
+        print("Error: One or more required environment variables are missing.")
+        return
+
     # Load the contract
     tournament_contract = w3.eth.contract(address=contract_address, abi=abi)
     print("retrive transcation! !!:", tournament_contract.functions.retrieve().call())
@@ -66,6 +72,12 @@ def retrieve_transaction():
 
 
 def record_transaction(tournament):
+
+    # If env variables are missing, return an error for runnning the django server
+    if w3 is None or chain_id == 0 or my_address is None or private_key is None:
+        print("Error: One or more required environment variables are missing.")
+        return
+
     # Load the contract
     tournament_contract = w3.eth.contract(address=contract_address, abi=abi)
     nonce = w3.eth.get_transaction_count(my_address)
