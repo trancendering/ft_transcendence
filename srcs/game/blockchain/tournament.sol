@@ -24,8 +24,6 @@ contract TournamentStorage {
     Tournament[] tournaments;
 
     function store(Tournament memory one_tournament) public {
-        // 시간을 기록
-        // one_tournament.timestamp = block.timestamp;
         tournaments.push(one_tournament);
     }
 
