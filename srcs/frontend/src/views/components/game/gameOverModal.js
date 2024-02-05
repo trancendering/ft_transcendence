@@ -8,7 +8,7 @@ export default class GameOverModal extends Component {
 	constructor() {
 		super({ element: document.getElementById("gameOverModal") });
 		this.render();
-		store.events.subscribe("gameStatusChange", async () => this.showModal());
+		store.events.subscribe("gameStatusChange", async () => this.showGameOverModal());
 	}
 
 	async render() {
@@ -55,8 +55,7 @@ export default class GameOverModal extends Component {
 		});
 	}
 
-	async showModal() {
-		console.log(`showModal() - gameStatus: ${store.state.gameStatus}`);
+	async showGameOverModal() {
 		if (store.state.gameStatus !== "ended") return;
 		if (store.state.endReason === "userLeft") return;
 
