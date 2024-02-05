@@ -3,6 +3,7 @@ import Main from "../components/main.js";
 import Login from "../components/login.js";
 import Game from "../components/game.js";
 import TournamentRecord from "../components/tournamentRecord.js";
+import store from "../../store/index.js";
 
 const routes = [
 	{ path: "/", view: Main },
@@ -36,6 +37,8 @@ const router = async () => {
 			result: [location.pathname],
 		};
 	}
+
+	store.dispatch("updateLocation", { location: match.route.path });
 
 	if (!viewCache[match.route.view]) {
 		console.log("new view created");

@@ -11,7 +11,6 @@ export default class OpponentWaitingModal extends Component {
 	}
 
 	async render() {
-		console.log("render opponent waiting modal");
 		const languageId = store.state.languageId;
 
 		const view = /*html*/ `
@@ -58,7 +57,6 @@ export default class OpponentWaitingModal extends Component {
 			store.dispatch("setFancyBall", { fancyBall: "normal" });
 
 			// Cancel Match Making Post Request
-			// TODO 소켓 Connection 끊는 로직
 			store.dispatch("leaveGame");
 
 			// Hide Opponent Waiting Modal

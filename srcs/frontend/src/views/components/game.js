@@ -1,4 +1,3 @@
-import store from "../../store/index.js";
 import Component from "../../library/component.js";
 import GameCanvas from "./game/gameCanvas.js";
 import TournamentBracketModal from "./game/tournamentBracketModal.js";
@@ -16,8 +15,6 @@ export default class Game extends Component {
 	}
 
 	async render() {
-		console.log("render game page");
-
 		const view = /*html*/ `
             <div id="game-controls">
                 <!-- Canvas for the game -->

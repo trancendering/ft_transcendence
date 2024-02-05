@@ -1,3 +1,9 @@
+// routing
+function updateLocation(state, payload) {
+	state.location = payload.location;
+	return state;
+}
+
 // login
 function logIn(state) {
 	state.isLoggedIn = true;
@@ -122,6 +128,7 @@ function setWinner(state, payload) {
 }
 
 export default {
+	updateLocation,
 	// login
 	logIn,
 	logOut,

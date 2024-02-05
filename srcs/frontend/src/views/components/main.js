@@ -20,20 +20,12 @@ export default class Main extends Component {
 			languageSelector: new LanguageSelector(),
 			gameModeCard1: new GameModeCard({
 				id: "singleGameMode",
-				gameMode: "Single", //"1 VS 1",
+				gameMode: "Single",
 			}),
-			// gameModeCard2: new GameModeCard({
-			// 	id: "doubleGameMode",
-			// 	gameMode: "2 VS 2",
-			// }),
 			gameModeCard3: new GameModeCard({
 				id: "tournamentGameMode",
 				gameMode: "Tournament",
 			}),
-			// gameModeCard4: new GameModeCard({
-			// 	id: "aiGameMode",
-			// 	gameMode: "AI",
-			// }),
 			gameCustomizationModal: new GameCustomizationModal(),
 			opponentWaitingModal: new OpponentWaitingModal(),
 			invalidNicknameModal: new InvalidNicknameModal(),

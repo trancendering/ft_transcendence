@@ -1,4 +1,5 @@
 export default {
+	location: "/", // or "/game" or "/login" or "/record"
 	intraId: "intraId(hyeyukim)",
 	isLoggedIn: false,
 	languageId: "en",

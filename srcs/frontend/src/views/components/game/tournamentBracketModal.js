@@ -8,14 +8,10 @@ export default class TournamentBracketModal extends Component {
 	}
 
 	async render() {
-		console.log("render tournament bracket modal");
 		const player = store.state.tournamentPlayer;
 		const score = store.state.tournamentScore;
 		const winner = store.state.tournamentWinner;
 
-		console.log(player);
-		console.log(score);
-		console.log(winner);
 		const view = /*html*/ `
         <div class="custom-modal-dialog">
             <div class="custom-modal-content">

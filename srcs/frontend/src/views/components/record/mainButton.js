@@ -3,11 +3,8 @@ import Component from "../../../library/component.js";
 import { mainButton } from "../../utils/languagePack.js";
 
 export default class TournamentRecordButton extends Component {
-	constructor(params) {
-		super({
-			store,
-			element: document.getElementById("mainBtn"),
-		});
+	constructor() {
+		super({ element: document.getElementById("mainBtn") });
 		this.render();
 	}
 

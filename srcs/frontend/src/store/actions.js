@@ -7,6 +7,10 @@ function getGameHandler(context) {
 		: TournamentActionHandler.getInstance(context);
 }
 
+function updateLocation(context, payload) {
+	context.commit("updateLocation", payload);
+}
+
 function logIn(context) {
 	context.commit("logIn");
 }
@@ -74,6 +78,7 @@ function setGameStatus(context, payload) {
 }
 
 export default {
+	updateLocation,
 	logIn,
 	logOut,
 	setIntraId,
