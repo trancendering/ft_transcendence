@@ -6,7 +6,8 @@ import "./static/css/tournamentBracketStyle.css";
 import "bootstrap";
 
 window.addEventListener("popstate", (event) => {
-	console.log("popstat: window.location.pathname=", window.location.pathname);
+	console.groupCollapsed("EVENT: popstate");
+	console.log(" - window.location.pathname=", window.location.pathname);
 
 	if (store.state.location === "/game") {
 		event.preventDefault();
@@ -16,10 +17,12 @@ window.addEventListener("popstate", (event) => {
 	if (window.location.pathname === "/game") {
 		event.preventDefault();
 		console.log("can't go back to game or tournament page");
+		console.groupEnd();
 		navigateTo("/");
 		return;
 	}
-	// Route to new page
+console.groupEnd();
+	// Route to the previous page
 	router();
 });
 

@@ -12,8 +12,6 @@ export default class GameOverModal extends Component {
 	}
 
 	async render() {
-		console.log("render game over modal");
-
 		const languageId = store.state.languageId;
 		const imgSrc = store.state.endReason === "normal" ? CrownImg : FrownImg;
 		const textContent =
