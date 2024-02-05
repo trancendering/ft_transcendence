@@ -8,7 +8,7 @@ import "bootstrap";
 window.addEventListener("popstate", (event) => {
 	console.log("popstat: window.location.pathname=", window.location.pathname);
 
-	if (store.state.gameStatus === "playing" || store.state.round < 4) {
+	if (store.state.location === "/game") {
 		event.preventDefault();
 		console.log("leave game");
 		store.dispatch("leaveGame");
