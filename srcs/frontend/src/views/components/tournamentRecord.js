@@ -172,11 +172,23 @@ export default class TournamentRecord extends Component {
 		// Add click event to open window
 		const link = tournamentData.etherscan;
 		newComponent.onclick = function () {
-			window.open(link, "_blank");
+			try {
+				window.open(link, "_blank");
+			} catch (error) {
+				console.error("Failed to open window:", error);
+			}
 		};
 
 		const originalComponent = document.getElementById("etherscan");
-		originalComponent.parentNode.replaceChild(newComponent, originalComponent);
+		if (originalComponent) {
+			try {
+				originalComponent.parentNode.replaceChild(newComponent, originalComponent);
+			} catch (error) {
+				// console.error("Failed to replace component:", error);
+			}
+		} else {
+			// console.error("Original component not found.");
+		}
 	}
 
 	createFormattedDate(unix_timestamp) {
