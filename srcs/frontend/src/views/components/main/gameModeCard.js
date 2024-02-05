@@ -1,7 +1,6 @@
 import store from "../../../store/index.js";
 import Component from "../../../library/component.js";
 import { gameModeCard } from "../../utils/languagePack.js";
-// import ModalHandler from "../utils/modalHandler.js";
 import Single from "../../../static/img/singleGameMode.svg";
 import Tournament from "../../../static/img/tournamentGameMode.svg";
 

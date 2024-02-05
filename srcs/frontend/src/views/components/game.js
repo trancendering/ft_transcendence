@@ -1,4 +1,3 @@
-import store from "../../store/index.js";
 import Component from "../../library/component.js";
 import GameCanvas from "./game/gameCanvas.js";
 import TournamentBracketModal from "./game/tournamentBracketModal.js";
