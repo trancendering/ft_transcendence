@@ -5,11 +5,8 @@ import LanguageSelector from "./main/languageSelector.js";
 import mainButton from "./record/mainButton.js";
 
 export default class TournamentRecord extends Component {
-	constructor(params) {
-		super({
-			store,
-			element: document.getElementById("app"),
-		});
+	constructor() {
+		super({ element: document.getElementById("app") });
 		this.render();
 		this.components = {
 			languageSelector: new LanguageSelector(),
