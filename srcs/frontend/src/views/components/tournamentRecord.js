@@ -113,7 +113,7 @@ export default class TournamentRecord extends Component {
 				tournamentList.appendChild(tournamentItem);
 			});
 		} catch (error) {
-			console.error("Error parsing tournament data: ", error);
+			// console.error("Error parsing tournament data: ", error);
 		}
 	}
 
@@ -175,7 +175,7 @@ export default class TournamentRecord extends Component {
 			try {
 				window.open(link, "_blank");
 			} catch (error) {
-				console.error("Failed to open window:", error);
+				// console.error("Failed to open window:", error);
 			}
 		};
 
