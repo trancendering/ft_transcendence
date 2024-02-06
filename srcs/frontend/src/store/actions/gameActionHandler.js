@@ -20,6 +20,7 @@ export default class gameActionHandler {
 		this.socket = null;
 		this.gameEnded = true;
 		this.roomName = "";
+		this.socketIdList = [];
 		this.intraIdList = [];
 		this.nicknameList = [];
 		this.matchQueue = []; // 매칭 대기열, player의 index number를 저장
@@ -154,22 +155,15 @@ export default class gameActionHandler {
 	 * @param {object} payload {ballPosition: {x, y}, leftPaddlePosition, rightPaddlePosition}
 	 */
 	updateGameState(payload) {
-		const gameContext = this.context.state.gameContext;
-
 		this.context.commit("updateBallPosition", {
 			ballPosition: payload.ballPosition,
 		});
-
-		if (gameContext.participated === false || gameContext.userSide === Side.LEFT) {
-			this.context.commit("updateRightPaddlePosition", {
-				rightPaddlePosition: payload.rightPaddlePosition,
-			});
-		}
-		if (gameContext.participated === false || gameContext.userSide === Side.RIGHT) {
-			this.context.commit("updateLeftPaddlePosition", {
-				leftPaddlePosition: payload.leftPaddlePosition,
-			});
-		}
+		this.context.commit("updateRightPaddlePosition", {
+			rightPaddlePosition: payload.rightPaddlePosition,
+		});
+		this.context.commit("updateLeftPaddlePosition", {
+			leftPaddlePosition: payload.leftPaddlePosition,
+		});
 	}
 
 	/**
@@ -207,23 +201,13 @@ export default class gameActionHandler {
 	 * @param {object} payload {paddlePosition}
 	 */
 	async updatePaddlePosition(payload) {
-		const context = this.context;
-		const state = this.context.state;
+		const gameContext = this.context.state.gameContext;
 		const paddlePosition = payload.paddlePosition;
 
-		if (state.gameContext.userSide === Side.LEFT) {
-			context.commit("updateLeftPaddlePosition", {
-				leftPaddlePosition: paddlePosition,
-			});
-		} else {
-			context.commit("updateRightPaddlePosition", {
-				rightPaddlePosition: paddlePosition,
-			});
-		}
 		if (this.gameEnded) return;
 		this.socket.emit("updatePaddlePosition", {
-			roomName: state.gameContext.roomName,
-			userSide: state.gameContext.userSide,
+			roomName: gameContext.roomName,
+			userSide: gameContext.userSide,
 			paddlePosition: paddlePosition,
 		});
 	}

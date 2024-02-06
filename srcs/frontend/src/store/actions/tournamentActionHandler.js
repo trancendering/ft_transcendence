@@ -35,15 +35,19 @@ export default class tournamentActionHandler extends GameActionHandler {
 
 		// 게임 시작 시 게임 정보 초기화
 		this.roomName = payload.roomName;
+		this.socketIdList = payload.socketId;
 		this.intraIdList = payload.intraId;
 		this.nicknameList = payload.nickname;
-		this.userIndex = this.intraIdList.indexOf(state.intraId);
+		this.userIndex = this.socketIdList.indexOf(this.socket.id);
+		// this.userIndex = this.intraIdList.indexOf(state.intraId);
 		this.userSide = this.userIndex % 2 === 0 ? Side.LEFT : Side.RIGHT;
 		this.matchQueue = [0, 1, 2, 3];
 
 		console.log(" - roomName=", payload.roomName);
+		console.log(" - socketId=", payload.socketId);
 		console.log(" - intraId=", payload.intraId);
 		console.log(" - nickname=", payload.nickname);
+		console.log(" - userSocket=", this.socket.id);
 		console.log(" - userIndex=", this.userIndex);
 		console.log(" - userSide=", this.userSide);
 
