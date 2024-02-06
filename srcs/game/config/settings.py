@@ -25,25 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-import random
-import string
-
-# Check if DJANGO_SECRET_KEY environment variable is set
-secret_key = os.getenv("DJANGO_SECRET_KEY")
-
-# If not set, generate a new random secret key
-if not secret_key:
-    chars = string.ascii_letters + string.digits + "!@#$%^&*(-_=+)"
-    new_secret_key = "".join(
-        random.choice(chars) for _ in range(50)
-    )  # You can adjust the length as needed
-
-    # Save the new secret key to the environment variable
-    os.environ["DJANGO_SECRET_KEY"] = new_secret_key
-    secret_key = new_secret_key
-
 # Use the secret key in your Django settings
-SECRET_KEY = secret_key
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # TODO: 제출시 debug 모드 끄기
 # SECURITY WARNING: don't run with debug turned on in production!
