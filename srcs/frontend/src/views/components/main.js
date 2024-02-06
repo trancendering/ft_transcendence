@@ -38,14 +38,12 @@ export default class Main extends Component {
 		const view = /*html*/ `
 
 		<!-- Navbar -->
-		<nav class="navbar navbar-light bg-light">
-		<form class="form-inline">
-				<!-- Language Dropdown -->
-				<div id="languageSelector"></div>
+		<nav class="navbar navbar-light bg-light justify-content-between">
+			<!-- Tournament Record -->
+			<div id="tournamentRecordBtn"></div>
 
-				<!-- Tournament Record -->
-				<div id="tournamentRecordBtn"></div>
-			</form>
+			<!-- Language Dropdown -->
+			<div id="languageSelector"></div>
 		</nav>
 
 

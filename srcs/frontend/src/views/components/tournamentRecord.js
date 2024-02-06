@@ -24,14 +24,12 @@ export default class TournamentRecord extends Component {
 		const view = /*html*/ `
 
 			<!-- Navbar -->
-			<nav class="navbar navbar-light bg-light">
-			<form class="form-inline">
-					<!-- Language Dropdown -->
-					<div id="languageSelector"></div>
+			<nav class="navbar navbar-light bg-light justify-content-between">
+				<!-- Main Button -->
+				<div id="mainBtn"></div>
 
-					<!-- Tournament Record -->
-					<div id="mainBtn"></div>
-				</form>
+				<!-- Language Dropdown -->
+				<div id="languageSelector"></div>
 			</nav>
 
             <div class="container mt-5">
