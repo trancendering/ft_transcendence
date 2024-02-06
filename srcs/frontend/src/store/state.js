@@ -24,6 +24,7 @@ export default {
 	leftUserScore: 0,
 	rightUserScore: 0,
 	ballPosition: { x: 0, y: 0 },
+	ballVelocity: { x: 0, y: 0 },
 	leftPaddlePosition: 200,
 	rightPaddlePosition: 200,
 
