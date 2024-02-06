@@ -110,6 +110,12 @@ export default class gameActionHandler {
 				y: 0,
 			},
 		});
+		this.context.commit("updateBallVelocity", {
+			ballVelocity: {
+				x: 0,
+				y: 0,
+			},
+		});
 		this.context.commit("updateLeftPaddlePosition", {
 			leftPaddlePosition: 0,
 		});
