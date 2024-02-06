@@ -41,7 +41,7 @@ const router = async () => {
 	store.dispatch("updateLocation", { location: match.route.path });
 
 	if (!viewCache[match.route.view]) {
-		console.log("new view created");
+		//console.log("new view created");
 		viewCache[match.route.view] = new match.route.view();
 	} else {
 		viewCache[match.route.view].renderAll();

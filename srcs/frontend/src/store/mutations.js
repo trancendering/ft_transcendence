@@ -109,7 +109,7 @@ function updateTournamentScore(state, payload) {
 	const newTournamentScore = { ...state.tournamentScore };
 	newTournamentScore[`round${payload.round}`] = [payload.leftUserScore, payload.rightUserScore];
 	state.tournamentScore = newTournamentScore;
-	console.log("updateTournamentScore: ", state.tournamentScore);
+	//console.log("updateTournamentScore: ", state.tournamentScore);
 	return state;
 }
 
@@ -117,7 +117,7 @@ function updateTournamentWinner(state, payload) {
 	const newTournamentWinner = { ...state.tournamentWinner };
 	newTournamentWinner[`round${payload.round}`] = payload.winner;
 	state.tournamentWinner = newTournamentWinner;
-	console.log("updateTournamentWinner: ", state.tournamentWinner);
+	//console.log("updateTournamentWinner: ", state.tournamentWinner);
 	return state;
 }
 

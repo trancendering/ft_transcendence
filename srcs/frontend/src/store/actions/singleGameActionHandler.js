@@ -29,7 +29,7 @@ export default class singleGameActionHandler extends GameActionHandler {
 	 * @param {object} payload { namespace, intraId, nickname, speedUp}
 	 */
 	async startGame(payload) {
-		console.groupCollapsed("EVENT: userFullEvent: singleGameActionHandler.startGame");
+		//console.groupCollapsed("EVENT: userFullEvent: singleGameActionHandler.startGame");
 
 		// 게임 시작 시 게임 정보 초기화
 		this.roomName = payload.roomName;
@@ -41,13 +41,13 @@ export default class singleGameActionHandler extends GameActionHandler {
 		this.userSide = this.userIndex % 2 === 0 ? Side.LEFT : Side.RIGHT;
 		this.matchQueue = [0, 1];
 
-		console.log(" - roomName=", payload.roomName);
-		console.log(" - socketId=", payload.socketId);
-		console.log(" - intraId=", payload.intraId);
-		console.log(" - nickname=", payload.nickname);
-		console.log(" - userSocket=", this.socket.id);
-		console.log(" - userIndex=", this.userIndex);
-		console.log(" - userSide=", this.userSide);
+		//console.log(" - roomName=", payload.roomName);
+		//console.log(" - socketId=", payload.socketId);
+		//console.log(" - intraId=", payload.intraId);
+		//console.log(" - nickname=", payload.nickname);
+		//console.log(" - userSocket=", this.socket.id);
+		//console.log(" - userIndex=", this.userIndex);
+		//console.log(" - userSide=", this.userSide);
 
 		this.initScores();
 		this.initPositions();
@@ -57,7 +57,7 @@ export default class singleGameActionHandler extends GameActionHandler {
 		// 게임 페이지로 이동
 		navigateTo("/game");
 		this.context.commit("setGameStatus", { gameStatus: "playing" });
-		console.groupEnd();
+		//console.groupEnd();
 	}
 
 	/**
@@ -65,8 +65,8 @@ export default class singleGameActionHandler extends GameActionHandler {
 	 * @param {object} payload {reason}
 	 */
 	async endGame(payload) {
-		console.groupCollapsed("EVENT: endGame: singleGameActionHandler.endGame");
-		console.log(" reason=", payload.reason);
+		//console.groupCollapsed("EVENT: endGame: singleGameActionHandler.endGame");
+		//console.log(" reason=", payload.reason);
 
 		const state = this.context.state;
 
@@ -82,6 +82,6 @@ export default class singleGameActionHandler extends GameActionHandler {
 		}
 		this.context.commit("setEndReason", { endReason: payload.reason });
 		this.context.commit("setGameStatus", { gameStatus: "ended" });
-		console.groupEnd();
+		//console.groupEnd();
 	}
 }

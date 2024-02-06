@@ -18,7 +18,7 @@ export default class TournamentRecord extends Component {
 	}
 
 	async render() {
-		console.log("render tournament page");
+		//console.log("render tournament page");
 
 		const languageId = store.state.languageId;
 		const view = /*html*/ `
@@ -55,7 +55,7 @@ export default class TournamentRecord extends Component {
 		await fetch("/tournament/log")
 			.then((response) => response.json())
 			.then((data) => {
-				// console.log(data);
+				//console.log(data);
 				this.tournamentLogData = data;
 				this.populateTournamentList();
 			});
@@ -110,7 +110,7 @@ export default class TournamentRecord extends Component {
 				tournamentList.appendChild(tournamentItem);
 			});
 		} catch (error) {
-			// console.error("Error parsing tournament data: ", error);
+			//console.error("Error parsing tournament data: ", error);
 		}
 	}
 
@@ -172,7 +172,7 @@ export default class TournamentRecord extends Component {
 			try {
 				window.open(link, "_blank");
 			} catch (error) {
-				// console.error("Failed to open window:", error);
+				//console.error("Failed to open window:", error);
 			}
 		};
 
@@ -181,10 +181,10 @@ export default class TournamentRecord extends Component {
 			try {
 				originalComponent.parentNode.replaceChild(newComponent, originalComponent);
 			} catch (error) {
-				// console.error("Failed to replace component:", error);
+				//console.error("Failed to replace component:", error);
 			}
 		} else {
-			// console.error("Original component not found.");
+			//console.error("Original component not found.");
 		}
 	}
 

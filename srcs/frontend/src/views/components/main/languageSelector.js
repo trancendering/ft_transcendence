@@ -59,13 +59,13 @@ export default class LanguageSelector extends Component {
 						credentials: "include",
 					});
 					const data = await response.json();
-					console.groupCollapsed("API Response SUCCESS: change-language");
-					console.log(data);
-					console.groupEnd();
+					//console.groupCollapsed("API Response SUCCESS: change-language");
+					//console.log(data);
+					//console.groupEnd();
 				} catch (err) {
-					console.groupCollapsed("API Response FAILURE: change-language");
-					console.error(err);
-					console.groupEnd();
+					//console.groupCollapsed("API Response FAILURE: change-language");
+					//console.error(err);
+					//console.groupEnd();
 				}
 			});
 		});
