@@ -54,11 +54,11 @@ export default class Main extends Component {
                         <h1 class="display-4 fw-bold">${main[languageId].title}</h1>
                     </div>
                     <div class="d-flex flex-row gap-3 mt-3 justify-content-center">
-                        <div id="singleGameMode" class="rounded border bg-light text-dark shadow-sm col-md" data-v0-t="card"></div>
+                        <div id="singleGameMode" class="rounded border bg-light text-dark shadow-sm col" data-v0-t="card"></div>
                         <!--
 						<div id="doubleGameMode" class="rounded border bg-light text-dark shadow-sm w-25" data-v0-t="card"></div>
 						-->
-                        <div id="tournamentGameMode" class="rounded border bg-light text-dark shadow-sm col-md" data-v0-t="card"></div>
+                        <div id="tournamentGameMode" class="rounded border bg-light text-dark shadow-sm col" data-v0-t="card"></div>
                         <!--
 						<div id="aiGameMode" class="rounded border bg-light text-dark shadow-sm w-25" data-v0-t="card"></div>
 						-->
