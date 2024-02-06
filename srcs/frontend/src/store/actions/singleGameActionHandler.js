@@ -31,8 +31,6 @@ export default class singleGameActionHandler extends GameActionHandler {
 	async startGame(payload) {
 		console.groupCollapsed("EVENT: userFullEvent: singleGameActionHandler.startGame");
 
-		const state = this.context.state;
-
 		// 게임 시작 시 게임 정보 초기화
 		this.roomName = payload.roomName;
 		this.socketIdList = payload.socketId;
