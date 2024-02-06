@@ -57,6 +57,7 @@ export default class singleGameActionHandler extends GameActionHandler {
 		// 게임 페이지로 이동
 		navigateTo("/game");
 		this.context.commit("setGameStatus", { gameStatus: "playing" });
+		this.trackBallPosition();
 		//console.groupEnd();
 	}
 

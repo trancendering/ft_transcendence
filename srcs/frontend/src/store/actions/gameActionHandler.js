@@ -228,6 +228,26 @@ export default class gameActionHandler {
 	}
 
 	/**
+	 * @description 클라이언트에서 공의 위치를 추적하여 주기적으로 업데이트
+	 */
+	async trackBallPosition() {
+		const ballPosition = this.context.state.ballPosition;
+		const ballVelocity = this.context.state.ballVelocity;
+
+		this.context.commit("updateBallPosition", {
+			ballPosition: {
+				x: Math.min(ballPosition.x + ballVelocity.x, Game.CANVAS_WIDTH / 2),
+				y: Math.min(ballPosition.y + ballVelocity.y, Game.CANVAS_HEIGHT / 2),
+			}
+		});
+		if (!this.gameEnded) {
+			setTimeout(() => {
+				this.trackBallPosition();
+			}, 1000 / 60);
+		}
+	}
+
+	/**
 	 * @description 유저가 준비되었다는 이벤트를 서버로 보냄
 	 */
 	emitUserReadyEvent() {

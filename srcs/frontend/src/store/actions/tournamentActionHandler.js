@@ -62,6 +62,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 		// 게임 페이지로 이동
 		navigateTo("/game");
 		this.context.commit("setRound", { round: 1 });
+		this.trackBallPosition();
 		//console.groupEnd();
 	}
 
@@ -69,10 +70,6 @@ export default class tournamentActionHandler extends GameActionHandler {
 	 * @description tournamentBracketModal이 뜬 이후, 매 라운드 시작 시 호출되는 함수.
 	 */
 	startRound() {
-		this.initScores();
-		this.initPositions();
-		this.updateGameContext();
-
 		this.context.commit("setGameStatus", { gameStatus: "playing" });
 	}
 
@@ -99,7 +96,10 @@ export default class tournamentActionHandler extends GameActionHandler {
 			winner: this.nicknameList[winnerIndex],
 		});
 
-		// 다음 round 번호 설정 -> Tournament Bracket Modal이 뜸
+		// 다음 round 정보 업데이트
+		this.initScores();
+		this.initPositions();
+		this.updateGameContext();
 		this.context.commit("setRound", { round: payload.round + 1 });
 	}
 
