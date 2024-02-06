@@ -70,8 +70,14 @@ export default class gameActionHandler {
 		this.socket.on("userFullEvent", (data) => {
 			this.startGame(data);
 		});
-		this.socket.on("updateGameStatus", (data) => {
-			this.updateGameState(data);
+		// this.socket.on("updateGameStatus", (data) => {
+		// 	this.updateGameState(data);
+		// });
+		this.socket.on("updateBallState", (data) => {
+			this.updateBallState(data);
+		});
+		this.socket.on("updatePaddlePosition", (data) => {
+			this.updatePaddlePosition(data);
 		});
 		this.socket.on("updateGameScore", (data) => {
 			this.updateGameScore(data);
@@ -156,19 +162,50 @@ export default class gameActionHandler {
 		});
 	}
 
+	// /**
+	//  * @description 볼 위치와 패들 위치 업데이트
+	//  * @param {object} payload {ballPosition: {x, y}, leftPaddlePosition, rightPaddlePosition}
+	//  */
+	// updateGameState(payload) {
+	// 	this.context.commit("updateBallPosition", {
+	// 		ballPosition: payload.ballPosition,
+	// 	});
+	// 	this.context.commit("updateRightPaddlePosition", {
+	// 		rightPaddlePosition: payload.rightPaddlePosition,
+	// 	});
+	// 	this.context.commit("updateLeftPaddlePosition", {
+	// 		leftPaddlePosition: payload.leftPaddlePosition,
+	// 	});
+	// }
+
 	/**
-	 * @description 볼 위치와 패들 위치 업데이트
-	 * @param {object} payload {ballPosition: {x, y}, leftPaddlePosition, rightPaddlePosition}
+	 * @description 볼 위치 업데이트
+	 * @param {object} payload {ballPosition: {x, y}, ballVelocity: {x, y}}
 	 */
-	updateGameState(payload) {
+	updateBallState(payload) {
+		//console.groupCollapsed("EVENT: ballCollisionEvent");
+		//console.log(" - ballPosition={x=", payload.ballPosition.x, ", y=", payload.ballPosition.y, "}");
+		//console.log(" - ballVelocity={x=", payload.ballVelocity.x, ", y=", payload.ballVelocity.y, "}");
+		//console.groupEnd();
+
 		this.context.commit("updateBallPosition", {
 			ballPosition: payload.ballPosition,
 		});
+		this.context.commit("updateBallVelocity", {
+			ballVelocity: payload.ballVelocity,
+		});
+	}
+
+	/**
+	 * @description 패들 위치 업데이트
+	 * @param {object} payload {left, right}
+	 */
+	updatePaddlePosition(payload) {
 		this.context.commit("updateRightPaddlePosition", {
-			rightPaddlePosition: payload.rightPaddlePosition,
+			rightPaddlePosition: payload.right,
 		});
 		this.context.commit("updateLeftPaddlePosition", {
-			leftPaddlePosition: payload.leftPaddlePosition,
+			leftPaddlePosition: payload.left,
 		});
 	}
 
