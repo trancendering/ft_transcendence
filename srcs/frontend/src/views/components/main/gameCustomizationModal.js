@@ -96,16 +96,6 @@ export default class GameCustomizationModal extends Component {
 			).value;
 			store.dispatch("setFancyBall", { fancyBall: fancyBallValue });
 
-			// 임시 랜덤 intraId 생성
-			// TODO: auth 로직 구현 후 삭제
-			function makeRandomName() {
-				var name = "";
-				var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-				for (var i = 0; i < 5; i++) name += possible.charAt(Math.floor(Math.random() * possible.length));
-				return name;
-			}
-			store.dispatch("setIntraId", { intraId: makeRandomName() });
-
 			// Set Game Customization State
 			const speedUp = this.element.querySelector('#speedOption input[name="speedBtn"]:checked').value;
 
