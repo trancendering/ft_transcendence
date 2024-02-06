@@ -25,6 +25,7 @@ function setIntraId(context, payload) {
 
 function setLanguage(context, payload) {
 	context.commit("setLanguage", payload);
+	document.documentElement.lang = payload.languageId;
 }
 
 function setGameMode(context, payload) {
