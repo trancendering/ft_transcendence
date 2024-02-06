@@ -206,7 +206,7 @@ export default class gameActionHandler {
 	 * @description 패들 위치 업데이트 되었다는 이벤트를 서버로 보냄
 	 * @param {object} payload {paddlePosition}
 	 */
-	async updatePaddlePosition(payload) {
+	async sendPaddlePosition(payload) {
 		const gameContext = this.context.state.gameContext;
 		const paddlePosition = payload.paddlePosition;
 
@@ -233,7 +233,7 @@ export default class gameActionHandler {
 			return;
 		}
 		//console.log(`moveUserPaddleUp: position=${newPosition}`);
-		this.updatePaddlePosition({ paddlePosition: newPosition });
+		this.sendPaddlePosition({ paddlePosition: newPosition });
 	}
 
 	/**
@@ -251,6 +251,6 @@ export default class gameActionHandler {
 			return;
 		}
 		//console.log(`moveUserPaddleDown: position=${newPosition}`);
-		this.updatePaddlePosition({ paddlePosition: newPosition });
+		this.sendPaddlePosition({ paddlePosition: newPosition });
 	}
 }
