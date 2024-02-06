@@ -6,22 +6,22 @@ import "./static/css/tournamentBracketStyle.css";
 import "bootstrap";
 
 window.addEventListener("popstate", (event) => {
-	console.groupCollapsed("EVENT: popstate");
-	console.log(" - window.location.pathname=", window.location.pathname);
+	//console.groupCollapsed("EVENT: popstate");
+	//console.log(" - window.location.pathname=", window.location.pathname);
 
 	if (store.state.location === "/game") {
 		event.preventDefault();
-		console.log("leave game");
+		//console.log("leave game");
 		store.dispatch("leaveGame");
 	}
 	if (window.location.pathname === "/game") {
 		event.preventDefault();
-		console.log("can't go back to game or tournament page");
-		console.groupEnd();
+		//console.log("can't go back to game or tournament page");
+		//console.groupEnd();
 		navigateTo("/");
 		return;
 	}
-console.groupEnd();
+	//console.groupEnd();
 	// Route to the previous page
 	router();
 });
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		try {
 			await checkLoginStatus();
 		} catch (error) {
-			console.log(error);
+			//console.log(error);
 			navigateTo("/login");
 			return;
 		}
@@ -76,7 +76,7 @@ async function checkLoginStatus() {
 		store.dispatch("logIn");
 		await setUserInfo();
 		navigateTo("/");
-		console.log("login state: redirect to /");
+		//console.log("login state: redirect to /");
 	} else {
 		throw new Error("Not logged in");
 	}

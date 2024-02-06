@@ -48,7 +48,7 @@ export default class OpponentWaitingModal extends Component {
 
 	async handleEvent() {
 		document.getElementById("cancelMatchBtn").addEventListener("click", async (event) => {
-			console.log("cancel match making");
+			//console.log("cancel match making");
 
 			// Prevent Default Link Behavior
 			event.preventDefault();

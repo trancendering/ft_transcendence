@@ -37,28 +37,28 @@ function setFancyBall(context, payload) {
 }
 
 function joinGame(context, payload) {
-	console.log("joinGame: ");
+	//console.log("joinGame: ");
 
 	const gameHandler = getGameHandler(context);
 	gameHandler.connectSocket(payload);
 }
 
 function startRound(context) {
-	console.log("startRound: ");
+	//console.log("startRound: ");
 
 	const gameHandler = getGameHandler(context);
 	gameHandler.startRound();
 }
 
 function leaveGame(context) {
-	console.log("leaveGame: ");
+	//console.log("leaveGame: ");
 
 	const gameHandler = getGameHandler(context);
 	gameHandler.endGame({ reason: "userLeft" });
 }
 
 function emitUserReadyEvent(context) {
-	console.log("emitUserReadyEvent: ");
+	//console.log("emitUserReadyEvent: ");
 
 	const gameHandler = getGameHandler(context);
 	gameHandler.emitUserReadyEvent();

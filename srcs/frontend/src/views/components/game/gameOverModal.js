@@ -44,7 +44,7 @@ export default class GameOverModal extends Component {
 			const buttonElement = document.getElementById("closeModalBtn");
 			if (!buttonElement) throw new Error("buttonElement is null");
 		} catch (error) {
-			console.log(error);
+			//console.log(error);
 			return;
 		}
 

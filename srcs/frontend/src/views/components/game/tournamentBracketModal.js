@@ -98,7 +98,7 @@ export default class TournamentBracketModal extends Component {
 	}
 
 	async showTournamentBracketModal() {
-		console.log("show tournament bracket modal");
+		//console.log("show tournament bracket modal");
 
 		this.render();
 

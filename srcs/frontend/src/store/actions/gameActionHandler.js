@@ -36,11 +36,11 @@ export default class gameActionHandler {
 	connectSocket(payload) {
 		const url = `${process.env.SOCKET_URL}/${payload.namespace}`;
 
-		console.log("connectSocket:");
-		console.log(" - url=", url);
-		console.log(" - intraId=", payload.intraId);
-		console.log(" - nickname=", payload.nickname);
-		console.log(" - speedUp=", payload.speedUp);
+		//console.log("connectSocket:");
+		//console.log(" - url=", url);
+		//console.log(" - intraId=", payload.intraId);
+		//console.log(" - nickname=", payload.nickname);
+		//console.log(" - speedUp=", payload.speedUp);
 
 		if (!this.socket) {
 			this.socket = io(url, {
@@ -63,7 +63,7 @@ export default class gameActionHandler {
 	 * @description 소켓 이벤트 핸들러 등록
 	 */
 	bindSocketEvents() {
-		console.log("bindSocketEvents:");
+		//console.log("bindSocketEvents:");
 		this.socket.on("connect_error", (error) => {
 			this.printSocketError(error);
 		});
@@ -82,7 +82,7 @@ export default class gameActionHandler {
 	}
 
 	printSocketError(error) {
-		console.error("Connection Error:", error);
+		//console.error("Connection Error:", error);
 	}
 
 	async startGame(payload) {}
@@ -93,17 +93,17 @@ export default class gameActionHandler {
 	 * @description 새 게임 시작할 때, 좌/우 플레이어 점수 초기화
 	 */
 	initScores() {
-		console.log("initScores: ");
+		//console.log("initScores: ");
 		this.context.commit("updateLeftUserScore", { leftUserScore: 0 });
 		this.context.commit("updateRightUserScore", { rightUserScore: 0 });
-		console.log(" - left=", this.context.state.leftUserScore, " right=", this.context.state.rightUserScore);
+		//console.log(" - left=", this.context.state.leftUserScore, " right=", this.context.state.rightUserScore);
 	}
 
 	/**
 	 * @description 새 게임 시작할 때, 볼 및 패들 위치 초기화
 	 */
 	initPositions() {
-		console.log("initPositions: ");
+		//console.log("initPositions: ");
 		this.context.commit("updateBallPosition", {
 			ballPosition: {
 				x: 0,
@@ -129,15 +129,15 @@ export default class gameActionHandler {
 			this.userSide = this.matchQueue.indexOf(this.userIndex) % 2 === 0 ? Side.LEFT : Side.RIGHT;
 		}
 
-		console.log("updateGameContext: ");
-		console.log(" - matchQueue=", this.matchQueue);
-		console.log(" - leftUserIndex=", leftUserIndex);
-		console.log(" - rightUserIndex=", rightUserIndex);
-		console.log(" - leftUser=", this.nicknameList[leftUserIndex]);
-		console.log(" - rightUser=", this.nicknameList[rightUserIndex]);
-		console.log(" - participated=", participated);
-		console.log(" - userIndex=", this.userIndex);
-		console.log(" - userSide=", this.userSide);
+		//console.log("updateGameContext: ");
+		//console.log(" - matchQueue=", this.matchQueue);
+		//console.log(" - leftUserIndex=", leftUserIndex);
+		//console.log(" - rightUserIndex=", rightUserIndex);
+		//console.log(" - leftUser=", this.nicknameList[leftUserIndex]);
+		//console.log(" - rightUser=", this.nicknameList[rightUserIndex]);
+		//console.log(" - participated=", participated);
+		//console.log(" - userIndex=", this.userIndex);
+		//console.log(" - userSide=", this.userSide);
 
 		this.context.commit("setGameContext", {
 			gameContext: {
@@ -171,10 +171,10 @@ export default class gameActionHandler {
 	 * @param {object} payload {leftUserScore, rightUserScore}
 	 */
 	updateGameScore(payload) {
-		console.groupCollapsed("EVENT: updateGameScore");
-		console.log(" - left=", payload.leftUserScore);
-		console.log(" - right=", payload.rightUserScore);
-		console.groupEnd();
+		//console.groupCollapsed("EVENT: updateGameScore");
+		//console.log(" - left=", payload.leftUserScore);
+		//console.log(" - right=", payload.rightUserScore);
+		//console.groupEnd();
 
 		this.context.commit("updateLeftUserScore", {
 			leftUserScore: payload.leftUserScore,
@@ -223,10 +223,10 @@ export default class gameActionHandler {
 			state.gameContext.userSide === Side.LEFT ? state.leftPaddlePosition : state.rightPaddlePosition;
 		const newPosition = Math.min(curPosition + 10, Game.CANVAS_HEIGHT / 2 - Game.PADDLE_HEIGHT / 2);
 		if (newPosition === undefined) {
-			console.log("moveUserPaddleUp: new position undefined");
+			//console.log("moveUserPaddleUp: new position undefined");
 			return;
 		}
-		console.log(`moveUserPaddleUp: position=${newPosition}`);
+		//console.log(`moveUserPaddleUp: position=${newPosition}`);
 		this.updatePaddlePosition({ paddlePosition: newPosition });
 	}
 
@@ -241,10 +241,10 @@ export default class gameActionHandler {
 			state.gameContext.userSide === Side.LEFT ? state.leftPaddlePosition : state.rightPaddlePosition;
 		const newPosition = Math.max(curPosition - 10, -Game.CANVAS_HEIGHT / 2 + Game.PADDLE_HEIGHT / 2);
 		if (newPosition === undefined) {
-			console.log("moveUserPaddleDown: new position undefined");
+			//console.log("moveUserPaddleDown: new position undefined");
 			return;
 		}
-		console.log(`moveUserPaddleDown: position=${newPosition}`);
+		//console.log(`moveUserPaddleDown: position=${newPosition}`);
 		this.updatePaddlePosition({ paddlePosition: newPosition });
 	}
 }
