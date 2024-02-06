@@ -12,8 +12,8 @@ export default class LanguageSelector extends Component {
 		const languageId = store.state.languageId;
 
 		const view = /*html*/ `
-            <div class="dropdown position-absolute top-0 end-0">
-                <button class="btn dropdown-toggle mt-3 me-3" type="button" id="languageMenu" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="dropdown">
+                <button class="btn btn-lg dropdown-toggle my-3 me-4" type="button" id="languageMenu" data-bs-toggle="dropdown" aria-expanded="false">
                 	${languageSelector[languageId].language}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">

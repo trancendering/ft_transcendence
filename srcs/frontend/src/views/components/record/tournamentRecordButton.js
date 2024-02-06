@@ -12,7 +12,7 @@ export default class TournamentRecordButton extends Component {
 		const languageId = store.state.languageId;
 
 		const view = /*html*/ `
-			<a class="btn btn-outline-success text-green mt-3 ms-3" data-link href="/record" role="button">
+			<a class="btn btn-lg btn-outline-success text-green my-3 ms-4" data-link href="/record" role="button">
 				${tournamentRecordButton[languageId].record}
 			</a>
         `;
