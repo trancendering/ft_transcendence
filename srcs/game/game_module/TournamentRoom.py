@@ -37,9 +37,7 @@ class TournamentRoom(BaseRoom):
             self._left_player, self._right_player = self._winner[:2]
         self._score[self._left_player] = 0
         self._score[self._right_player] = 0
-        self._bar_loc_left, self._bar_loc_right = 0, 0
-        self._ball_loc.zero()
-        self._reset_ball_velocity()
+        self._game_state.reset_state()
         await asyncio.sleep(0.5)
         self._stay_state = False
         isError = await self._state_updata_loop()
@@ -98,8 +96,7 @@ class TournamentRoom(BaseRoom):
         await self._server.emit(
             "updateGameScore", score_data, room=self._room_name, namespace=self._namespace
         )
-        self._ball_loc.zero()
-        self._reset_ball_velocity()
+        self._game_state.reset_ball()
         return end_game
 
     async def _game_end(self, end_reason: str) -> None:
