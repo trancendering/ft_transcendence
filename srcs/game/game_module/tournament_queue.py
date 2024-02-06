@@ -106,6 +106,7 @@ async def _enter_room(sio: AsyncServer, room_name: str, player: List[str], mode:
         "roomName": room_name,
         "intraId": user_id,
         "nickname": user_nick,
+        "socketId": player,
     }
     print(send_info, "tournament_send", file=sys.stderr)
     await sio.emit("userFullEvent", send_info, room=room_name, namespace="/tournament")  # 플레이어 위치 정보 송신
