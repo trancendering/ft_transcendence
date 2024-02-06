@@ -42,17 +42,31 @@ class GameStateManager:
         self._bar_loc_right: float = 0  # player_2의 bar위치
 
     def reset_ball(self) -> None:
+        """
+        공의 위치를 초기화
+        """
         self._reset_ball_velocity()
         self._ball_loc.zero()
 
     def reset_state(self) -> None:
+        """
+        게임의 상태를 초기화
+        """
         self.reset_ball()
         self._bar_loc_left, self._bar_loc_right = 0, 0
 
     def update_next_state(self) -> None:
+        """
+        게임을 다음 상태로 업데이트
+        """
         self._ball_move_update()
 
     def is_get_score(self) -> Tuple[bool]:
+        """
+        양측 득점 여부
+
+        반환값: tuple(우측 득점(bool), 좌측 득점(bool))
+        """
         # 우측 득점
         if self._ball_loc.x <= -self.FIELD_WIDTH / 2:
             return False, True
@@ -62,6 +76,11 @@ class GameStateManager:
         return False, False
 
     def get_current_ball_location(self) -> Dict[str, float]:
+        """
+        공의 현재 위치를 딕셔너리 형태로 반환
+
+        반환값: {"x": float, "y": float}
+        """
         return self._ball_loc.cast_dict()
 
     @property
