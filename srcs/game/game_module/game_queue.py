@@ -99,6 +99,7 @@ async def _enter_room(sio: AsyncServer, room_name: str, player: List[str], mode:
         "roomName": room_name,
         "intraId": [user1_session["intraId"], user2_session["intraId"]],
         "nickname": [user1_session["nickname"], user2_session["nickname"]],
+        "socketId": player,
     }
     print(send_info, "single_send", file=sys.stderr)
     await sio.emit("userFullEvent", send_info, room=room_name, namespace="/single")  # 플레이어 위치 정보 송신
