@@ -57,6 +57,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 		this.initTournamentScores();
 		this.initTournamentWinners();
 		this.updateGameContext();
+		this.context.commit("setMusicOn", { musicOn: false });
 		this.context.commit("setEndReason", { endReason: "normal" });
 
 		// 게임 페이지로 이동
@@ -124,6 +125,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 				winner: state.tournamentWinner.round3,
 			});
 		}
+		this.context.commit("setMusicOn", { musicOn: false });
 		if (!this.gameEnded) {
 			this.socket.disconnect();
 			this.gameEnded = true;

@@ -52,6 +52,7 @@ export default class singleGameActionHandler extends GameActionHandler {
 		this.initScores();
 		this.initPositions();
 		this.updateGameContext();
+		this.context.commit("setMusicOn", { musicOn: false });
 		this.context.commit("setEndReason", { endReason: "normal" });
 
 		// 게임 페이지로 이동
@@ -70,6 +71,7 @@ export default class singleGameActionHandler extends GameActionHandler {
 
 		const state = this.context.state;
 
+		this.context.commit("setMusicOn", { musicOn: false });
 		if (payload.reason === "normal") {
 			const winner =
 				state.leftUserScore > state.rightUserScore ? state.gameContext.leftUser : state.gameContext.rightUser;
