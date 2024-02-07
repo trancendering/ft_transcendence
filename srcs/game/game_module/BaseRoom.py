@@ -13,9 +13,9 @@ from .GameStateManager import GameStateManager
 
 
 async def precide_sleep(delay):
-    end_time = time.time() + delay
+    end_time = time.time_ns() / 1000000000 + delay
     await asyncio.sleep(delay * 0.8)
-    while time.time() < end_time:
+    while time.time_ns() / 1000000000 < end_time:
         await asyncio.sleep(0)
 
 
@@ -115,12 +115,17 @@ class BaseRoom:
         조정된 거리만큼 다음 프레임에서 추가적으로 이동
         """
         update_send = True
+        cal_delay = 0
         while not self._kill:
             # 게임 현재 상태 전송 및 연산 간 딜레이 생성
             if (update_send):
-                await asyncio.gather(self._state_send(), precide_sleep(1 / self.UPDATE_FREQUENCY))
+                await precide_sleep(1 / self.UPDATE_FREQUENCY - cal_delay)
+                cal_delay = time.time_ns()
+                await self._state_send()
+                # await asyncio.gather(self._state_send(), precide_sleep(1000 / self.UPDATE_FREQUENCY - cal_delay))
             else:
-                await precide_sleep(1 / self.UPDATE_FREQUENCY)
+                await precide_sleep(1 / self.UPDATE_FREQUENCY - cal_delay)
+                cal_delay = time.time_ns()
 
             left_get_score, right_get_score = self._game_state.is_get_score()
             # 우측 득점
@@ -140,6 +145,8 @@ class BaseRoom:
                     self._stay_state = False  # 게임 재개
             else:
                 update_send = self._game_state.update_next_state()  # 공 위치 갱신
+                # print(cal_delay, file=sys.stderr)
+            cal_delay = (time.time_ns() - cal_delay) / 100000000
         return True  # 비정상(사용자 탈주 등) 종료
 
     async def _state_send(self):
