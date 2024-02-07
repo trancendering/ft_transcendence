@@ -9,6 +9,7 @@ export default class Game extends Component {
 		this.render();
 		this.components = {
 			gameCanvas: new GameCanvas(),
+			backgroundMusic: new BackgroundMusic(),
 			tournamentBracketModal: new TournamentBracketModal(),
 			gameOverModal: new GameOverModal(),
 		};
@@ -16,6 +17,9 @@ export default class Game extends Component {
 
 	async render() {
 		const view = /*html*/ `
+			<!-- Background Music -->
+			<audio id="bgm" loop></audio>
+
             <div id="game-controls">
                 <!-- Canvas for the game -->
                 <canvas id="gameCanvas"></canvas>
