@@ -24,7 +24,7 @@
 
 - **Reverse Proxy**: Nginx serves as a reverse proxy, routing requests to the appropriate backend service, configured in `srcs/middleware/conf/default.conf`.
 - **SSL/TLS**: Nginx is configured to use SSL/TLS for secure HTTP communication, as shown in `srcs/middleware/conf/default.conf.`
-
+- **Static File Delivery**: Utilizes Docker volumes to serve static files directly from the `frontend/dist` directory without the need for rebuilding the middleware container. This is achieved by referencing the [dist](file:///Users/leetaekwon/Documents/coding/trans/srcs/middleware/conf/default.conf#5%2C24-5%2C24) volume in both the [frontend](file:///Users/leetaekwon/Documents/coding/trans/srcs/docker-compose.yml#18%2C15-18%2C15) and [middleware](file:///Users/leetaekwon/Documents/coding/trans/srcs/docker-compose.yml#4%2C5-4%2C5) service definitions within the `docker-compose.yml` file, ensuring that the Nginx server within the middleware container can serve the latest frontend static files.
 ## Backend
 
 ![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=yellow) ![Django REST Framework](https://img.shields.io/badge/Django_REST_Framework-092E20?logo=django&logoColor=white) ![Daphne](https://img.shields.io/badge/Daphne-512BD4?logo=django&logoColor=white) ![HTTPS](https://img.shields.io/badge/HTTPS-565656?logo=letsencrypt&logoColor=white) ![OAuth](https://img.shields.io/badge/OAuth-4285F4?logo=oauth&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?logo=postgresql&logoColor=white) ![Ethereum](https://img.shields.io/badge/Ethereum-3C3C3D?logo=ethereum&logoColor=white) ![Solidity](https://img.shields.io/badge/Solidity-363636?logo=solidity&logoColor=white)
@@ -48,14 +48,23 @@
 	<img width="470" alt="스크린샷 2024-02-07 오후 1 38 36" src="https://github.com/trancendering/Transcendence_Backend/assets/84652799/e66c41b5-ad92-459a-8533-96d8c1301843">
 </div>
 
-- **Containerization**: Docker and Docker Compose are pivotal in creating isolated environments for both the frontend and backend, streamlining development and deployment processes. The `Dockerfile` and `docker-compose.yml` files detail the container configurations.
+- **Containerization**: Docker and Docker Compose are pivotal in creating isolated environments for both the frontend and backend, streamlining development and deployment processes. The [Dockerfile](file:///Users/leetaekwon/Documents/coding/trans/srcs/docker-compose.yml#10%2C25-10%2C25) and `docker-compose.yml` files detail the container configurations.
+
+- **Static File Sharing**: Frontend static files (JS, CSS) are generated in a `dist` directory, shared with the Nginx container via a named volume in `docker-compose.yml`. This ensures Nginx serves the latest static files without needing container rebuilds.
+
+- **Bind Mounts for Development**: `docker-compose.yml` supports bind mounts, linking host directories to containers. This allows immediate reflection of changes in the container, streamlining development by bypassing rebuilds for every update, crucial for rapid frontend development iterations.
 
 
+```yaml
+services:
+  django_game:
+    volumes:
+      - ./game:/game
 
-
-
-
-
+  frontend:
+    volumes:
+      - ./frontend:/app
+```
 
 
 
