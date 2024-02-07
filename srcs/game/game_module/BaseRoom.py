@@ -143,7 +143,7 @@ class BaseRoom:
             "ballPosition": self._game_state.get_current_ball_location(),
             "ballVelocity": self._game_state.get_current_ball_velocity(),
         }
-        await self._server.emit("updateGameStatus", now_state, room=self._room_name, namespace=self._namespace)
+        await self._server.emit("updateBallState", now_state, room=self._room_name, namespace=self._namespace)
 
     async def bar_move(self, bar_loc: float, side: str) -> None:
         """
