@@ -11,7 +11,7 @@
  ![Nginx](https://img.shields.io/badge/Nginx-009639?logo=nginx&logoColor=white)  ![OAuth](https://img.shields.io/badge/OAuth-4285F4?logo=oauth&logoColor=white)
 ![HTTPS](https://img.shields.io/badge/HTTPS-565656?logo=letsencrypt&logoColor=white) ![Ethereum](https://img.shields.io/badge/Ethereum-3C3C3D?logo=ethereum&logoColor=white) ![Solidity](https://img.shields.io/badge/Solidity-363636?logo=solidity&logoColor=white) ![Docker Compose](https://img.shields.io/badge/Docker_Compose-1DA1F2?logo=docker&logoColor=white)
 
-`ft_transcendence` is the capstone project of the 6th circle at Ecole 42, presenting a modern reinterpretation of the classic Pong game. Leveraging a robust Django-powered backend and a dynamic vanilla JavaScript frontend, this project introduces a remote multiplayer experience with real-time interactions and personalized content. 
+`ft_transcendence` is the last project of the inner circle at Ecole 42, presenting a modern reinterpretation of the classic Pong game. Leveraging a robust Django-powered backend and a dynamic vanilla JavaScript frontend, this project introduces a remote multiplayer experience with real-time interactions and personalized content. 
 
 
 ## Screen
