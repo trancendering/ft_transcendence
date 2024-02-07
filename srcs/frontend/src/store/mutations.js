@@ -127,6 +127,11 @@ function setWinner(state, payload) {
 	return state;
 }
 
+function setMusicOn(state, payload) {
+	state.musicOn = payload.musicOn;
+	return state;
+}
+
 export default {
 	updateLocation,
 	// login
@@ -156,4 +161,5 @@ export default {
 	updateTournamentWinner,
 	// single game state
 	setWinner,
+	setMusicOn,
 };

@@ -78,6 +78,12 @@ function setGameStatus(context, payload) {
 	context.commit("setGameStatus", payload);
 }
 
+function toggleMusicOn(context) {
+	context.commit("setMusicOn", {
+		musicOn: !context.state.musicOn,
+	});
+}
+
 export default {
 	updateLocation,
 	logIn,
@@ -93,4 +99,5 @@ export default {
 	moveUserPaddleDown,
 	moveUserPaddleUp,
 	setGameStatus,
+	toggleMusicOn,
 };
