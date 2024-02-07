@@ -216,7 +216,11 @@ export default class gameCanvas extends Component {
 	 * 키보드 이벤트를 처리
 	 */
 	async handleEvent() {
+		let canInput = true;
 		document.addEventListener("keydown", (e) => {
+			// 입력이 불가능한 경우 이벤트를 처리하지 않음
+			if (canInput === false) return;
+
 			// 게임이 종료되었으면 이벤트를 처리하지 않음
 			if (store.state.gameStatus !== "playing") return;
 
@@ -228,6 +232,9 @@ export default class gameCanvas extends Component {
 			} else if (e.key == "ArrowDown") {
 				store.dispatch("moveUserPaddleDown");
 			}
+
+			canInput = false;
+			setTimeout(() => canInput = true, 200);
 		});
 	}
 

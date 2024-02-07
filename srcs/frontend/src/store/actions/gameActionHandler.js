@@ -91,9 +91,9 @@ export default class gameActionHandler {
 		//console.error("Connection Error:", error);
 	}
 
-	async startGame(payload) {}
+	async startGame(payload) { }
 
-	async endGame(payload) {}
+	async endGame(payload) { }
 
 	/**
 	 * @description 새 게임 시작할 때, 좌/우 플레이어 점수 초기화
@@ -289,7 +289,7 @@ export default class gameActionHandler {
 
 		const curPosition =
 			state.gameContext.userSide === Side.LEFT ? state.leftPaddlePosition : state.rightPaddlePosition;
-		const newPosition = Math.min(curPosition + 10, Game.CANVAS_HEIGHT / 2 - Game.PADDLE_HEIGHT / 2);
+		const newPosition = Math.min(curPosition + 40, Game.CANVAS_HEIGHT / 2 - Game.PADDLE_HEIGHT / 2);
 		if (newPosition === undefined) {
 			//console.log("moveUserPaddleUp: new position undefined");
 			return;
@@ -307,7 +307,7 @@ export default class gameActionHandler {
 
 		const curPosition =
 			state.gameContext.userSide === Side.LEFT ? state.leftPaddlePosition : state.rightPaddlePosition;
-		const newPosition = Math.max(curPosition - 10, -Game.CANVAS_HEIGHT / 2 + Game.PADDLE_HEIGHT / 2);
+		const newPosition = Math.max(curPosition - 40, -Game.CANVAS_HEIGHT / 2 + Game.PADDLE_HEIGHT / 2);
 		if (newPosition === undefined) {
 			//console.log("moveUserPaddleDown: new position undefined");
 			return;
