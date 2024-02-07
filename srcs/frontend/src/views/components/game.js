@@ -1,5 +1,7 @@
 import Component from "../../library/component.js";
 import GameCanvas from "./game/gameCanvas.js";
+import BackgroundMusic from "./game/backgroundMusic.js";
+import AudioButton from "./game/audioButton.js";
 import TournamentBracketModal from "./game/tournamentBracketModal.js";
 import GameOverModal from "./game/gameOverModal.js";
 
@@ -10,6 +12,7 @@ export default class Game extends Component {
 		this.components = {
 			gameCanvas: new GameCanvas(),
 			backgroundMusic: new BackgroundMusic(),
+			audioButton: new AudioButton(),
 			tournamentBracketModal: new TournamentBracketModal(),
 			gameOverModal: new GameOverModal(),
 		};
@@ -19,6 +22,9 @@ export default class Game extends Component {
 		const view = /*html*/ `
 			<!-- Background Music -->
 			<audio id="bgm" loop></audio>
+
+			<!-- Audio Button -->
+			<div id="audioBtn"></div>
 
             <div id="game-controls">
                 <!-- Canvas for the game -->
