@@ -234,16 +234,34 @@ export default class gameActionHandler {
 		const ballPosition = this.context.state.ballPosition;
 		const ballVelocity = this.context.state.ballVelocity;
 
-		this.context.commit("updateBallPosition", {
-			ballPosition: {
-				x: Math.min(ballPosition.x + ballVelocity.x, Game.CANVAS_WIDTH / 2),
-				y: Math.min(ballPosition.y + ballVelocity.y, Game.CANVAS_HEIGHT / 2),
-			}
-		});
+		const newX = Math.max(Math.min(ballPosition.x + ballVelocity.x, 400), -400);
+		const newY = Math.max(Math.min(ballPosition.y + ballVelocity.y, 200), -200);
+
+		if (newX === 400 || newX === -400) {
+			this.context.commit("updateBallPosition", {
+				ballPosition: {
+					x: 0,
+					y: 0,
+				},
+			});
+			this.context.commit("updateBallVelocity", {
+				ballVelocity: {
+					x: 0,
+					y: 0,
+				},
+			});
+		} else {
+			this.context.commit("updateBallPosition", {
+				ballPosition: {
+					x: newX,
+					y: newY,
+				}
+			});
+		}
 		if (!this.gameEnded) {
 			setTimeout(() => {
 				this.trackBallPosition();
-			}, 1000 / 60);
+			}, 18);
 		}
 	}
 
@@ -268,7 +286,7 @@ export default class gameActionHandler {
 		const paddlePosition = payload.paddlePosition;
 
 		if (this.gameEnded) return;
-		this.socket.emit("updatePaddlePosition", {
+		this.socket.emit("sendPaddlePosition", {
 			roomName: gameContext.roomName,
 			userSide: gameContext.userSide,
 			paddlePosition: paddlePosition,

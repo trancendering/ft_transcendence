@@ -35,7 +35,7 @@ class BaseRoom:
     def __init__(self, sio: AsyncServer, player: List[str], room_name: str, mode: str, namespace: str) -> None:
         #  게임 상수 데이터
         self.ENDSCORE = 5  # 목표 점수
-        self.UPDATE_FREQUENCY = 30  # 업데이트 빈도(프레임)
+        self.UPDATE_FREQUENCY = 60  # 업데이트 빈도(프레임)
         self.ROUND_READY_TIME = 1  # 매 라운드 시작 시 준비 시간
 
         # 게임 객체를 정의하는 내부 변수
@@ -56,7 +56,7 @@ class BaseRoom:
         self._score: Dict[str, int] = {player[0]: 0, player[1]: 0}  # 게임 스코어
 
         self._game_state: GameStateManager = GameStateManager(
-            ball_speed=(6 if self._game_mode == "normal" else 10)
+            ball_speed=(3 if self._game_mode == "normal" else 5)
         )
 
     # 비동기 게임 루프의 entrypoint
