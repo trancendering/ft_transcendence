@@ -57,11 +57,11 @@ export default class tournamentActionHandler extends GameActionHandler {
 		this.initTournamentScores();
 		this.initTournamentWinners();
 		this.updateGameContext();
-		this.context.commit("setMusicOn", { musicOn: false });
 		this.context.commit("setEndReason", { endReason: "normal" });
 
 		// 게임 페이지로 이동
 		navigateTo("/game");
+		this.context.commit("setMusicOn", { musicOn: false });
 		this.context.commit("setRound", { round: 1 });
 		//console.groupEnd();
 	}

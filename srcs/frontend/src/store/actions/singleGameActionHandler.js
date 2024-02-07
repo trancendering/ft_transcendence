@@ -52,11 +52,11 @@ export default class singleGameActionHandler extends GameActionHandler {
 		this.initScores();
 		this.initPositions();
 		this.updateGameContext();
-		this.context.commit("setMusicOn", { musicOn: false });
 		this.context.commit("setEndReason", { endReason: "normal" });
 
 		// 게임 페이지로 이동
 		navigateTo("/game");
+		this.context.commit("setMusicOn", { musicOn: false });
 		this.context.commit("setGameStatus", { gameStatus: "playing" });
 		//console.groupEnd();
 	}
