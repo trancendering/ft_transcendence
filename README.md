@@ -5,13 +5,14 @@
 ## Overview
 
 
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black) ![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?logo=bootstrap&logoColor=white) ![Webpack](https://img.shields.io/badge/Webpack-8DD6F9?logo=webpack&logoColor=black) ![Socket.IO](https://img.shields.io/badge/Socket.IO-010101?logo=socket.io&logoColor=white) 
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)  ![Three.js](https://img.shields.io/badge/Three.js-black?logo=three.js&logoColor=white) ![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?logo=bootstrap&logoColor=white) ![Webpack](https://img.shields.io/badge/Webpack-8DD6F9?logo=webpack&logoColor=black) ![Socket.IO](https://img.shields.io/badge/Socket.IO-010101?logo=socket.io&logoColor=white) 
 
-![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=yellow)![Django REST Framework](https://img.shields.io/badge/Django_REST_Framework-092E20?logo=django&logoColor=white) ![Daphne](https://img.shields.io/badge/Daphne-512BD4?logo=django&logoColor=white)  ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?logo=postgresql&logoColor=white) 
+![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=yellow) ![Django REST Framework](https://img.shields.io/badge/Django_REST_Framework-092E20?logo=django&logoColor=white) ![Daphne](https://img.shields.io/badge/Daphne-512BD4?logo=django&logoColor=white)  ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?logo=postgresql&logoColor=white) 
 
 
 
- ![Nginx](https://img.shields.io/badge/Nginx-009639?logo=nginx&logoColor=white) ![HTTPS](https://img.shields.io/badge/HTTPS-565656?logo=letsencrypt&logoColor=white) ![Ethereum](https://img.shields.io/badge/Ethereum-3C3C3D?logo=ethereum&logoColor=white) ![Solidity](https://img.shields.io/badge/Solidity-363636?logo=solidity&logoColor=white) ![Docker Compose](https://img.shields.io/badge/Docker_Compose-1DA1F2?logo=docker&logoColor=white)
+ ![Nginx](https://img.shields.io/badge/Nginx-009639?logo=nginx&logoColor=white)  ![OAuth](https://img.shields.io/badge/OAuth-4285F4?logo=oauth&logoColor=white)
+![HTTPS](https://img.shields.io/badge/HTTPS-565656?logo=letsencrypt&logoColor=white) ![Ethereum](https://img.shields.io/badge/Ethereum-3C3C3D?logo=ethereum&logoColor=white) ![Solidity](https://img.shields.io/badge/Solidity-363636?logo=solidity&logoColor=white) ![Docker Compose](https://img.shields.io/badge/Docker_Compose-1DA1F2?logo=docker&logoColor=white)
 
 
 This project is the final assignment of the 6th circle at Ecole 42, named ft_transcendence. Also, This project is a modern take on the classic Pong game, featuring a Django-powered backend and a vanilla JavaScript frontend. It supports remote pingpong game, real-time interactions, and dynamic content based on user preferences.
