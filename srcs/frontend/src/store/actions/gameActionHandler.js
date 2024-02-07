@@ -234,34 +234,21 @@ export default class gameActionHandler {
 		const ballPosition = this.context.state.ballPosition;
 		const ballVelocity = this.context.state.ballVelocity;
 
-		const newX = Math.max(Math.min(ballPosition.x + ballVelocity.x, 400), -400);
-		const newY = Math.max(Math.min(ballPosition.y + ballVelocity.y, 200), -200);
-
-		if (newX === 400 || newX === -400) {
-			this.context.commit("updateBallPosition", {
-				ballPosition: {
-					x: 0,
-					y: 0,
-				},
-			});
-			this.context.commit("updateBallVelocity", {
-				ballVelocity: {
-					x: 0,
-					y: 0,
-				},
-			});
-		} else {
-			this.context.commit("updateBallPosition", {
-				ballPosition: {
-					x: newX,
-					y: newY,
-				}
-			});
+		let newX = ballPosition.x, newY = ballPosition.y;
+		if (newY > -195 && newY < 195) {
+			newX = Math.max(Math.min(ballPosition.x + ballVelocity.x, 395), -395);
 		}
+		if (newX > -395 && newX < 395) {
+			newY = Math.max(Math.min(ballPosition.y + ballVelocity.y, 195), -195);
+		}
+		if (newY === 195 || newY === -195) newX = ballPosition.x;
+		this.context.commit("updateBallPosition", {
+			ballPosition: { x: newX, y: newY }
+		});
 		if (!this.gameEnded) {
 			setTimeout(() => {
 				this.trackBallPosition();
-			}, 18);
+			}, 1000 / 60);
 		}
 	}
 
