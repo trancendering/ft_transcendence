@@ -1,4 +1,5 @@
-import json, os
+import json
+import os
 from dotenv import load_dotenv
 from web3 import Web3
 
@@ -10,10 +11,15 @@ CONTRACT_ADDRESS = os.path.join(OUTPUTS_DIR, "contract_address.json")
 
 # Set the environment variables
 load_dotenv()
-w3 = os.environ.get("WEB3_PROVIDER", None)
+w3_provider = os.environ.get("WEB3_PROVIDER", None)
 chain_id = int(os.environ.get("CHAIN_ID"))
 my_address = os.environ.get("MY_ADDRESS", None)
 private_key = os.getenv("PRIVATE_OWNER_KEY", None)
+
+# Create a Web3 instance
+w3 = Web3(
+    Web3.HTTPProvider(w3_provider)
+)  # Replace 'w3_provider' with your actual Ethereum node URL
 
 
 def load_json_file(path, key):
@@ -28,28 +34,31 @@ contract_address = load_json_file(CONTRACT_ADDRESS, "contractAddress")
 
 
 def retrieve_transaction():
-
-    # If env variables are missing, return an error for runnning the django server
-    if w3 is None or chain_id == 0 or my_address is None or private_key is None:
+    # If env variables are missing, return an error for running the Django server
+    if (
+        w3_provider is None
+        or chain_id == 0
+        or my_address is None
+        or private_key is None
+    ):
         print("Error: One or more required environment variables are missing.")
         return
 
     # Load the contract
     tournament_contract = w3.eth.contract(address=contract_address, abi=abi)
-    print("retrive transcation! !!:", tournament_contract.functions.retrieve().call())
+    print("Retrieve transaction:", tournament_contract.functions.retrieve().call())
 
     # Retrieve the log from the contract
     tournaments = tournament_contract.functions.retrieve().call()
     tournaments = sorted(tournaments, key=lambda x: x[-1])
 
     # Convert the log into a dictionary
-
     tournament_log = []
     for tournament in tournaments:
         tournament_dict = []
 
         for idx, game in enumerate(tournament):
-            if idx < 3:  # 3번만 반복하도록 조건 추가
+            if idx < 3:  # Limit to 3 iterations
                 game_id, winner, loser = game
                 game_dict = {
                     "game_id": game_id,
@@ -63,18 +72,22 @@ def retrieve_transaction():
 
     tournament_log_data = {
         "tournamentLog": tournament_log,
-        "etherscan": "https://goerli.etherscan.io/address/{}".format(contract_address),
+        "etherscan": f"https://goerli.etherscan.io/address/{contract_address}",
     }
 
-    # 딕셔너리를 JSON 형태로 변환
+    # Convert the dictionary to JSON format
     json_data = json.dumps(tournament_log_data, ensure_ascii=False, indent=4)
     return json_data
 
 
 def record_transaction(tournament):
-
-    # If env variables are missing, return an error for runnning the django server
-    if w3 is None or chain_id == 0 or my_address is None or private_key is None:
+    # If env variables are missing, return an error for running the Django server
+    if (
+        w3_provider is None
+        or chain_id == 0
+        or my_address is None
+        or private_key is None
+    ):
         print("Error: One or more required environment variables are missing.")
         return
 
@@ -96,3 +109,8 @@ def record_transaction(tournament):
     # Wait for the transaction to be mined
     tx_receipt = w3.eth.wait_for_transaction_receipt(send_add_tx)
     print("Recorded Done!")
+
+
+# Example usage:
+# json_data = retrieve_transaction()
+# record_transaction("YourTournamentData")
