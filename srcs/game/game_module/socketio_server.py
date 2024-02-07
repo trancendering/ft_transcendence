@@ -14,8 +14,8 @@ sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins='*')
 # 서버 이벤트 등록
 sio.on("userReadyEvent", player_ready, namespace="/single")
 sio.on("userReadyEvent", player_ready, namespace="/tournament")
-sio.on("updatePaddlePosition", bar_move, namespace="/single")
-sio.on("updatePaddlePosition", bar_move, namespace="/tournament")
+sio.on("sendPaddlePosition", bar_move, namespace="/single")
+sio.on("sendPaddlePosition", bar_move, namespace="/tournament")
 
 
 def _log(command: str, name: str, sid: str) -> None:
