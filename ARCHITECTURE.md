@@ -12,11 +12,11 @@
 - **Framework/Library**: The frontend is built using vanilla JavaScript, leveraging several libraries for UI components and state management.
 - **Single Page Application (SPA)**: The frontend implements SPA architecture for smooth user experiences without page reloads.
 - **State Management**: Implements a custom state management system with a Store pattern, similar to Redux or Vuex, located in `srcs/frontend/src/store/index.js`.
+- **3D Rendering**: Three.js is used for 3D graphics, especially in the game canvas component (`srcs/frontend/src/views/components/game/gameCanvas.js`).
+
 - **Styling**: Utilizes Bootstrap for UI components and custom styles with CSS and SCSS. The project employs Webpack to compile SCSS to CSS.
 - **Module Bundler**: Webpack is configured for bundling JavaScript modules, as seen in `srcs/frontend/webpack.config.js`.
-- **Development Tools**: Docker is used for containerization, evident from the [Dockerfile](file:///Users/leetaekwon/Documents/coding/trans/srcs/docker-compose.yml#10%2C25-10%2C25) and `docker-compose.yml` for service orchestration.
 - **Internationalization**: Features a custom implementation for language selection and dynamic text rendering based on the selected language.
-- **3D Rendering**: Three.js is used for 3D graphics, especially in the game canvas component (`srcs/frontend/src/views/components/game/gameCanvas.js`).
 
 ## Middleware 
 
@@ -36,9 +36,6 @@
 - **Blockchain Integration** : Smartcontract with Ethereum blockchain for secure tournament log recording and retrieval.
 - **SSL/TLS**: Daphneis configured to use SSL/TLS for secure HTTP communication, as shown in `srcs/game/tool/docker_entrypoint.sh`.
 
-
-
-- **Blockchain Integration**: Utilizes Ethereum blockchain and Solidity for smart contracts, ensuring secure and transparent tournament logs.
 
 ## Deployment and Development
 
