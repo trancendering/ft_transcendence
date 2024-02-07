@@ -115,7 +115,6 @@ export default class tournamentActionHandler extends GameActionHandler {
 		//console.log(" winnerSide: ", payload.winnerSide);
 		const state = this.context.state;
 
-		this.context.commit("setMusicOn", { musicOn: false });
 		if (payload.reason === "normal") {
 			this.endRound(payload);
 			if (payload.round < 3) {
@@ -126,6 +125,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 				winner: state.tournamentWinner.round3,
 			});
 		}
+		this.context.commit("setMusicOn", { musicOn: false });
 		if (!this.gameEnded) {
 			this.socket.disconnect();
 			this.gameEnded = true;
