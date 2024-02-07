@@ -12,6 +12,13 @@ from .Vector import Vector
 from .GameStateManager import GameStateManager
 
 
+async def precide_sleep(delay):
+    end_time = time.time() + delay
+    await asyncio.sleep(delay * 0.8)
+    while time.time() < end_time:
+        await asyncio.sleep(0)
+
+
 class Collusion(Enum):
     """
     NO_COLLUSION: 바에 충돌하지 않음
@@ -35,7 +42,7 @@ class BaseRoom:
     def __init__(self, sio: AsyncServer, player: List[str], room_name: str, mode: str, namespace: str) -> None:
         #  게임 상수 데이터
         self.ENDSCORE = 5  # 목표 점수
-        self.UPDATE_FREQUENCY = 30  # 업데이트 빈도(프레임)
+        self.UPDATE_FREQUENCY = 60  # 업데이트 빈도(프레임)
         self.ROUND_READY_TIME = 1  # 매 라운드 시작 시 준비 시간
 
         # 게임 객체를 정의하는 내부 변수
@@ -56,7 +63,7 @@ class BaseRoom:
         self._score: Dict[str, int] = {player[0]: 0, player[1]: 0}  # 게임 스코어
 
         self._game_state: GameStateManager = GameStateManager(
-            ball_speed=(6 if self._game_mode == "normal" else 10)
+            ball_speed=(3 if self._game_mode == "normal" else 5)
         )
 
     # 비동기 게임 루프의 entrypoint
@@ -107,9 +114,13 @@ class BaseRoom:
         해당 프레임에 이동 거리를 조정하여 공과 구조물이 접하게 렌더링 후
         조정된 거리만큼 다음 프레임에서 추가적으로 이동
         """
+        update_send = True
         while not self._kill:
             # 게임 현재 상태 전송 및 연산 간 딜레이 생성
-            await asyncio.gather(self._state_send(), asyncio.sleep(1 / self.UPDATE_FREQUENCY))
+            if (update_send):
+                await asyncio.gather(self._state_send(), precide_sleep(1 / self.UPDATE_FREQUENCY))
+            else:
+                await precide_sleep(1 / self.UPDATE_FREQUENCY)
 
             left_get_score, right_get_score = self._game_state.is_get_score()
             # 우측 득점
@@ -123,10 +134,12 @@ class BaseRoom:
 
             # 현재 라운드 간 준비시간일 경우
             if self._stay_state is True:
+                update_send = False
                 if time.time() - self._stay_time >= self.ROUND_READY_TIME:
+                    update_send = True
                     self._stay_state = False  # 게임 재개
             else:
-                self._game_state.update_next_state()  # 공 위치 갱신
+                update_send = self._game_state.update_next_state()  # 공 위치 갱신
         return True  # 비정상(사용자 탈주 등) 종료
 
     async def _state_send(self):
@@ -135,12 +148,11 @@ class BaseRoom:
         """
         now_state = {
             "ballPosition": self._game_state.get_current_ball_location(),
-            "leftPaddlePosition": self._game_state.left_bar,
-            "rightPaddlePosition": self._game_state.right_bar,
+            "ballVelocity": self._game_state.get_current_ball_velocity(),
         }
-        await self._server.emit("updateGameStatus", now_state, room=self._room_name, namespace=self._namespace)
+        await self._server.emit("updateBallState", now_state, room=self._room_name, namespace=self._namespace)
 
-    def bar_move(self, bar_loc: float, side: str) -> None:
+    async def bar_move(self, bar_loc: float, side: str) -> None:
         """
         바를 움직이는 함수
 
@@ -152,6 +164,11 @@ class BaseRoom:
             self._game_state.left_bar = bar_loc
         else:
             self._game_state.right_bar = bar_loc
+        send_bar_loc = {
+            "left": self._game_state.left_bar,
+            "right": self._game_state.right_bar,
+        }
+        await self._server.emit("updatePaddlePosition", send_bar_loc, room=self._room_name, namespace=self._namespace)
 
     async def kill_room(self) -> None:
         """

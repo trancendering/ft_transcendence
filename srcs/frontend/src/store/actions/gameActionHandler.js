@@ -70,8 +70,14 @@ export default class gameActionHandler {
 		this.socket.on("userFullEvent", (data) => {
 			this.startGame(data);
 		});
-		this.socket.on("updateGameStatus", (data) => {
-			this.updateGameState(data);
+		// this.socket.on("updateGameStatus", (data) => {
+		// 	this.updateGameState(data);
+		// });
+		this.socket.on("updateBallState", (data) => {
+			this.updateBallState(data);
+		});
+		this.socket.on("updatePaddlePosition", (data) => {
+			this.updatePaddlePosition(data);
 		});
 		this.socket.on("updateGameScore", (data) => {
 			this.updateGameScore(data);
@@ -106,6 +112,12 @@ export default class gameActionHandler {
 		//console.log("initPositions: ");
 		this.context.commit("updateBallPosition", {
 			ballPosition: {
+				x: 0,
+				y: 0,
+			},
+		});
+		this.context.commit("updateBallVelocity", {
+			ballVelocity: {
 				x: 0,
 				y: 0,
 			},
@@ -150,19 +162,50 @@ export default class gameActionHandler {
 		});
 	}
 
+	// /**
+	//  * @description 볼 위치와 패들 위치 업데이트
+	//  * @param {object} payload {ballPosition: {x, y}, leftPaddlePosition, rightPaddlePosition}
+	//  */
+	// updateGameState(payload) {
+	// 	this.context.commit("updateBallPosition", {
+	// 		ballPosition: payload.ballPosition,
+	// 	});
+	// 	this.context.commit("updateRightPaddlePosition", {
+	// 		rightPaddlePosition: payload.rightPaddlePosition,
+	// 	});
+	// 	this.context.commit("updateLeftPaddlePosition", {
+	// 		leftPaddlePosition: payload.leftPaddlePosition,
+	// 	});
+	// }
+
 	/**
-	 * @description 볼 위치와 패들 위치 업데이트
-	 * @param {object} payload {ballPosition: {x, y}, leftPaddlePosition, rightPaddlePosition}
+	 * @description 볼 위치 업데이트
+	 * @param {object} payload {ballPosition: {x, y}, ballVelocity: {x, y}}
 	 */
-	updateGameState(payload) {
+	updateBallState(payload) {
+		//console.groupCollapsed("EVENT: ballCollisionEvent");
+		//console.log(" - ballPosition={x=", payload.ballPosition.x, ", y=", payload.ballPosition.y, "}");
+		//console.log(" - ballVelocity={x=", payload.ballVelocity.x, ", y=", payload.ballVelocity.y, "}");
+		//console.groupEnd();
+
 		this.context.commit("updateBallPosition", {
 			ballPosition: payload.ballPosition,
 		});
+		this.context.commit("updateBallVelocity", {
+			ballVelocity: payload.ballVelocity,
+		});
+	}
+
+	/**
+	 * @description 패들 위치 업데이트
+	 * @param {object} payload {left, right}
+	 */
+	updatePaddlePosition(payload) {
 		this.context.commit("updateRightPaddlePosition", {
-			rightPaddlePosition: payload.rightPaddlePosition,
+			rightPaddlePosition: payload.right,
 		});
 		this.context.commit("updateLeftPaddlePosition", {
-			leftPaddlePosition: payload.leftPaddlePosition,
+			leftPaddlePosition: payload.left,
 		});
 	}
 
@@ -185,6 +228,31 @@ export default class gameActionHandler {
 	}
 
 	/**
+	 * @description 클라이언트에서 공의 위치를 추적하여 주기적으로 업데이트
+	 */
+	async trackBallPosition() {
+		const ballPosition = this.context.state.ballPosition;
+		const ballVelocity = this.context.state.ballVelocity;
+
+		let newX = ballPosition.x, newY = ballPosition.y;
+		if (newY > -195 && newY < 195) {
+			newX = Math.max(Math.min(ballPosition.x + ballVelocity.x, 395), -395);
+		}
+		if (newX > -395 && newX < 395) {
+			newY = Math.max(Math.min(ballPosition.y + ballVelocity.y, 195), -195);
+		}
+		if (newY === 195 || newY === -195) newX = ballPosition.x;
+		this.context.commit("updateBallPosition", {
+			ballPosition: { x: newX, y: newY }
+		});
+		if (!this.gameEnded) {
+			setTimeout(() => {
+				this.trackBallPosition();
+			}, 1000 / 60);
+		}
+	}
+
+	/**
 	 * @description 유저가 준비되었다는 이벤트를 서버로 보냄
 	 */
 	emitUserReadyEvent() {
@@ -200,12 +268,12 @@ export default class gameActionHandler {
 	 * @description 패들 위치 업데이트 되었다는 이벤트를 서버로 보냄
 	 * @param {object} payload {paddlePosition}
 	 */
-	async updatePaddlePosition(payload) {
+	async sendPaddlePosition(payload) {
 		const gameContext = this.context.state.gameContext;
 		const paddlePosition = payload.paddlePosition;
 
 		if (this.gameEnded) return;
-		this.socket.emit("updatePaddlePosition", {
+		this.socket.emit("sendPaddlePosition", {
 			roomName: gameContext.roomName,
 			userSide: gameContext.userSide,
 			paddlePosition: paddlePosition,
@@ -227,7 +295,7 @@ export default class gameActionHandler {
 			return;
 		}
 		//console.log(`moveUserPaddleUp: position=${newPosition}`);
-		this.updatePaddlePosition({ paddlePosition: newPosition });
+		this.sendPaddlePosition({ paddlePosition: newPosition });
 	}
 
 	/**
@@ -245,6 +313,6 @@ export default class gameActionHandler {
 			return;
 		}
 		//console.log(`moveUserPaddleDown: position=${newPosition}`);
-		this.updatePaddlePosition({ paddlePosition: newPosition });
+		this.sendPaddlePosition({ paddlePosition: newPosition });
 	}
 }

@@ -58,6 +58,11 @@ function updateBallPosition(state, payload) {
 	return state;
 }
 
+function updateBallVelocity(state, payload) {
+	state.ballVelocity = payload.ballVelocity;
+	return state;
+}
+
 function updateLeftPaddlePosition(state, payload) {
 	state.leftPaddlePosition = payload.leftPaddlePosition;
 	return state;
@@ -148,6 +153,7 @@ export default {
 	setEndReason,
 	// game common state : real-time update
 	updateBallPosition,
+	updateBallVelocity,
 	updateLeftPaddlePosition,
 	updateRightPaddlePosition,
 	updateLeftUserScore,

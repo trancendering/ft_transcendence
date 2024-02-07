@@ -14,8 +14,8 @@ sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins='*')
 # 서버 이벤트 등록
 sio.on("userReadyEvent", player_ready, namespace="/single")
 sio.on("userReadyEvent", player_ready, namespace="/tournament")
-sio.on("updatePaddlePosition", bar_move, namespace="/single")
-sio.on("updatePaddlePosition", bar_move, namespace="/tournament")
+sio.on("sendPaddlePosition", bar_move, namespace="/single")
+sio.on("sendPaddlePosition", bar_move, namespace="/tournament")
 
 
 def _log(command: str, name: str, sid: str) -> None:
@@ -155,6 +155,6 @@ async def ping(namespace: str, sid: str, data: str) -> str:
     """
     디버깅용으로 쓸려고 만들...었는데 안 써봄 흑흑
     """
-    session: Dict[str, str] = await sio.get_session(sid, namespace=namespace)
-    _log("PING", session["name"], sid, data)
+    # session: Dict[str, str] = await sio.get_session(sid, namespace=namespace)
+    # _log("PING", session["name"], sid, data)
     return "pong"

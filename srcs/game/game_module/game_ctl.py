@@ -35,5 +35,5 @@ async def bar_move(sid: str, data: Dict[str, str]) -> Literal["OK"]:
     바의 y 좌표로 게임의 바를 이동
     """
     if data["roomName"] in game_room:
-        game_room[str(data["roomName"])].bar_move(float(data["paddlePosition"]), str(data["userSide"]))
+        await game_room[str(data["roomName"])].bar_move(float(data["paddlePosition"]), str(data["userSide"]))
     return "OK"
