@@ -12,6 +12,13 @@ from .Vector import Vector
 from .GameStateManager import GameStateManager
 
 
+async def precide_sleep(delay):
+    end_time = time.time() + delay
+    await asyncio.sleep(delay * 0.8)
+    while time.time() < end_time:
+        await asyncio.sleep(0)
+
+
 class Collusion(Enum):
     """
     NO_COLLUSION: 바에 충돌하지 않음
@@ -111,9 +118,9 @@ class BaseRoom:
         while not self._kill:
             # 게임 현재 상태 전송 및 연산 간 딜레이 생성
             if (update_send):
-                await asyncio.gather(self._state_send(), asyncio.sleep(1 / self.UPDATE_FREQUENCY))
+                await asyncio.gather(self._state_send(), precide_sleep(1 / self.UPDATE_FREQUENCY))
             else:
-                await asyncio.sleep(1 / self.UPDATE_FREQUENCY)
+                await precide_sleep(1 / self.UPDATE_FREQUENCY)
 
             left_get_score, right_get_score = self._game_state.is_get_score()
             # 우측 득점
