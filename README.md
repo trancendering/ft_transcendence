@@ -1,50 +1,44 @@
-# Pong Game Project
+# ft_transcendence
 
 ## Overview
-This project is a modern take on the classic Pong game, featuring a Django-powered backend and a vanilla JavaScript frontend. It supports multiplayer functionality, real-time interactions, and dynamic content based on user preferences.
 
-## Tech Stack
+This project is the final assignment of the 6th circle at Ecole 42, named ft_transcendence. Also, This project is a modern take on the classic Pong game, featuring a Django-powered backend and a vanilla JavaScript frontend. It supports multiplayer functionality, real-time interactions, and dynamic content based on user preferences.
 
-- **Frontend**: Vanilla JavaScript, Bootstrap, SCSS/CSS, Webpack
-  - **JavaScript**: Core programming language for dynamic content.
-  - **HTML/CSS**: Markup and styling of web pages.
-  - **Webpack**: Module bundler for JavaScript applications.
-  - **SASS**: CSS preprocessor for enhanced styling capabilities.
+## Screen
+<div align="center">
+	<img width="400" alt="스크린샷 2024-02-07 오후 2 26 15" src="https://github.com/trancendering/Transcendence_Backend/assets/84652799/72660f21-0932-4b8d-ba43-3d6fe6ae4482">
 
-- **Backend**: Django, PostgreSQL
-  - **Django**: Python-based web framework for the backend logic.
-  - **PostgreSQL**: Database for persistent data storage.
-  - **Django Channels**: For WebSocket communication.
-  - **Django REST Framework**: For building RESTful APIs.
+  <img width="400" src="https://github.com/trancendering/Transcendence_Backend/assets/84652799/2e92e6b2-dacc-4b0c-b4f4-d545af8bcae8">
+  <img width="400" src="https://github.com/trancendering/Transcendence_Backend/assets/84652799/03939448-3dc9-401a-b178-dd9e51157d68">
+<img width="400" src="https://github.com/trancendering/Transcendence_Backend/assets/84652799/d461cec6-cf7d-424a-9268-e0dba093fcfc">	
+  <img width="400" src="https://github.com/trancendering/Transcendence_Backend/assets/84652799/033facb1-f18d-4e81-ae51-d315052dd7d4">
+  <img width="400" src="https://github.com/trancendering/Transcendence_Backend/assets/84652799/ac2b601c-7b3b-4f88-8870-e786d9724371">
+  <img width="400" src="https://github.com/trancendering/Transcendence_Backend/assets/84652799/511433d2-af9e-44c2-a299-faec1cf02e71">
+  <img width="400" alt="스크린샷 2024-02-07 오후 2 34 15" src="https://github.com/trancendering/Transcendence_Backend/assets/84652799/aae0aff8-93fd-44f5-a0f6-ef6a18e2b853">
 
-- **Middleware**: Nginx
-  - **Nginx**: Web server and reverse proxy for routing requests and serving static files.
 
-- **Infrastructure**
-  - **Docker**: Containerization platform for encapsulating components.
-  - **Docker Compose**: Tool for defining and running multi-container Docker applications.
-
-- **Development Tools**
-  - **EditorConfig**: Helps maintain consistent coding styles.
-  - **Makefile**: Automates the build and deployment process.
-
-- **Blockchain**
-  - **Web3.js**: Ethereum JavaScript API for interacting with the Ethereum blockchain.
-  - **Solidity**: Programming language for writing smart contracts.
-
-- **Authentication**
-  - **OAuth**: Open standard for access delegation, used for user authentication.
-
-- **Real-Time Communication**: Socket.IO
-
-- **Containerization**: Docker
+</div>
 
 ## Features
-- Multiplayer gameplay
-- Real-time game updates
-- User authentication and profile management
-- Internationalization support
-- 3D game rendering
+
+- **Web**
+	- *Major module*: Use a framework as backend :white_check_mark:
+	- *Minor module*: Use a front-end framework or toolkit :white_check_mark:
+	- *Minor module*: Use a database for the backend :white_check_mark:
+	- *Major module*: Store the score of a tournament in the Blockchain :white_check_mark:
+- **User Management**
+	- *Major module*: Implementing a remote authentication :white_check_mark:
+- **Gameplay and User Experience**
+	- *Major module*: Remote players :white_check_mark:
+	- *Minor module*: Game customization options :white_check_mark:
+
+- **Graphics**
+	- *Major module*: Use advanced 3D techniques :white_check_mark:
+   
+- **Accessibility**
+	- *Minor module*: Multiple language support :white_check_mark:
+   
+
 
 ## Getting Started
 
