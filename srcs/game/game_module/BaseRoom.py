@@ -107,9 +107,9 @@ class BaseRoom:
         해당 프레임에 이동 거리를 조정하여 공과 구조물이 접하게 렌더링 후
         조정된 거리만큼 다음 프레임에서 추가적으로 이동
         """
+        update_send = True
         while not self._kill:
             # 게임 현재 상태 전송 및 연산 간 딜레이 생성
-            update_send = True
             if (update_send):
                 await asyncio.gather(self._state_send(), asyncio.sleep(1 / self.UPDATE_FREQUENCY))
             else:
@@ -143,7 +143,7 @@ class BaseRoom:
             "ballPosition": self._game_state.get_current_ball_location(),
             "ballVelocity": self._game_state.get_current_ball_velocity(),
         }
-        await self._server.emit("updateGameStatus", now_state, room=self._room_name, namespace=self._namespace)
+        await self._server.emit("updateBallState", now_state, room=self._room_name, namespace=self._namespace)
 
     async def bar_move(self, bar_loc: float, side: str) -> None:
         """
