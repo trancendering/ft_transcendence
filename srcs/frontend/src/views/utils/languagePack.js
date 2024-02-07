@@ -67,7 +67,7 @@ export const gameModeCard = {
 		Tournament: "토너먼트",
 	},
 	zh: {
-		play: "玩",
+		play: "开始",
 		Single: "单人",
 		Tournament: "锦标赛",
 	},
@@ -137,7 +137,7 @@ export const invalidNicknameModal = {
 		ok: "Ok",
 	},
 	ko: {
-		title: "유요하지 않은 닉네임",
+		title: "유효하지 않은 닉네임",
 		description: "다른 닉네임을 입력해주세요",
 		ok: "확인",
 	},
