@@ -109,7 +109,11 @@ class BaseRoom:
         """
         while not self._kill:
             # 게임 현재 상태 전송 및 연산 간 딜레이 생성
-            await asyncio.gather(self._state_send(), asyncio.sleep(1 / self.UPDATE_FREQUENCY))
+            update_send = True
+            if (update_send):
+                await asyncio.gather(self._state_send(), asyncio.sleep(1 / self.UPDATE_FREQUENCY))
+            else:
+                await asyncio.sleep(1 / self.UPDATE_FREQUENCY)
 
             left_get_score, right_get_score = self._game_state.is_get_score()
             # 우측 득점
@@ -123,10 +127,12 @@ class BaseRoom:
 
             # 현재 라운드 간 준비시간일 경우
             if self._stay_state is True:
+                update_send = False
                 if time.time() - self._stay_time >= self.ROUND_READY_TIME:
+                    update_send = True
                     self._stay_state = False  # 게임 재개
             else:
-                self._game_state.update_next_state()  # 공 위치 갱신
+                update_send = self._game_state.update_next_state()  # 공 위치 갱신
         return True  # 비정상(사용자 탈주 등) 종료
 
     async def _state_send(self):
@@ -135,12 +141,11 @@ class BaseRoom:
         """
         now_state = {
             "ballPosition": self._game_state.get_current_ball_location(),
-            "leftPaddlePosition": self._game_state.left_bar,
-            "rightPaddlePosition": self._game_state.right_bar,
+            "ballVelocity": self._game_state.get_current_ball_velocity(),
         }
         await self._server.emit("updateGameStatus", now_state, room=self._room_name, namespace=self._namespace)
 
-    def bar_move(self, bar_loc: float, side: str) -> None:
+    async def bar_move(self, bar_loc: float, side: str) -> None:
         """
         바를 움직이는 함수
 
@@ -152,6 +157,11 @@ class BaseRoom:
             self._game_state.left_bar = bar_loc
         else:
             self._game_state.right_bar = bar_loc
+        send_bar_loc = {
+            "left": self._game_state.left_bar,
+            "right": self._game_state.right_bar,
+        }
+        await self._server.emit("updatePaddlePosition", send_bar_loc, room=self._room_name, namespace=self._namespace)
 
     async def kill_room(self) -> None:
         """

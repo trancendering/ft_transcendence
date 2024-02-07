@@ -55,11 +55,11 @@ class GameStateManager:
         self.reset_ball()
         self._bar_loc_left, self._bar_loc_right = 0, 0
 
-    def update_next_state(self) -> None:
+    def update_next_state(self) -> bool:
         """
         게임을 다음 상태로 업데이트
         """
-        self._ball_move_update()
+        return self._ball_move_update()
 
     def is_get_score(self) -> Tuple[bool]:
         """
@@ -83,6 +83,14 @@ class GameStateManager:
         """
         return self._ball_loc.cast_dict()
 
+    def get_current_ball_velocity(self) -> Dict[str, float]:
+        """
+        공의 현재 속도를 딕셔너리 형태로 반환
+
+        반환값: {"x": float, "y": float}
+        """
+        return self._ball_velocity.cast_dict()
+
     @property
     def left_bar(self) -> float:
         return self._bar_loc_left
@@ -101,11 +109,12 @@ class GameStateManager:
         if -self.FIELD_HEIGHT/2 <= bar_loc <= self.FIELD_HEIGHT/2:
             self._bar_loc_right = bar_loc
 
-    def _ball_move_update(self) -> None:
+    def _ball_move_update(self) -> bool:
         """
         공의 움직임을 기술한 함수
         공의 위치, 속도, 위치 보정값을 수정한다
         """
+        is_collusion = True
         # 상단 충돌
         if self._ball_velocity.y > 0 and \
                 self._ball_loc.y + self.BALL_SIZE > self.FIELD_HEIGHT / 2 - self._ball_velocity.y:
@@ -180,18 +189,20 @@ class GameStateManager:
                     self._ball_rad += 2 * math.pi
         # 충돌하지 않음, 속도에 따른 공 위치 갱신
         else:
-            self._ball_loc += self._ball_velocity * (1 + min(0.1, self._correction_val))
-            self._correction_val -= min(0.1, self._correction_val)
+            is_collusion = False
+            self._ball_loc += self._ball_velocity  # * (1 + min(0.1, self._correction_val))
+            # self._correction_val -= min(0.1, self._correction_val)
 
             # 데드라인에 도달한 경우 이동을 데드라인에서 중단한 것처럼 보이게 함, 렌더링이 겹치는 것을 막기 위함
-            if self._ball_loc.x < -self.FIELD_WIDTH / 2:
-                self._ball_loc -= (
-                    (-self.FIELD_WIDTH/2 - self._ball_loc.x) / -self._ball_velocity.x
-                    * self._ball_velocity)
-            elif self._ball_loc.x > self.FIELD_WIDTH / 2:
-                self._ball_loc -= (
-                    (self._ball_loc.x - self.FIELD_WIDTH/2) / self._ball_velocity.x
-                    * self._ball_velocity)
+            # if self._ball_loc.x < -self.FIELD_WIDTH / 2:
+            #     self._ball_loc -= (
+            #         (-self.FIELD_WIDTH/2 - self._ball_loc.x) / -self._ball_velocity.x
+            #         * self._ball_velocity)
+            # elif self._ball_loc.x > self.FIELD_WIDTH / 2:
+            #     self._ball_loc -= (
+            #         (self._ball_loc.x - self.FIELD_WIDTH/2) / self._ball_velocity.x
+            #         * self._ball_velocity)
+        return is_collusion
 
     def _bar_collusion(self) -> Collusion:
         """
