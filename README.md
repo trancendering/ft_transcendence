@@ -29,12 +29,37 @@
 
 </div>
 
-## Key Features
+## Key Features and Modules
 
 - **Web Gameplay**: Remote Play functionality with real-time interactions.
 - **Graphics**: Advanced 3D game rendering with Three.js.
 - **User Management**: Remote authentication using OAuth.
 - **Blockchain Integration** : Smartcontract with Ethereum blockchain for secure tournament log recording and retrieval.
+
+  
+
+## Modules
+
+
+- **Web**
+	- *Major module*: Use a framework as backend :white_check_mark:
+	- *Minor module*: Use a front-end framework or toolkit :white_check_mark:
+	- *Minor module*: Use a database for the backend :white_check_mark:
+	- *Major module*: Store the score of a tournament in the Blockchain :white_check_mark:
+- **User Management**
+	- *Major module*: Implementing a remote authentication :white_check_mark:
+- **Gameplay and User Experience**
+	- *Major module*: Remote players :white_check_mark:
+	- *Minor module*: Game customization options :white_check_mark:
+
+- **Graphics**
+	- *Major module*: Use advanced 3D techniques :white_check_mark:
+   
+- **Accessibility**
+	- *Minor module*: Multiple language support :white_check_mark:
+
+   
+
 
 
 ## Further Reading
