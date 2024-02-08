@@ -204,6 +204,17 @@ export default class gameActionHandler {
 		// 현재 게임 중인 사용자의 플레이어 사이드
 		const userSide = this.context.state.gameContext.userSide;
 
+		// 토너먼트 참여 안할 시 양쪽 패들 위치 업데이트
+		if (this.context.state.gameContext.participated === false) {
+			this.context.commit("updateRightPaddlePosition", {
+				rightPaddlePosition: payload.right,
+			});
+			this.context.commit("updateLeftPaddlePosition", {
+				leftPaddlePosition: payload.left,
+			});
+			return;
+		}
+
 		// 상대방 플레이어의 패들 위치만 업데이트
 		if (userSide === Side.LEFT) {
 			this.context.commit("updateRightPaddlePosition", {
@@ -297,7 +308,7 @@ export default class gameActionHandler {
 			userSide === Side.LEFT ? this.context.state.leftPaddlePosition : this.context.state.rightPaddlePosition;
 
 		const newPosition = Math.min(curPosition + 40, Game.CANVAS_HEIGHT / 2 - Game.PADDLE_HEIGHT / 2);
-		if (newPosition === undefined) {
+		if (curPosition == newPosition || newPosition === undefined) {
 			//console.log("moveUserPaddleUp: new position undefined");
 			return;
 		}
@@ -326,7 +337,7 @@ export default class gameActionHandler {
 			userSide === Side.LEFT ? this.context.state.leftPaddlePosition : this.context.state.rightPaddlePosition;
 
 		const newPosition = Math.max(curPosition - 40, -Game.CANVAS_HEIGHT / 2 + Game.PADDLE_HEIGHT / 2);
-		if (newPosition === undefined) {
+		if (curPosition == newPosition || newPosition === undefined) {
 			//console.log("moveUserPaddleDown: new position undefined");
 			return;
 		}
