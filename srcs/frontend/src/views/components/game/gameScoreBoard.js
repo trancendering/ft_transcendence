@@ -11,7 +11,6 @@ export default class gameScoreBoard extends Component {
 	}
 
 	async render() {
-		console.log("gameScoreBoard render");
 		if (store.state.gameStatus !== "playing") return;
 
 		let leftUserNickname = store.state.gameContext.leftUser;
@@ -35,11 +34,15 @@ export default class gameScoreBoard extends Component {
 	}
 
 	async updateLeftUserScore() {
+		if (store.state.gameStatus !== "playing") return;
+
 		const score = document.getElementById("score-board-number");
 		score.textContent = `${store.state.leftUserScore}  :  ${score.textContent.split(':')[1]}`;
 	}
 
 	async updateRightUserScore() {
+		if (store.state.gameStatus !== "playing") return;
+
 		const score = document.getElementById("score-board-number");
 		score.textContent = `${score.textContent.split(':')[0]}  :  ${store.state.rightUserScore}`;
 	}
