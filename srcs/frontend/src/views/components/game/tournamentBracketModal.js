@@ -23,12 +23,12 @@ export default class TournamentBracketModal extends Component {
                         <div class="round one">
                             <div class="match">
                                 <div class="match-top team">
-                                    <span class="name">${player[0]}</span>
-                                    <span class="score">${score.round1[0]}</span>
+                                    <span class="tournament-bracket-name">${player[0]}</span>
+                                    <span class="tournament-bracket-score">${score.round1[0]}</span>
                                 </div>
                                 <div class="match-bottom team">
-                                    <span class="name">${player[1]}</span>
-                                    <span class="score">${score.round1[1]}</span>
+                                    <span class="tournament-bracket-name">${player[1]}</span>
+                                    <span class="tournament-bracket-score">${score.round1[1]}</span>
                                 </div>
                                 <div class="match-lines">
                                     <div class="line one"></div>
@@ -41,12 +41,12 @@ export default class TournamentBracketModal extends Component {
 
                             <div class="match">
                                 <div class="match-top team">
-                                    <span class="name">${player[2]}</span>
-                                    <span class="score">${score.round2[0]}</span>
+                                    <span class="tournament-bracket-name">${player[2]}</span>
+                                    <span class="tournament-bracket-score">${score.round2[0]}</span>
                                 </div>
                                 <div class="match-bottom team">
-                                    <span class="name">${player[3]}</span>
-                                    <span class="score">${score.round2[1]}</span>
+                                    <span class="tournament-bracket-name">${player[3]}</span>
+                                    <span class="tournament-bracket-score">${score.round2[1]}</span>
                                 </div>
                                 <div class="match-lines">
                                     <div class="line one"></div>
@@ -61,12 +61,12 @@ export default class TournamentBracketModal extends Component {
                         <div class="round two">
                             <div class="match">
                                 <div class="match-top team">
-                                    <span class="name">${winner.round1}</span>
-                                    <span class="score">${score.round3[0]}</span>
+                                    <span class="tournament-bracket-name">${winner.round1}</span>
+                                    <span class="tournament-bracket-score">${score.round3[0]}</span>
                                 </div>
                                 <div class="match-bottom team">
-                                    <span class="name">${winner.round2}</span>
-                                    <span class="score">${score.round3[1]}</span>
+                                    <span class="tournament-bracket-name">${winner.round2}</span>
+                                    <span class="tournament-bracket-score">${score.round3[1]}</span>
                                 </div>
                                 <div class="match-lines">
                                     <div class="line one"></div>
@@ -80,7 +80,7 @@ export default class TournamentBracketModal extends Component {
                         <div class="round three">
                             <div class="champion">
                                 <div>
-                                    <span class="name">${winner.round3}</span>
+                                    <span class="tournament-bracket-name">${winner.round3}</span>
                                 </div>
                                 <div class="match-lines alt">
                                     <div class="line one"></div>
