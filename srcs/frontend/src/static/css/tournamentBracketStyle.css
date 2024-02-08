@@ -159,3 +159,8 @@
 	 background:  #2dae88;
 	 color: #e3e8ef;
 }
+
+.score,
+.name {
+    color: #ffffff;
+}
