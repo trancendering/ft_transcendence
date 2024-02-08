@@ -235,7 +235,7 @@ export default class gameCanvas extends Component {
 			}
 
 			canInput = false;
-			setTimeout(() => canInput = true, 200);
+			setTimeout(() => canInput = true, 100);
 		});
 	}
 
