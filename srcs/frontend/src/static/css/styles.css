@@ -23,6 +23,30 @@ canvas {
     z-index: 1;
 }
 
+#gameScoreBoard {
+    position: fixed;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: transparent;
+    width: 80vw;
+    margin: auto;
+    z-index: 1;
+}
+
+.nickname {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.score-board-number {
+    font-size: 3rem;
+    font-weight: bold;
+    letter-spacing: 10px;
+    color: #ffffff;
+}
+
 .custom-modal {
     display: none;
     position: fixed;

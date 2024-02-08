@@ -12,18 +12,18 @@ import {
 	westWall,
 	leftPaddle,
 	rightPaddle,
-	scoreSeparator,
+	// scoreSeparator,
 	createBallObject,
-	createNicknameObject,
-	createScoreObject,
+	// createNicknameObject,
+	// createScoreObject,
 } from "./object";
 
 export default class gameCanvas extends Component {
 	constructor() {
 		super({ element: document.getElementById("gameCanvas") });
 		store.events.subscribe("gameStatusChange", async () => this.render());
-		store.events.subscribe("leftUserScoreChange", async () => this.updateLeftUserScore());
-		store.events.subscribe("rightUserScoreChange", async () => this.updateRightUserScore());
+		// store.events.subscribe("leftUserScoreChange", async () => this.updateLeftUserScore());
+		// store.events.subscribe("rightUserScoreChange", async () => this.updateRightUserScore());
 		this.handleEvent();
 		this.handleResize();
 	}
@@ -59,14 +59,14 @@ export default class gameCanvas extends Component {
 		const addObjectsToScene = (objects) => objects.forEach((obj) => this.scene.add(obj));
 
 		// 좌우 닉네임, 점수, 공 객체를 생성
-		const nicknameObjects = [
-			createNicknameObject(store.state.gameContext, Side.LEFT),
-			createNicknameObject(store.state.gameContext, Side.RIGHT),
-		];
-		const scoreObjects = [
-			(this.leftScoreObject = createScoreObject(store.state.leftUserScore, Side.LEFT)),
-			(this.rightScoreObject = createScoreObject(store.state.rightUserScore, Side.RIGHT)),
-		];
+		// const nicknameObjects = [
+		// 	createNicknameObject(store.state.gameContext, Side.LEFT),
+		// 	createNicknameObject(store.state.gameContext, Side.RIGHT),
+		// ];
+		// const scoreObjects = [
+		// 	(this.leftScoreObject = createScoreObject(store.state.leftUserScore, Side.LEFT)),
+		// 	(this.rightScoreObject = createScoreObject(store.state.rightUserScore, Side.RIGHT)),
+		// ];
 		const { ball, pointLight } = createBallObject(store.state.fancyBall);
 		this.ball = ball;
 		this.pointLight = pointLight;
@@ -80,12 +80,13 @@ export default class gameCanvas extends Component {
 			westWall,
 			leftPaddle,
 			rightPaddle,
-			scoreSeparator,
+			// scoreSeparator,
 			this.ball,
 		];
 
 		// Scene에 객체들을 추가
-		addObjectsToScene([...staticObjects, ...nicknameObjects, ...scoreObjects]);
+		// addObjectsToScene([...staticObjects, ...nicknameObjects, ...scoreObjects]);
+		addObjectsToScene([...staticObjects]);
 
 		// fancyBall 모드의 경우에는 pointLight를 추가
 		if (this.pointLight) {
@@ -260,22 +261,22 @@ export default class gameCanvas extends Component {
 	/**
 	 * @description 왼쪽 사용자의 점수 Object를 업데이트
 	 */
-	async updateLeftUserScore() {
-		if (store.state.gameStatus !== "playing") return;
+	// async updateLeftUserScore() {
+	// 	if (store.state.gameStatus !== "playing") return;
 
-		this.scene.remove(this.leftScoreObject);
-		this.leftScoreObject = createScoreObject(store.state.leftUserScore, Side.LEFT);
-		this.scene.add(this.leftScoreObject);
-	}
+	// 	this.scene.remove(this.leftScoreObject);
+	// 	this.leftScoreObject = createScoreObject(store.state.leftUserScore, Side.LEFT);
+	// 	this.scene.add(this.leftScoreObject);
+	// }
 
 	/**
 	 * @description 오른쪽 사용자의 점수 Object를 업데이트
 	 */
-	async updateRightUserScore() {
-		if (store.state.gameStatus !== "playing") return;
+	// async updateRightUserScore() {
+	// 	if (store.state.gameStatus !== "playing") return;
 
-		this.scene.remove(this.rightScoreObject);
-		this.rightScoreObject = createScoreObject(store.state.rightUserScore, Side.RIGHT);
-		this.scene.add(this.rightScoreObject);
-	}
+	// 	this.scene.remove(this.rightScoreObject);
+	// 	this.rightScoreObject = createScoreObject(store.state.rightUserScore, Side.RIGHT);
+	// 	this.scene.add(this.rightScoreObject);
+	// }
 }

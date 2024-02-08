@@ -2,6 +2,7 @@ import Component from "../../library/component.js";
 import GameCanvas from "./game/gameCanvas.js";
 import BackgroundMusic from "./game/backgroundMusic.js";
 import AudioButton from "./game/audioButton.js";
+import GameScoreBoard from "./game/gameScoreBoard.js";
 import TournamentBracketModal from "./game/tournamentBracketModal.js";
 import GameOverModal from "./game/gameOverModal.js";
 
@@ -13,6 +14,7 @@ export default class Game extends Component {
 			gameCanvas: new GameCanvas(),
 			backgroundMusic: new BackgroundMusic(),
 			audioButton: new AudioButton(),
+			gameScoreBoard: new GameScoreBoard(),
 			tournamentBracketModal: new TournamentBracketModal(),
 			gameOverModal: new GameOverModal(),
 		};
@@ -27,6 +29,8 @@ export default class Game extends Component {
 			<div id="audioBtn"></div>
 
             <div id="game-controls">
+				<!-- Score Board -->
+				<div id="gameScoreBoard" class="d-flex justify-content-between align-items-center p-4"></div>
                 <!-- Canvas for the game -->
                 <canvas id="gameCanvas"></canvas>
 				<!-- Modal for Game Over -->
