@@ -22,6 +22,18 @@ export const loginButton = {
 	},
 };
 
+export const logoutButton = {
+	en: {
+		logoutDescription: "Logout",
+	},
+	ko: {
+		logoutDescription: "로그아웃",
+	},
+	zh: {
+		logoutDescription: "登出",
+	},
+};
+
 export const main = {
 	en: {
 		title: "Choose Your Pong Mode",

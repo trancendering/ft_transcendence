@@ -1,6 +1,7 @@
 import store from "../../store/index.js";
 import Component from "../../library/component.js";
 import TournamentRecordButton from "./record/tournamentRecordButton.js";
+import LogoutButton from './main/logoutButton.js';
 import LanguageSelector from "./main/languageSelector.js";
 import GameModeCard from "./main/gameModeCard.js";
 import GameCustomizationModal from "./main/gameCustomizationModal.js";
@@ -17,6 +18,7 @@ export default class Main extends Component {
 		this.render();
 		this.components = {
 			tournamentRecordButton: new TournamentRecordButton(),
+			logoutButton: new LogoutButton(),
 			languageSelector: new LanguageSelector(),
 			gameModeCard1: new GameModeCard({
 				id: "singleGameMode",
@@ -38,10 +40,13 @@ export default class Main extends Component {
 		const view = /*html*/ `
 
 		<!-- Navbar -->
-		<nav class="navbar navbar-light bg-light justify-content-between">
-			<!-- Tournament Record -->
-			<div id="tournamentRecordBtn"></div>
-
+		<nav class="navbar navbar-expand-md navbar-light bg-light justify-content-between">
+			<ul class="navbar-nav mr-auto">
+				<!-- Tournament Record -->
+				<li class="nav-item" id="tournamentRecordBtn"></li>
+				<!-- Logout Button -->
+				<li class="nav-item" id="logoutBtn"></li>
+			</ul>
 			<!-- Language Dropdown -->
 			<div id="languageSelector"></div>
 		</nav>
