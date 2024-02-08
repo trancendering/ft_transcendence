@@ -125,7 +125,7 @@ export default class tournamentActionHandler extends GameActionHandler {
 				winner: state.tournamentWinner.round3,
 			});
 		}
-		this.context.commit("setMusicOn", { musicOn: false });
+		// this.context.commit("setMusicOn", { musicOn: false });
 		if (!this.gameEnded) {
 			this.socket.disconnect();
 			this.gameEnded = true;

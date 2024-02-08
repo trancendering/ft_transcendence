@@ -72,7 +72,7 @@ export default class singleGameActionHandler extends GameActionHandler {
 
 		const state = this.context.state;
 
-		this.context.commit("setMusicOn", { musicOn: false });
+		// this.context.commit("setMusicOn", { musicOn: false });
 		if (payload.reason === "normal") {
 			const winner =
 				state.leftUserScore > state.rightUserScore ? state.gameContext.leftUser : state.gameContext.rightUser;
