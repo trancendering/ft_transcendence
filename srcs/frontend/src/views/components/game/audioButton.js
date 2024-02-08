@@ -25,7 +25,7 @@ export default class AudioButton extends Component {
 
 	async handleEvent() {
 		this.element.querySelector("button").addEventListener("click", () => {
-			console.log("click audio button");
+			// console.log("click audio button");
 			store.dispatch("toggleMusicOn");
 		});
 	}
