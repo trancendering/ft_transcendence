@@ -11,7 +11,7 @@ all: up
 
 up:
 	if [ ! -d $(DATEBASE_DIR) ]; then mkdir -p $(DATEBASE_DIR); fi
-	$(DOCKER_COMPOSE) -f $(YML_PATH) up --build
+	$(DOCKER_COMPOSE) -f $(YML_PATH) up -d --build
 
 
 # webpack 생성 및 복사 front src만 바뀌었을 때, webpack만 다시 빌드하고, nginx 재시작.
