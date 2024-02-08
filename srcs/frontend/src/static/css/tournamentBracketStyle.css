@@ -73,7 +73,7 @@
 	 /* padding-right: 8px; */
 	 padding-right: 0.5rem;
 }
- .match .team .score {
+ .match .team .tournament-bracket-score {
 	 margin-left: auto;
 }
  .match .team:first-child {
@@ -135,11 +135,11 @@
 	 border-color: #36404e;
 	 z-index: 1;
 }
- .winner-top .match-top .score, .winner-bottom .match-bottom .score {
+ .winner-top .match-top .tournament-bracket-score, .winner-bottom .match-bottom .tournament-bracket-score {
 	 color: #03d9ce;
 }
 
- .match .score {
+ .match .tournament-bracket-score {
 	 /* font-size: 14px; */
 	 font-size: 0.875rem;
 }
@@ -160,7 +160,8 @@
 	 color: #e3e8ef;
 }
 
-.score,
-.name {
+.tournament-bracket-score,
+.tournament-bracket-name {
     color: #ffffff;
 }
+
